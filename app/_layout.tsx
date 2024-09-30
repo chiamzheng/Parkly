@@ -1,14 +1,19 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, ThemeProvider,NavigationContainer } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+//import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
-
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { useColorScheme } from '@/hooks/useColorScheme';
-
+import Login from './login';
+import Signin from './signin';
+import Register from './register';
+import Forgot from './forgot';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+const Stack = createNativeStackNavigator();
+
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -27,11 +32,35 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    
+      <Stack.Navigator>
+        <Stack.Screen
+          name="login"
+          component={Login}
+          options={{headerShown:false,
+          }}
+        />
+        <Stack.Screen
+          name="signin"
+          component={Signin}
+          options={{headerShown:false,
+          }}
+        />
+        <Stack.Screen
+          name="register"
+          component={Register}
+          options={{headerShown:false,
+          }}
+        />
+        <Stack.Screen
+          name="forgot"
+          component={Forgot}
+          options={{headerShown:false,
+          }}
+        />
+      </Stack.Navigator>
+       
+    
+    
   );
 }

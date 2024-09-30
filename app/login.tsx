@@ -6,40 +6,43 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { green } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import * as Animatable from 'react-native-animatable';
-import Signin from '../signin';
-
-export default function HomeScreen({ navigation}) {
+import { SafeAreaView,SafeAreaProvider } from 'react-native-safe-area-context';
+import Signin from './signin';
+import Register from './register';
+export default function Login({ navigation }) {
   return (
-    <View style={styles.background}>
-      <ThemedView style={styles.titleContainer}>
-        <Text style={styles.titletext}>Parkly</Text>
-        {/*<HelloWave />*/}
-      </ThemedView>
-      <View style={styles.imgcontainer}>
-        <Image style={styles.cargif} source={require('../../assets/images/car.gif')} />
-        <Image style={styles.locationgif} source={require('../../assets/images/nav.gif')} />
-      </View>
-      
-      <ThemedView style={styles.stepContainer}>
-        <Pressable
-          style={styles.button}
-          onPress={() => navigation.navigate(Signin)}
-        >
-          <Text style={styles.buttonText}>LOGIN</Text>
-        </Pressable>
-        <Pressable
-          style={styles.button}
-          onPress={() => Alert.alert('Button with adjusted color pressed')}
-        >
-          <Text style={styles.buttonText}>REGISTER</Text>
-        </Pressable>
-        <Pressable
-          onPress={() => Alert.alert('Button with adjusted color pressed')}
-        >
-          <Text style={styles.guest}>Continue as Guest</Text>
-        </Pressable>
-      </ThemedView>
-    </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.background}>
+        <ThemedView style={styles.titleContainer}>
+          <Text style={styles.titletext}>Parkly</Text>
+        </ThemedView>
+        
+        <View style={styles.imgcontainer}>
+          <Image style={styles.cargif} source={require('../assets/images/car.gif')} />
+          <Image style={styles.locationgif} source={require('../assets/images/nav.gif')} />
+        </View>
+        
+        <ThemedView style={styles.stepContainer}>
+          <Pressable
+            style={styles.button}
+            onPress={() => navigation.navigate('signin')} // Navigate to Signin
+          >
+            <Text style={styles.buttonText}>LOGIN</Text>
+          </Pressable>
+          <Pressable
+            style={styles.button}
+            onPress={() => navigation.navigate('register')}
+          >
+            <Text style={styles.buttonText}>REGISTER</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => Alert.alert('Button with adjusted color pressed')}
+          >
+            <Text style={styles.guest}>Continue as Guest</Text>
+          </Pressable>
+        </ThemedView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
@@ -61,6 +64,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     alignItems:'center',
     backgroundColor:'#DDD5D5',
+    
   },
   reactLogo: {
     height: 50,
@@ -98,6 +102,7 @@ const styles = StyleSheet.create({
   },
   background:{
     backgroundColor:'#DDD5D5',
+    flex:1,
   },
   imgcontainer:{
     flexDirection:'row',
