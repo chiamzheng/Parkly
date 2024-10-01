@@ -17,3 +17,4 @@ const UserAccount = mongoose.model('User', userAccountSchema);
 
 // Export the model to be used elsewhere
 module.exports = UserAccount; 
+

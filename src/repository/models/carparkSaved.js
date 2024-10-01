@@ -3,5 +3,5 @@ const carparkSavedSchema = new mongoose.Schema({
     caparkInfo: [String],
 });
 
-const UserAccount = mongoose.model('User', userAccountSchema);
-module.exports = UserAccount; 
+const carparkSaved = mongoose.model('User', userAccountSchema);
+module.exports = carparkSaved; 

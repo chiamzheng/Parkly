@@ -5,6 +5,6 @@ const carparkReviewsSchema = new mongoose.Schema({
     reviewer: UserAccount,
 });
 
-const UserAccount = mongoose.model('User', userAccountSchema);
-module.exports = UserAccount; 
+const carparkReviews = mongoose.model('User', userAccountSchema);
+module.exports = carparkReviews; 
 
