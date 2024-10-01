@@ -1,5 +1,0 @@
-// The underlying language that React uses is HTML CSS and JavaScript. React is just an abstraction to make the code more readable and maintainable
-// React creates a website, not an app. React Native creates a website that feels exactly like an app
-// The word "Native" comes from giving users a native feel i.e. feeling like using an app when in fact they are actually using a website
-// Native feel means for example, Android apps have a particular way of working, e.g. when pressing a button it comes out from the right, this is native Android feel
-// whereas on ios, a lot of the buttons slides up from the bottom, that is native IOS feel. Meaning to say that the website feels like it's an IOS app.
