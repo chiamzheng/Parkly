@@ -19,11 +19,14 @@ import * as Animatable from "react-native-animatable";
 import { CheckBox } from "@rneui/themed";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import validator from 'validator';
 import React from "react";
 export default function Signin({ navigation }) {
   const [username, onChangeUser] = React.useState("");
   const [password, onChangePass] = React.useState("");
   const [check1, setCheck1] = React.useState(false);
+  const [validEmail, setValidEmail] = React.useState(true);
+  const [validPassword, setValidPassword] = React.useState(true);
   const [showPassword, setShowPassword] = React.useState(false);
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -39,7 +42,7 @@ export default function Signin({ navigation }) {
         <Text style={styles.title}>Login</Text>
         <ThemedView style={styles.stepContainer}>
           <TextInput
-            style={styles.input}
+            style={validEmail?styles.input:styles.invalidinput}
             onChangeText={onChangeUser}
             value={username}
             placeholder="Email"
@@ -48,7 +51,7 @@ export default function Signin({ navigation }) {
           />
           <View style={styles.password}>
             <TextInput
-              style={styles.input}
+              style={validPassword?styles.input:styles.invalidinput}
               onChangeText={onChangePass}
               value={password}
               placeholder="Password"
@@ -67,17 +70,21 @@ export default function Signin({ navigation }) {
             
           </View>
           
+          <View style={styles.bottomline}>
+            <CheckBox
+              containerStyle={styles.checkbox}
+              title="Remember me"
+              checked={check1}
+              onPress={() => setCheck1(!check1)}
+            />
+            <Pressable onPress={() => navigation.navigate("forgot")}>
+              <Text style={styles.guest}>Forgot Password</Text>
+            </Pressable>
+          </View>
         </ThemedView>
-        <View style={styles.bottomline}>
-          <CheckBox
-            containerStyle={styles.checkbox}
-            title="Remember me"
-            checked={check1}
-            onPress={() => setCheck1(!check1)}
-          />
-          <Pressable onPress={() => navigation.navigate("forgot")}>
-            <Text style={styles.guest}>Forgot Password</Text>
-          </Pressable>
+        
+        <View>
+          <Text style={validPassword?styles.hide:styles.invalidmsg}>The username or password you entered is incorrect.</Text>
         </View>
         <View style={styles.buttoncontainer}>
           <Pressable
@@ -91,7 +98,21 @@ export default function Signin({ navigation }) {
           </Pressable>
           <Pressable
             style={styles.button}
-            onPress={() => Alert.alert("Button with adjusted color pressed")}
+            onPress={() => {
+              if(validator.isEmail(username)){
+                setValidEmail(true);
+              }
+              else{
+                  setValidEmail(false);
+                }
+              if(validator.isEmpty(password)){
+                setValidPassword(false)
+              }
+              else{
+                setValidPassword(true);
+              }
+              }
+            }
           >
             <Text style={styles.buttonText}>Let's Go!</Text>
           </Pressable>
@@ -120,8 +141,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     alignItems: "center",
     backgroundColor: "#DDD5D5",
-    height: 120,
-    justifyContent: "space-between",
+    height: Dimensions.get("window").height / 4,
+    //justifyContent: "space-between",
   },
   reactLogo: {
     height: 50,
@@ -133,7 +154,7 @@ const styles = StyleSheet.create({
   titletext: {
     fontSize: Dimensions.get("window").width / 6,
     fontWeight: "800",
-    fontFamily: "Erica",
+    //fontFamily: "Erica",
     
   },
   button: {
@@ -180,7 +201,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
   input: {
-    fontFamily: "Ubuntu",
+    //fontFamily: "Ubuntu",
     backgroundColor: "white",
     width: Dimensions.get("window").width / 1.2,
     height: 50,
@@ -190,6 +211,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     fontWeight: "800",
     color: "black",
+    marginBottom:20,
   },
   img: {
     height: 30,
@@ -218,16 +240,39 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal:Dimensions.get("window").width / 12,
     paddingBottom:Dimensions.get("window").height / 12,
+    width:Dimensions.get("window").width,
   },
   password:{
     flexDirection:"row",
-    alignItems:"center",
+    //alignItems:"center",
     justifyContent:"flex-end",
     paddingHorizontal:14,
+    
   },
   icon:{
     position:"absolute",
-    
+    marginTop:14,
     paddingRight:Dimensions.get("window").width / 14,
+  },
+  invalidinput: {
+    //fontFamily: "Ubuntu",
+    backgroundColor: "white",
+    width: Dimensions.get("window").width / 1.2,
+    height: 50,
+    borderRadius: 10,
+    paddingLeft: 20,
+    borderColor: "red",
+    borderWidth: 2,
+    fontWeight: "800",
+    color: "black",
+    marginBottom:20,
+  },
+  hide:{
+    display:'none',
+  },
+  invalidmsg:{
+    color:'red',
+    fontWeight:'800',
+    alignSelf:"center",
   }
 });
