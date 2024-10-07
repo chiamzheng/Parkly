@@ -9,15 +9,8 @@ import {
   View,
 } from "react-native";
 import { Dimensions } from "react-native";
-import { HelloWave } from "@/components/HelloWave";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { green } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
-import * as Animatable from "react-native-animatable";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import Signin from "./signin";
-import Register from "./register";
 export default function Login({ navigation }) {
   return (
     <SafeAreaProvider>
@@ -90,7 +83,7 @@ const styles = StyleSheet.create({
   titletext: {
     fontSize: Dimensions.get("window").width / 6,
     fontWeight: "800",
-    fontFamily: "Erica",
+    //fontFamily: "Erica",
   },
   button: {
     borderRadius: 25,

@@ -10,9 +10,7 @@ import {
   TextInput,
 } from "react-native";
 import { Dimensions, TouchableOpacity } from "react-native";
-import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import * as Animatable from "react-native-animatable";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import validator from 'validator';
