@@ -9,7 +9,7 @@ import {
   View,
   TextInput,
 } from "react-native";
-import { Dimensions } from "react-native";
+import { Dimensions,TouchableOpacity } from "react-native";
 import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
@@ -18,11 +18,16 @@ import { green } from "react-native-reanimated/lib/typescript/reanimated2/Colors
 import * as Animatable from "react-native-animatable";
 import { CheckBox } from "@rneui/themed";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from "react";
 export default function Signin({ navigation }) {
   const [username, onChangeUser] = React.useState("");
   const [password, onChangePass] = React.useState("");
   const [check1, setCheck1] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+};
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.background}>
@@ -39,16 +44,29 @@ export default function Signin({ navigation }) {
             value={username}
             placeholder="Email"
             placeholderTextColor="#B9B7B7"
-            keyboardType="email-address"
+            inputMode="email"
           />
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangePass}
-            value={password}
-            placeholder="Password"
-            placeholderTextColor="#B9B7B7"
-            keyboardType="default"
-          />
+          <View style={styles.password}>
+            <TextInput
+              style={styles.input}
+              onChangeText={onChangePass}
+              value={password}
+              placeholder="Password"
+              placeholderTextColor="#B9B7B7"
+              inputMode="text"
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity  style={styles.icon}>
+              <MaterialCommunityIcons
+                        name={showPassword ? 'eye-off' : 'eye'}
+                        size={24}
+                        color="#aaa"
+                        onPress={toggleShowPassword}
+              />
+            </TouchableOpacity>
+            
+          </View>
+          
         </ThemedView>
         <View style={styles.bottomline}>
           <CheckBox
@@ -116,6 +134,7 @@ const styles = StyleSheet.create({
     fontSize: Dimensions.get("window").width / 6,
     fontWeight: "800",
     fontFamily: "Erica",
+    
   },
   button: {
     borderRadius: 40,
@@ -179,7 +198,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "800",
     fontSize: 20,
-    marginLeft: 40,
+    marginLeft: Dimensions.get("window").width / 12 ,
     margin: 10,
   },
   buttoncontainer: {
@@ -196,6 +215,19 @@ const styles = StyleSheet.create({
   bottomline: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
+    paddingHorizontal:Dimensions.get("window").width / 12,
+    paddingBottom:Dimensions.get("window").height / 12,
   },
+  password:{
+    flexDirection:"row",
+    alignItems:"center",
+    justifyContent:"flex-end",
+    paddingHorizontal:14,
+  },
+  icon:{
+    position:"absolute",
+    
+    paddingRight:Dimensions.get("window").width / 14,
+  }
 });

@@ -22,7 +22,7 @@ import React from "react";
 export default function Forgot({ navigation }) {
   const [username, onChangeUser] = React.useState("");
   const [password, onChangePass] = React.useState("");
-  const [check1, setCheck1] = React.useState(false);
+  const [validuser, setValidUser] = React.useState(false);
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.background}>
@@ -42,7 +42,7 @@ export default function Forgot({ navigation }) {
             value={username}
             placeholder="Email"
             placeholderTextColor="#B9B7B7"
-            keyboardType="email-address"
+            inputMode='email'
           />
         </ThemedView>
         <View style={styles.buttoncontainer}>
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "800",
     fontSize: 20,
-    marginLeft: 35,
+    marginLeft: Dimensions.get("window").width / 12 ,
     margin: 10,
   },
   buttoncontainer: {
@@ -185,8 +185,8 @@ const styles = StyleSheet.create({
   subtitle: {
     fontWeight: "500",
     fontSize: 14,
-    marginLeft: 35,
     alignSelf: "flex-start",
     marginTop: 40,
+    marginLeft: Dimensions.get("window").width / 12 ,
   },
 });
