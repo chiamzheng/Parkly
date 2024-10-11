@@ -44,7 +44,7 @@ export default function Login({ navigation }) {
             <Text style={styles.buttonText}>REGISTER</Text>
           </Pressable>
           <Pressable
-            onPress={() => Alert.alert("Button with adjusted color pressed")}
+            onPress={() => navigation.navigate("homepage")}
           >
             <Text style={styles.guest}>Continue as Guest</Text>
           </Pressable>
