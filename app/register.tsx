@@ -9,17 +9,27 @@ import {
   View,
   TextInput,
 } from "react-native";
-import { Dimensions } from "react-native";
-import { ThemedText } from "@/components/ThemedText";
+import { Dimensions, TouchableOpacity } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
-import { green } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
-import * as Animatable from "react-native-animatable";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import validator from 'validator';
 import React from "react";
 export default function Register({ navigation }) {
   const [username, onChangeUser] = React.useState("");
   const [password, onChangePass] = React.useState("");
   const [cfm, onChangeCfm] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+  const [showPassword1, setShowPassword1] = React.useState(false);
+    const toggleShowPassword1 = () => {
+      setShowPassword1(!showPassword1);
+  };
+  const [validEmail, setValidEmail] = React.useState(true);
+  const [validPassword, setValidPassword] = React.useState(true);
+  const [validcfm, setValidcfm] = React.useState(true);
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.background}>
@@ -32,31 +42,60 @@ export default function Register({ navigation }) {
         <ThemedView style={styles.stepContainer}>
           <Text style={styles.subtitle}>Enter Email</Text>
           <TextInput
-            style={styles.input}
+            style={validEmail?styles.input:styles.invalidinput}
             onChangeText={onChangeUser}
             value={username}
             placeholder="you@example.com"
             placeholderTextColor="#B9B7B7"
-            keyboardType="email-address"
+            inputMode="email"
           />
           <Text style={styles.subtitle}>Enter New Password</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangePass}
-            value={password}
-            placeholder="Enter 6 characters or more"
-            placeholderTextColor="#B9B7B7"
-            keyboardType="default"
-          />
+          <View style={styles.password}>
+            <TextInput
+              style={validPassword?styles.input:styles.invalidinput}
+              onChangeText={onChangePass}
+              value={password}
+              placeholder="Enter 6 characters or more"
+              placeholderTextColor="#B9B7B7"
+              inputMode="text"
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity style={styles.icon}>
+              <MaterialCommunityIcons
+                        name={showPassword ? 'eye-off' : 'eye'}
+                        size={24}
+                        color="#aaa"
+                        
+                        onPress={toggleShowPassword}
+              />
+            </TouchableOpacity>
+            
+          </View>
+          
           <Text style={styles.subtitle}>Confirm Password</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeCfm}
-            value={password}
-            placeholder="Enter 6 characters or more"
-            placeholderTextColor="#B9B7B7"
-            keyboardType="default"
-          />
+          <View style={styles.password}>
+            <TextInput
+              style={validcfm?styles.input:styles.invalidinput}
+              onChangeText={onChangeCfm}
+              value={cfm}
+              placeholder="Enter 6 characters or more"
+              placeholderTextColor="#B9B7B7"
+              inputMode="text"
+              secureTextEntry={!showPassword1}
+            />
+            <TouchableOpacity style={styles.icon}>
+              <MaterialCommunityIcons
+                        name={showPassword1 ? 'eye-off' : 'eye'}
+                        size={24}
+                        color="#aaa"
+                        
+                        onPress={toggleShowPassword1}
+              />
+            </TouchableOpacity>
+          </View>
+          <View>
+            <Text style={validcfm?styles.hide:styles.invalidmsg}>The passwords do not match.</Text>
+          </View>
         </ThemedView>
         <View style={styles.buttoncontainer}>
           <Pressable
@@ -70,7 +109,26 @@ export default function Register({ navigation }) {
           </Pressable>
           <Pressable
             style={styles.button}
-            onPress={() => Alert.alert("Button with adjusted color pressed")} // Navigate to Signin
+            onPress={() => {
+              if(validator.isEmail(username)){
+                setValidEmail(true);
+              }else{
+                  setValidEmail(false);
+                }
+              if(validator.isEmpty(password)){
+                setValidPassword(false)
+              }else{
+                setValidPassword(true);
+              }
+              if(password==cfm){
+                setValidcfm(true);
+              }else{
+                setValidcfm(false);
+              }
+
+            }
+            
+          }
           >
             <Text style={styles.buttonText}>Let's Go!</Text>
           </Pressable>
@@ -109,7 +167,7 @@ const styles = StyleSheet.create({
   titletext: {
     fontSize: Dimensions.get("window").width / 6,
     fontWeight: "800",
-    fontFamily: "Erica",
+    //fontFamily: "Erica",
   },
   button: {
     borderRadius: 40,
@@ -155,7 +213,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
   input: {
-    fontFamily: "Ubuntu",
+    //fontFamily: "Ubuntu",
     backgroundColor: "white",
     width: Dimensions.get("window").width / 1.2,
     height: 50,
@@ -165,7 +223,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     fontWeight: "800",
     color: "black",
-    marginBottom: 8,
+    marginBottom:8,
   },
   img: {
     height: 30,
@@ -174,14 +232,14 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "800",
     fontSize: 20,
-    marginLeft: 35,
+    marginLeft: Dimensions.get("window").width / 12,
     margin: 10,
     alignSelf: "flex-start",
   },
   subtitle: {
     fontWeight: "500",
     fontSize: 14,
-    marginLeft: 35,
+    marginLeft: Dimensions.get("window").width / 12,
     alignSelf: "flex-start",
   },
   buttoncontainer: {
@@ -189,4 +247,37 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     margin: 20,
   },
+  password:{
+    flexDirection:"row",
+    alignItems:"center",
+    justifyContent:"flex-end",
+    paddingHorizontal:14,
+    
+  },
+  icon:{
+    position:"absolute",
+    paddingBottom:8,
+    paddingRight:Dimensions.get("window").width / 14,
+  },
+  invalidinput: {
+    //fontFamily: "Ubuntu",
+    backgroundColor: "white",
+    width: Dimensions.get("window").width / 1.2,
+    height: 50,
+    borderRadius: 10,
+    paddingLeft: 20,
+    borderColor: "red",
+    borderWidth: 2,
+    fontWeight: "800",
+    color: "black",
+    marginBottom:20,
+  },
+  hide:{
+    display:'none',
+  },
+  invalidmsg:{
+    color:'red',
+    fontWeight:'800',
+    alignSelf:"center",
+  }
 });
