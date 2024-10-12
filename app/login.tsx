@@ -44,7 +44,7 @@ export default function Login({ navigation }) {
             <Text style={styles.buttonText}>REGISTER</Text>
           </Pressable>
           <Pressable
-            onPress={() => navigation.navigate("homepage")}
+            onPress={() => navigation.navigate("homepage")} // shiat how do you navigate,, am i supposed to edit a route TT
           >
             <Text style={styles.guest}>Continue as Guest</Text>
           </Pressable>
