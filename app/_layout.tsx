@@ -16,6 +16,7 @@ import Signin from "./signin";
 import Register from "./register";
 import Forgot from "./forgot";
 import EmailSent from "./emailsent";
+import Homepage from "./homepage";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -61,6 +62,11 @@ export default function RootLayout() {
       <Stack.Screen
         name="emailsent"
         component={EmailSent}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="homepage"
+        component={Homepage}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

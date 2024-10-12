@@ -16,6 +16,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import validator from 'validator';
 import React from "react";
+import Homepage from "./homepage";
 export default function Signin({ navigation }) {
   const [username, onChangeUser] = React.useState("");
   const [password, onChangePass] = React.useState("");
@@ -106,7 +107,10 @@ export default function Signin({ navigation }) {
               else{
                 setValidPassword(true);
               }
+              if(validPassword && validEmail){
+                navigation.navigate("homepage");
               }
+            }
             }
           >
             <Text style={styles.buttonText}>Let's Go!</Text>

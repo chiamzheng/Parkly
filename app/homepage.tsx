@@ -1,3 +1,4 @@
+import LocationSearchInterface from '@/components/LocationSearchInterface';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import MapView, {UrlTile} from 'react-native-maps';
@@ -5,6 +6,10 @@ import MapView, {UrlTile} from 'react-native-maps';
 export default function Homepage({navigation}) {
   return (
     <View style={styles.container}>
+      <LocationSearchInterface
+        style={styles.search}
+      />
+
       <MapView 
       style ={styles.map}
       initialRegion={{
@@ -38,5 +43,11 @@ const styles = StyleSheet.create({
   map: {
     width:'100%',
     height:'100%'
+  },
+
+  search: {
+    position: 'absolute',
+    top: 20,
+    zIndex: 1,
   }
 });
