@@ -1,3 +1,6 @@
+const mongoose = require("mongoose");
+const UserAccount = require("./userAccount") //OK????????? 
+
 const carparkReviewsSchema = new mongoose.Schema({
     carparkID: String,
     rating: Number,
@@ -5,6 +8,6 @@ const carparkReviewsSchema = new mongoose.Schema({
     reviewer: UserAccount,
 });
 
-const carparkReviews = mongoose.model('User', userAccountSchema);
+const carparkReviews = mongoose.model('User', carparkReviewsSchema);
 module.exports = carparkReviews; 
 

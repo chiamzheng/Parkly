@@ -1,0 +1,15 @@
+const { UserAccount } = require("../../models/userAccount.js");
+
+// creates and returns a model of User
+function createUser(email, username, password) {
+    const newUser = {
+        email: email,
+        username: username,
+        password: password,
+        bookmarkList: []
+    };
+
+    return newUser;
+}
+
+module.exports = { createUser };

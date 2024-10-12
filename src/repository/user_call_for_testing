@@ -1,0 +1,4 @@
+const userAccountRead = require("./retrieval and manipulation/readDatabase/userAccountRead.js")
+const userAccountWrite = require("./retrieval and manipulation/writeDatabase/userAccountWrite.js")
+
+console.log(userAccountWrite.addAccount('euhanglee@gmail.com', "lyh0805", "abcd1234"));
