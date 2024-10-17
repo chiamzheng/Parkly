@@ -20,6 +20,7 @@ import Settings from "./settings";
 import ChangeUsername from "./change_username";
 import ChangePassword from "./change_password";
 import SignOut from "./sign_out";
+import Homepage from "./homepage";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -85,6 +86,11 @@ export default function RootLayout() {
       <Stack.Screen
         name="sign_out"
         component={SignOut}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="homepage"
+        component={Homepage}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

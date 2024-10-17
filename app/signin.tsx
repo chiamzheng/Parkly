@@ -18,6 +18,7 @@ import validator from 'validator';
 import React from "react";
 export default function Signin({ navigation }: { navigation: any }) {
   const [username, onChangeUser] = React.useState("");
+  const [username, onChangeUser] = React.useState("");
   const [password, onChangePass] = React.useState("");
   const [check1, setCheck1] = React.useState(false);
   const [validEmail, setValidEmail] = React.useState(true);
@@ -106,7 +107,10 @@ export default function Signin({ navigation }: { navigation: any }) {
               else{
                 setValidPassword(true);
               }
+              if(validPassword && validEmail){
+                navigation.navigate("homepage");
               }
+            }
             }
           >
             <Text style={styles.buttonText}>Let's Go!</Text>
