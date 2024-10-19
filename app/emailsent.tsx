@@ -13,17 +13,17 @@ import {
   import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 
 
-  const censorEmail = (email) => {
+  const censorEmail = (email: any) => {
     const [localPart, domain] = email.split('@');
     if (localPart.length <= 3) {
-      return email; // If the local part is very short, don't over-censor
+      return email; // If the local part .is very short, don't over-censor
     }
     const censoredLocal = `${localPart.slice(0, 3)}***`;
     return `${censoredLocal}@${domain}`;
   };
 
 
-  export default function EmailSent({ route,navigation }) {
+  export default function EmailSent({ route,navigation }: { route: any; navigation: any }) {
     const { email } = route.params;
     return (
       <SafeAreaProvider>

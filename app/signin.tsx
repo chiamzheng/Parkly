@@ -16,8 +16,8 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import validator from 'validator';
 import React from "react";
-import Homepage from "./homepage";
-export default function Signin({ navigation }) {
+export default function Signin({ navigation }: { navigation: any }) {
+  const [username, onChangeUser] = React.useState("");
   const [username, onChangeUser] = React.useState("");
   const [password, onChangePass] = React.useState("");
   const [check1, setCheck1] = React.useState(false);
