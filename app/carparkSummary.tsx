@@ -142,15 +142,18 @@ export default function CarparkSummary() {
                     </Text>
 
                     <View style={[styles.nameContainer, {marginRight: 10}]}>
-                      <Pressable style={[styles.selectButton, {borderRadius: 15, width:60, justifyContent:"space-between"}]}>
+                      <Pressable style={[styles.selectButton, {flexDirection: 'row', borderRadius: 15, width:60}]}>
+                        <Image style={[styles.exit, {marginRight: 2, tintColor: 'white', width: 20, height: 20}]} source={require("../assets/images/taxi.png")}/>
                         <Text style={styles.buttonText}>Taxi</Text>
                       </Pressable>
 
-                      <Pressable style={[styles.selectButton, {borderRadius: 15, width:150, justifyContent:"space-between"}]}>
+                      <Pressable style={[styles.selectButton, {padding: 13, flexDirection: 'row', borderRadius: 15, width:150, justifyContent:"space-between"}]}>
+                        <Image style={[styles.exit, {tintColor: 'white', width: 20, height: 20}]} source={require("../assets/images/public-transport.png")}/>
                         <Text style={styles.buttonText}>Public Transport</Text>
                       </Pressable>
 
-                      <Pressable style={[styles.selectButton, {borderRadius: 15, width:60, justifyContent:"space-between"}]}>
+                      <Pressable style={[styles.selectButton, {flexDirection: 'row', borderRadius: 15, width:60}]}>
+                        <Image style={[styles.exit, {tintColor: 'white', width: 20, height: 20}]} source={require("../assets/images/walk.png")}/>
                         <Text style={styles.buttonText}>Walk</Text>
                       </Pressable>
                     </View>
