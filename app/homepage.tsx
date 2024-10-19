@@ -3,9 +3,12 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import MapView, {UrlTile} from 'react-native-maps';
 
+import CarparkSummary from './carparkSummary';
+
 export default function Homepage({navigation}) {
   return (
     <View style={styles.container}>
+
       <LocationSearchInterface
         style={styles.search}
       />
@@ -27,6 +30,11 @@ export default function Homepage({navigation}) {
           tileSize={256}
         />
       </MapView>
+
+      <View style={styles.carpark}>
+        <CarparkSummary/>
+      </View>
+      
       <StatusBar style="auto" />
     </View>
   );
@@ -49,5 +57,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 20,
     zIndex: 1,
-  }
+  },
+
+  carpark: {
+    position: 'absolute', 
+    top: 500,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
 });
