@@ -22,10 +22,12 @@ app.get('/carparkAvailability/:id', async (req, res) => {
 
         // Extract availability info
         const availability = carparkData.carpark_info[0].lots_available;
+        const totalLots = carparkData.carpark_info[0].total_lots;
 
         res.status(200).send({
             name: `Carpark ID ${id}`,
-            availability: availability
+            availability: availability,
+            capacity: totalLots
         });
     } catch (error) {
         console.error(error);
