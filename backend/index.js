@@ -34,6 +34,7 @@ app.get('/carparkAvailability/:id', async (req, res) => {
 });
 
 // GET endpoint to search for an address using OneMap API, locate x, y coordinates to pin destination
+// Note you need to convert to WGS84 longtitude n latitude
 app.get('/searchAddress/:query', async (req, res) => {
     const { query } = req.params;
 
@@ -63,12 +64,13 @@ app.get('/searchAddress/:query', async (req, res) => {
     }
 });
 
-//get carRoute from starting to destination (carpark)
+//get carRoute from starting to destination (carpark), takes in WGS84 longtitude and latitude
+//need to decode route geometry
 app.get('/carRoute/:start/:end', async (req, res) => {
     const { start, end } = req.params; // Extract start and end locations from URL parameters
 
     try {
-        const response = await axios.get(`https://www.onemap.gov.sg/api/common/route`, {
+        const response = await axios.get(`https://www.onemap.gov.sg/api/public/routingsvc/route`, {
           params: {
             start: start,
             end: end,
@@ -79,21 +81,25 @@ app.get('/carRoute/:start/:end', async (req, res) => {
           }
         });
 
-        // Check if routes were found
-        if (!response.data || response.data.routes.length === 0) {
-            return res.status(404).send({ message: 'No routes found' });
-        }
+    // Log the response to ensure we have the correct structure, can remove
+    console.log(response.data);
 
-        // Extract the relevant route information
-        const route = response.data.routes[0]; // Get the first route
-        const { routePath, totalDistance, totalTime } = route; // Destructure relevant data
+    // Check if the route data is present
+    if (response.data.status !== 0) {
+        return res.status(404).send({ message: 'No routes found' });
+    }
 
-        // Send back the route information
-        res.status(200).send({
-            routePath: routePath, // The path of the route (coordinates)
-            totalDistance: totalDistance, // Total distance of the route
-            totalTime: totalTime // Total time taken for the route
-        });
+    // Extract relevant data from the response
+    const { route_geometry, route_instructions, route_summary } = response.data;
+    const { total_time, total_distance } = route_summary;
+
+    // Send back the route information
+    res.status(200).send({
+        routeGeometry: route_geometry,   // The encoded geometry of the route
+        routeInstructions: route_instructions, // Step-by-step instructions
+        totalDistance: total_distance,   // Total distance of the route
+        totalTime: total_time            // Total time taken for the route
+    });
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: 'Error fetching route data' });
