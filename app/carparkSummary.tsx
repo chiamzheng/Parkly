@@ -1,11 +1,32 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Alert, Modal, StyleSheet, Text, Pressable, View, Image, ScrollView} from 'react-native';
+import axios from 'axios';
 import CarparkIcons from './carparkIcons';
 
 export default function CarparkSummary() {
   const [modalVisible, setModalVisible] = useState(false);
   const [bigModalVisible, setBigModalVisible] = useState(false);
+  const [carparkData, setCarparkData] = useState(null); // To store fetched carpark data
   const exitIcon = require("../assets/images/exit.png");
+
+
+  useEffect(() => {
+    if (modalVisible) {
+      // Call the API when the modal opens
+      fetchCarparkAvailability();
+    }
+  }, [modalVisible]);
+
+  //testing api fetch
+  const fetchCarparkAvailability = async () => {
+    try {
+      // note I am using an andriod emulator so i have to use 10.0.2.2 instead of localhost - jamie
+      const response = await axios.get('http://10.0.2.2:8083/carparkAvailability/JM23'); // Have to edit so that you pass in respective the carpark id
+      setCarparkData(response.data);
+    } catch (error) {
+      console.error('Error fetching carpark availability:', error);
+    }
+  };
 
   return (
     <View style={styles.centerView}>
@@ -36,8 +57,8 @@ export default function CarparkSummary() {
               <Text style={styles.name}>JM23</Text>
               <Text style={styles.name}>Capacity: 88%</Text>
             </View>
-
-            <Text style={styles.lot}>Lots Available: 40</Text>
+            
+            <Text style={styles.lot}>Lots Available: {carparkData ? carparkData.availability : 'Loading...'}</Text>
             <Text style={styles.rate}>Rate: $1.12/hour</Text>
 
             <CarparkIcons/>

@@ -1,7 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const app = express();
-const PORT = 8080;
+const PORT = 8083;
 
 app.use(express.json()); // To parse incoming JSON data
 
@@ -25,7 +25,7 @@ app.get('/carparkAvailability/:id', async (req, res) => {
         const totalLots = carparkData.carpark_info[0].total_lots;
 
         res.status(200).send({
-            name: `Carpark ID ${id}`,
+            name: `{id}`,
             availability: availability,
             capacity: totalLots
         });
