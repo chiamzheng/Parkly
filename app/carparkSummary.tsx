@@ -45,17 +45,24 @@ export default function CarparkSummary() {
           Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
-
+             
         <View style={styles.boxLayout}>
           <View style={styles.box}>
         
-            <Pressable style={styles.exitLayout} onPress={() =>setModalVisible(!modalVisible)}>
-              <Image source={exitIcon} style={styles.exit}/>
-            </Pressable>
+            <View style={[styles.nameContainer, {marginTop: 5}]}> 
+              <View style={{flexDirection:'row', marginRight: -5, alignItems: 'center'}}>
+                <Image style={[styles.exit, {width: 30, height: 30, tintColor: 'green'}]} source={require("../assets/images/location_icon.png")}/>
+                <Text style={[styles.name]}>JM23</Text>
+                {/*include the time here beside the name?*/}
+              </View>
 
-            <View style={styles.nameContainer}>
-              <Text style={styles.name}>JM23</Text>
-              <Text style={styles.name}>Capacity: 88%</Text>
+              <View style={{flexDirection:'row', marginRight: -5, alignItems: 'center'}}>
+                <Text style={[styles.name, {marginBottom: 0, marginRight: 10}]}> Capacity: <Text style={{color: 'green'}}> 88%</Text> </Text>
+                <Pressable onPress={() =>setModalVisible(!modalVisible)}>
+                  <Image source={exitIcon} style={styles.exit}/>
+                </Pressable>
+              </View>
+
             </View>
             
             <Text style={styles.lot}>Lots Available: {carparkData ? carparkData.availability : 'Loading...'}</Text>
@@ -63,7 +70,7 @@ export default function CarparkSummary() {
 
             <CarparkIcons/>
 
-            <View style={styles.nameContainer}>
+            <View style={[styles.nameContainer, {marginTop: 3}]}>
               <Pressable style={styles.selectButton}>
                 <Text style={styles.buttonText}>Select carpark</Text>
               </Pressable>
@@ -89,16 +96,13 @@ export default function CarparkSummary() {
       >
           <View style={styles.boxLayout}>
                 <View style={styles.bigbox}>
-                  <Pressable style={styles.exitLayout} onPress={() => {setBigModalVisible(!bigModalVisible), setModalVisible(!modalVisible)}}>
-                    <Image source={exitIcon} style={styles.exit}/>
-                  </Pressable>
-
                   <ScrollView>
                     <View style={{
                       flexDirection:'row', 
                       justifyContent: 'space-between', 
                       alignItems: 'center', 
-                      marginBottom: 15
+                      marginBottom: 15,
+                      marginTop: 15,
                     }}>
                       <View style={{flexDirection:'row', alignItems:'center'}}>
                         <Image style={[styles.exit, {width: 30, height:30}]} source={require("../assets/images/location_icon.png")}/>
@@ -107,8 +111,11 @@ export default function CarparkSummary() {
 
                       
                       <View style={{flexDirection:'row', marginRight: 10}}>
-                        <Image style={[styles.exit, {width: 30, height:30}]} source={require("../assets/images/notification_off.png")}/>
-                        <Image style={[styles.exit, {width: 30, height:30}]} source={require("../assets/images/bookmark_off.png")}/>
+                        <Image style={[styles.exit, {width: 30, height:30, marginRight:5}]} source={require("../assets/images/notification_off.png")}/>
+                        <Image style={[styles.exit, {width: 30, height:30, marginRight:10}]} source={require("../assets/images/bookmark_off.png")}/>
+                        <Pressable onPress={() => {setBigModalVisible(!bigModalVisible), setModalVisible(!modalVisible)}}>
+                          <Image source={require("../assets/images/return.png")} style={[styles.exit, {width: 30,height: 30}]}/>
+                        </Pressable>
                       </View>
                     </View>
 
@@ -191,14 +198,14 @@ export default function CarparkSummary() {
 
 const styles = StyleSheet.create({
   reviewBox: {
-    width: 270,
+    width: 280,
     height: 200,
     borderRadius: 20,
     borderColor: "black",
     borderWidth: 2,
     alignSelf: 'center',
     marginBottom: 20,
-    marginRight: 10,
+    marginTop: 5,
   },
   buttonText: {
     color: 'white',
@@ -223,9 +230,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
   },    
-  exitLayout: {
-    alignSelf: 'flex-end',
-  },
   exit: {
     width: 23,
     height: 23,
@@ -293,7 +297,6 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5,
   },
   modalText: {
     marginBottom: 15,
@@ -302,6 +305,7 @@ const styles = StyleSheet.create({
   nameContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignContent: 'center',
     marginBottom: 10,
   },
 });
