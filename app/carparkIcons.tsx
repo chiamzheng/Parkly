@@ -24,7 +24,7 @@ const ControlledTooltip: React.FC<TooltipProps> = (props) => {
     );
   };
 
-export default function CarparkIcons({flexDirection='row', alignItems='center', width=30, height=30}) {
+export default function CarparkIcons({flexDirection='row', alignItems='center', width=30, height=30, tooltipEnabled = true}) {
     const circlewidth = width + 10;
     const circleheight = height + 10;
 
@@ -32,39 +32,67 @@ export default function CarparkIcons({flexDirection='row', alignItems='center', 
         <View style={[style.aligncircle, { flexDirection: flexDirection as 'row', alignItems: alignItems as 'center' }]}>
 
             <View style={[style.circle, {width: circlewidth, height: circleheight}]}>
-                <ControlledTooltip popover={<Text>Carpark Type</Text>}>
+                {tooltipEnabled ? (
+                    <ControlledTooltip popover={<Text>Carpark Type</Text>}>
+                        <Image resizeMode='contain' style={{width: width, height: height}} source={require("../assets/images/car-park-type.png")}/>
+                    </ControlledTooltip>
+                ) : (
                     <Image resizeMode='contain' style={{width: width, height: height}} source={require("../assets/images/car-park-type.png")}/>
-                </ControlledTooltip>
+                )}
             </View>
-              <View style={[style.circle, {width: circlewidth, height: circleheight}]}>
-                <ControlledTooltip popover={<Text>Payment System</Text>}>
+            <View style={[style.circle, {width: circlewidth, height: circleheight}]}>
+                {tooltipEnabled ? (
+                    <ControlledTooltip popover={<Text>Payment System</Text>}>
+                        <Image resizeMode='contain' style={{width: width, height: height}} source={require("../assets/images/parking-system.png")}/>
+                    </ControlledTooltip>
+                ) : (
                     <Image resizeMode='contain' style={{width: width, height: height}} source={require("../assets/images/parking-system.png")}/>
-                </ControlledTooltip>
+                )}
             </View>
-              <View style={[style.circle, {width: circlewidth, height: circleheight}]}>
-                <ControlledTooltip popover={<Text>Night Parking</Text>}>
+            <View style={[style.circle, {width: circlewidth, height: circleheight}]}>
+                {tooltipEnabled ? (
+                    <ControlledTooltip popover={<Text>Night Parking</Text>}>
+                        <Image resizeMode='contain' style={{width: width, height: height}} source={require("../assets/images/night-parking.png")}/>
+                    </ControlledTooltip>
+                ) : (
                     <Image resizeMode='contain' style={{width: width, height: height}} source={require("../assets/images/night-parking.png")}/>
-                </ControlledTooltip>
+                )}
             </View>
             <View style={[style.circle, {backgroundColor: '#DF6C70'}]}>
-                <ControlledTooltip popover={<Text>Basement Parking</Text>}>
+                {tooltipEnabled ? (
+                    <ControlledTooltip popover={<Text>Basement Parking</Text>}>
+                        <Image resizeMode='contain' style={{width: width, height: height}} source={require("../assets/images/basement.png")}/>
+                    </ControlledTooltip>
+                ) : (
                     <Image resizeMode='contain' style={{width: width, height: height}} source={require("../assets/images/basement.png")}/>
-                </ControlledTooltip>
+                )}
             </View>
-              <View style={[style.circle, {width: circlewidth, height: circleheight}]}>
-                <ControlledTooltip popover={<Text>Gantry Height</Text>}>
+            <View style={[style.circle, {width: circlewidth, height: circleheight}]}>
+                {tooltipEnabled ? (
+                    <ControlledTooltip popover={<Text>Gantry Height</Text>}>
+                        <Image resizeMode='contain' style={{width: width, height: height}} source={require("../assets/images/gantry-height.png")}/>
+                    </ControlledTooltip>
+                ) : (
                     <Image resizeMode='contain' style={{width: width, height: height}} source={require("../assets/images/gantry-height.png")}/>
-                </ControlledTooltip>
+                )}
             </View>
             <View style={[style.circle, {backgroundColor: '#DF6C70'}]}>
-                <ControlledTooltip popover={<Text>Short Term Parking</Text>}>
+                {tooltipEnabled ? (
+                    <ControlledTooltip popover={<Text>Short Term Parking</Text>}>
+                        <Image resizeMode='contain' style={{width: width, height: height}} source={require("../assets/images/short-term-parking.png")}/>
+                    </ControlledTooltip>
+                ) : (
                     <Image resizeMode='contain' style={{width: width, height: height}} source={require("../assets/images/short-term-parking.png")}/>
-                </ControlledTooltip>
+                )}
             </View>
-              <View style={[style.circle, {width: circlewidth, height: circleheight}]}>
-                <ControlledTooltip popover={<Text>Free Parking</Text>}>
+            <View style={[style.circle, {width: circlewidth, height: circleheight}]}>
+                {tooltipEnabled ? (
+                    <ControlledTooltip popover={<Text>Free Parking</Text>}>
+                        <Image resizeMode='contain' style={{width: width, height: height}} source={require("../assets/images/free-parking.png")}/>
+                    </ControlledTooltip>
+                ) : (
                     <Image resizeMode='contain' style={{width: width, height: height}} source={require("../assets/images/free-parking.png")}/>
-                </ControlledTooltip>
+                )}
             </View>
 
         </View>

@@ -137,6 +137,7 @@ export default function CarparkSummary() {
                         alignItems='flex-start' 
                         width={40} 
                         height={40}
+                        tooltipEnabled={false}
                       />
 
                     <View style={{marginLeft: 10}}>
