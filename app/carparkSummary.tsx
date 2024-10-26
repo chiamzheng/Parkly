@@ -50,14 +50,14 @@ export default function CarparkSummary() {
           <View style={styles.box}>
         
             <View style={[styles.nameContainer, {marginTop: 5}]}> 
-              <View style={{flexDirection:'row', marginRight: -5, alignItems: 'center'}}>
+              <View style={{flexDirection:'row', alignItems: 'center'}}>
                 <Image style={[styles.exit, {width: 30, height: 30, tintColor: 'green'}]} source={require("../assets/images/location_icon.png")}/>
                 <Text style={[styles.name]}>JM23</Text>
                 {/*include the time here beside the name?*/}
               </View>
 
-              <View style={{flexDirection:'row', marginRight: -5, alignItems: 'center'}}>
-                <Text style={[styles.name, {marginBottom: 0, marginRight: 10}]}> Capacity: <Text style={{color: 'green'}}> 88%</Text> </Text>
+              <View style={{flexDirection:'row', alignItems: 'center'}}>
+                <Text style={[styles.name, {marginBottom: 0, marginRight: 4}]}> Capacity: <Text style={{color: 'green'}}> 88%</Text> </Text>
                 <Pressable onPress={() =>setModalVisible(!modalVisible)}>
                   <Image source={exitIcon} style={styles.exit}/>
                 </Pressable>
