@@ -43,4 +43,4 @@ async function read_bookmark_list ( email ) {
 }
 
 
-module.exports = { read_email, read_password, read_bookmark_list }; 
+module.exports = { find_document, read_email, read_password, read_bookmark_list }; 

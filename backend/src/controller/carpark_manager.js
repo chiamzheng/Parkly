@@ -1,10 +1,15 @@
+<<<<<<< Updated upstream:src/controller/carpark_manager.js
 //import axios from 'axios';
 const axios = require("axios")
+=======
+ 
+>>>>>>> Stashed changes:backend/src/controller/carpark_manager.js
 const CarparkWrite = require("../repository/database_access/write database/carpark_write.js");
 const CarparkRead = require("../repository/database_access/read database/carpark_read.js");
 const { get_collection } = require("../repository/database_access/database_tools.js");
 const { wgs84ToSvy21 } = require("svy21");
 
+<<<<<<< Updated upstream:src/controller/carpark_manager.js
 
 
 async function get_available_lots(car_park_id){
@@ -55,10 +60,21 @@ async function fetch_suggestions(search) {
 
 // returns an array of reviews
 async function fetch_reviews(car_park_id) {
+=======
+function calculateDistance(x1, y1, x2, y2) {
+    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+}
+
+
+
+// returns an array of reviews
+async function display_reviews(car_park_id) {
+>>>>>>> Stashed changes:backend/src/controller/carpark_manager.js
     reviews = await CarparkRead.read_reviews(car_park_id);
     return reviews;
 }
 
+<<<<<<< Updated upstream:src/controller/carpark_manager.js
 // utility function
 function calculate_distance(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
@@ -70,6 +86,15 @@ function calculate_distance(x1, y1, x2, y2) {
 async function fetch_carparks_within_radius(user_destination, radius) {
 
     // convert WGS84 to SVY21
+=======
+
+
+// all distances in meters
+// user_destination in WGS84, will be converted to SVY21 in the function
+async function fetch_nearby_carparks(user_destination, radius) {
+
+    // convert latitude longitude to svy21 format i.e. x, y
+>>>>>>> Stashed changes:backend/src/controller/carpark_manager.js
     user_destination = wgs84ToSvy21(user_destination[0], user_destination[1]);
     console.log(user_destination);
 
@@ -102,9 +127,15 @@ async function fetch_carparks_within_radius(user_destination, radius) {
         if (carpark_x >= minX && carpark_y >= minY && carpark_x <= maxX && carpark_y <= maxY) {
 
             // calculate the euclidean distance between destination and carpark
+<<<<<<< Updated upstream:src/controller/carpark_manager.js
             distance = calculate_distance(x, y, carpark_x, carpark_y);
 
             // if it is within the radius, add the carpark car_park_id to nearby carparks array
+=======
+            distance = calculateDistance(x, y, carpark_x, carpark_y);
+
+            // if it is within the radius, add the carpark id to nearby carparks array
+>>>>>>> Stashed changes:backend/src/controller/carpark_manager.js
             if (distance <= radius) {
                 nearby_carparks.push(car_park_id);
             }
@@ -119,9 +150,15 @@ async function fetch_carparks_within_radius(user_destination, radius) {
 }
 
 // test function
+<<<<<<< Updated upstream:src/controller/carpark_manager.js
 // const user_destination = [1.321572, 103.884496] //wgs82
 // const user_destination = [30000, 30000]; //svy21
 // fetch_carparks_within_radius(user_destination, 500);
 
 
 module.exports = { get_available_lots, get_capacity };
+=======
+const user_destination = [1.321572, 103.884496]
+// const user_destination = [30000, 30000];
+fetch_nearby_carparks(user_destination, 500);
+>>>>>>> Stashed changes:backend/src/controller/carpark_manager.js
