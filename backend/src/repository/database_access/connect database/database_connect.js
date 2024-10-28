@@ -15,15 +15,4 @@ async function close_db() {
   console.log("Disconnected from MongoDB!");
 }
 
-// // get database from cluster
-// function get_database(db_name) {
-//     return client.db(db_name);
-// }
-
-// // get collection from the database
-// function get_collection(collection_name) {
-//     return client.db("Parkly").collection(collection_name);
-// }
-
-
 module.exports = { connect_db, close_db, client };

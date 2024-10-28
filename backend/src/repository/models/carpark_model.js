@@ -7,6 +7,7 @@ const carpark_schema = new mongoose.Schema({
     carpark_id: { type: String, required: true },
     location: { type: String, required: true},
     hourly_rate: { type: Number },
+    average_review: { type: Number, required: true },
     reviews: [carpark_review_schema]
 });
 

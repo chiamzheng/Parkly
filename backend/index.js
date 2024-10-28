@@ -1,7 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const app = express();
-const PORT = 8080;
+const PORT = 8083;
 
 app.use(express.json()); // To parse incoming JSON data
 
@@ -25,7 +25,7 @@ app.get('/carparkAvailability/:id', async (req, res) => {
         const totalLots = carparkData.carpark_info[0].total_lots;
 
         res.status(200).send({
-            name: `Carpark ID ${id}`,
+            name: id,
             availability: availability,
             capacity: totalLots
         });
@@ -50,16 +50,21 @@ app.get('/searchAddress/:query', async (req, res) => {
             }
         });
 
-        const { ADDRESS, POSTAL, X, Y } = response.data.results[0];
+        console.log(response.data);
 
-        res.status(200).send({
-            Address: ADDRESS,
-            Postal: POSTAL,
-            X: X,
-            Y: Y
-        });
+        if (response.data.results && response.data.results.length > 0) {
+            const results = response.data.results.map(item => ({
+                Address: item.ADDRESS,
+                Postal: item.POSTAL,
+                X: item.X,
+                Y: item.Y
+            }));
 
-
+            res.status(200).send(results); // Send all results
+        } else {
+            res.status(404).send({ message: 'No results found' });
+        }
+        
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: 'Error searching for address' });
@@ -79,7 +84,47 @@ app.get('/carRoute/:start/:end', async (req, res) => {
             routeType: 'drive'
           },
           headers: {
-            'Authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTY5YTNhNmM4NjAwZGM0ZDEwNDc1NDliMzk2NmRkOCIsImlzcyI6Imh0dHA6Ly9pbnRlcm5hbC1hbGItb20tcHJkZXppdC1pdC1uZXctMTYzMzc5OTU0Mi5hcC1zb3V0aGVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hcGkvdjIvdXNlci9wYXNzd29yZCIsImlhdCI6MTcyOTM0ODQ0MSwiZXhwIjoxNzI5NjA3NjQxLCJuYmYiOjE3MjkzNDg0NDEsImp0aSI6Ik91Q1ZOaml4TThUTjBvTEYiLCJ1c2VyX2lkIjo0NDU4LCJmb3JldmVyIjpmYWxzZX0.tLt8NBnYogZxkD0aVQMtnhIm7jwXP2bj5Bfff50dY5A' // every 3 days
+            'Authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vaW50ZXJuYWwtYWxiLW9tLXByZGV6aXQtaXQtbmV3LTE2MzM3OTk1NDIuYXAtc291dGhlYXN0LTEuZWxiLmFtYXpvbmF3cy5jb20vYXBpL3YyL3VzZXIvcGFzc3dvcmQiLCJpYXQiOjE3Mjk4MzQzNDQsImV4cCI6MTczMDA5MzU0NCwibmJmIjoxNzI5ODM0MzQ0LCJqdGkiOiJhdTBsNnhEUFVXTHMyaVNKIiwic3ViIjoiMTE2OWEzYTZjODYwMGRjNGQxMDQ3NTQ5YjM5NjZkZDgiLCJ1c2VyX2lkIjo0NDU4LCJmb3JldmVyIjpmYWxzZX0.gq23ZZ4FdoK4G6Xgqft1DGT0f_upVYiflYbyT2lJpaM' // every 3 days
+          }
+        });
+
+    // Log the response to ensure we have the correct structure, can remove
+    console.log(response.data);
+
+    // Check if the route data is present
+    if (response.data.status !== 0) {
+        return res.status(404).send({ message: 'No routes found' });
+    }
+
+    // Extract relevant data from the response
+    const { route_geometry, route_instructions, route_summary } = response.data;
+    const { total_time, total_distance } = route_summary;
+
+    // Send back the route information
+    res.status(200).send({
+        routeGeometry: route_geometry,   // The encoded geometry of the route
+        routeInstructions: route_instructions, // Step-by-step instructions
+        totalDistance: total_distance,   // Total distance of the route
+        totalTime: total_time            // Total time taken for the route
+    });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Error fetching route data' });
+    }
+});
+
+app.get('/walkRoute/:start/:end', async (req, res) => {
+    const { start, end } = req.params; // Extract start and end locations from URL parameters
+
+    try {
+        const response = await axios.get(`https://www.onemap.gov.sg/api/public/routingsvc/route`, {
+          params: {
+            start: start,
+            end: end,
+            routeType: 'walk'
+          },
+          headers: {
+            'Authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vaW50ZXJuYWwtYWxiLW9tLXByZGV6aXQtaXQtbmV3LTE2MzM3OTk1NDIuYXAtc291dGhlYXN0LTEuZWxiLmFtYXpvbmF3cy5jb20vYXBpL3YyL3VzZXIvcGFzc3dvcmQiLCJpYXQiOjE3Mjk4MzQzNDQsImV4cCI6MTczMDA5MzU0NCwibmJmIjoxNzI5ODM0MzQ0LCJqdGkiOiJhdTBsNnhEUFVXTHMyaVNKIiwic3ViIjoiMTE2OWEzYTZjODYwMGRjNGQxMDQ3NTQ5YjM5NjZkZDgiLCJ1c2VyX2lkIjo0NDU4LCJmb3JldmVyIjpmYWxzZX0.gq23ZZ4FdoK4G6Xgqft1DGT0f_upVYiflYbyT2lJpaM' // every 3 days
           }
         });
 

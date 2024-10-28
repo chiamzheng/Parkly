@@ -1,11 +1,32 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Alert, Modal, StyleSheet, Text, Pressable, View, Image, ScrollView} from 'react-native';
+import axios from 'axios';
 import CarparkIcons from './carparkIcons';
 
 export default function CarparkSummary() {
   const [modalVisible, setModalVisible] = useState(false);
   const [bigModalVisible, setBigModalVisible] = useState(false);
+  const [carparkData, setCarparkData] = useState(null); // To store fetched carpark data
   const exitIcon = require("../assets/images/exit.png");
+
+
+  useEffect(() => {
+    if (modalVisible) {
+      // Call the API when the modal opens
+      fetchCarparkAvailability();
+    }
+  }, [modalVisible]);
+
+  //testing api fetch
+  const fetchCarparkAvailability = async () => {
+    try {
+      // note I am using an andriod emulator so i have to use 10.0.2.2 instead of localhost - jamie
+      const response = await axios.get('http://10.0.2.2:8083/carparkAvailability/JM23'); // Have to edit so that you pass in respective the carpark id
+      setCarparkData(response.data);
+    } catch (error) {
+      console.error('Error fetching carpark availability:', error);
+    }
+  };
 
   return (
     <View style={styles.centerView}>
@@ -24,25 +45,32 @@ export default function CarparkSummary() {
           Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
-
+             
         <View style={styles.boxLayout}>
           <View style={styles.box}>
         
-            <Pressable style={styles.exitLayout} onPress={() =>setModalVisible(!modalVisible)}>
-              <Image source={exitIcon} style={styles.exit}/>
-            </Pressable>
+            <View style={[styles.nameContainer, {marginTop: 5}]}> 
+              <View style={{flexDirection:'row', alignItems: 'center'}}>
+                <Image style={[styles.exit, {width: 30, height: 30, tintColor: 'green'}]} source={require("../assets/images/location_icon.png")}/>
+                <Text style={[styles.name]}>JM23</Text>
+                {/*include the time here beside the name?*/}
+              </View>
 
-            <View style={styles.nameContainer}>
-              <Text style={styles.name}>JM23</Text>
-              <Text style={styles.name}>Capacity: 88%</Text>
+              <View style={{flexDirection:'row', alignItems: 'center'}}>
+                <Text style={[styles.name, {marginBottom: 0, marginRight: 4}]}> Capacity: <Text style={{color: 'green'}}> 88%</Text> </Text>
+                <Pressable onPress={() =>setModalVisible(!modalVisible)}>
+                  <Image source={exitIcon} style={styles.exit}/>
+                </Pressable>
+              </View>
+
             </View>
-
-            <Text style={styles.lot}>Lots Available: 40</Text>
+            
+            <Text style={styles.lot}>Lots Available: {carparkData ? carparkData.availability : 'Loading...'}</Text>
             <Text style={styles.rate}>Rate: $1.12/hour</Text>
 
             <CarparkIcons/>
 
-            <View style={styles.nameContainer}>
+            <View style={[styles.nameContainer, {marginTop: 3}]}>
               <Pressable style={styles.selectButton}>
                 <Text style={styles.buttonText}>Select carpark</Text>
               </Pressable>
@@ -68,16 +96,13 @@ export default function CarparkSummary() {
       >
           <View style={styles.boxLayout}>
                 <View style={styles.bigbox}>
-                  <Pressable style={styles.exitLayout} onPress={() => {setBigModalVisible(!bigModalVisible), setModalVisible(!modalVisible)}}>
-                    <Image source={exitIcon} style={styles.exit}/>
-                  </Pressable>
-
                   <ScrollView>
                     <View style={{
                       flexDirection:'row', 
                       justifyContent: 'space-between', 
                       alignItems: 'center', 
-                      marginBottom: 15
+                      marginBottom: 15,
+                      marginTop: 15,
                     }}>
                       <View style={{flexDirection:'row', alignItems:'center'}}>
                         <Image style={[styles.exit, {width: 30, height:30}]} source={require("../assets/images/location_icon.png")}/>
@@ -86,8 +111,11 @@ export default function CarparkSummary() {
 
                       
                       <View style={{flexDirection:'row', marginRight: 10}}>
-                        <Image style={[styles.exit, {width: 30, height:30}]} source={require("../assets/images/notification_off.png")}/>
-                        <Image style={[styles.exit, {width: 30, height:30}]} source={require("../assets/images/bookmark_off.png")}/>
+                        <Image style={[styles.exit, {width: 30, height:30, marginRight:5}]} source={require("../assets/images/notification_off.png")}/>
+                        <Image style={[styles.exit, {width: 30, height:30, marginRight:10}]} source={require("../assets/images/bookmark_off.png")}/>
+                        <Pressable onPress={() => {setBigModalVisible(!bigModalVisible), setModalVisible(!modalVisible)}}>
+                          <Image source={require("../assets/images/return.png")} style={[styles.exit, {width: 30,height: 30}]}/>
+                        </Pressable>
                       </View>
                     </View>
 
@@ -109,6 +137,7 @@ export default function CarparkSummary() {
                         alignItems='flex-start' 
                         width={40} 
                         height={40}
+                        tooltipEnabled={false}
                       />
 
                     <View style={{marginLeft: 10}}>
@@ -170,14 +199,14 @@ export default function CarparkSummary() {
 
 const styles = StyleSheet.create({
   reviewBox: {
-    width: 270,
+    width: 280,
     height: 200,
     borderRadius: 20,
     borderColor: "black",
     borderWidth: 2,
     alignSelf: 'center',
     marginBottom: 20,
-    marginRight: 10,
+    marginTop: 5,
   },
   buttonText: {
     color: 'white',
@@ -202,9 +231,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
   },    
-  exitLayout: {
-    alignSelf: 'flex-end',
-  },
   exit: {
     width: 23,
     height: 23,
@@ -272,7 +298,6 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5,
   },
   modalText: {
     marginBottom: 15,
@@ -281,6 +306,7 @@ const styles = StyleSheet.create({
   nameContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignContent: 'center',
     marginBottom: 10,
   },
 });

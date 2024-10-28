@@ -14,13 +14,15 @@ const LocationSearchInterface = (style: any) => {
     setBookmarksVisible(!bookmarksVisible);
   };
 
+  // Handle logout action
+  const handleLogout = () => {
+    alert('Logout button pressed');
+    // Add your logout logic here, like clearing user data or redirecting to login screen
+  };
 
   // Fetching data from the API
   const fetchData = async () => {
     try {
-      // const response = await fetch('https://api.example.com/data'); // Replace with your API endpoint
-      // const json = await response.json();
-      // setData(json);
       setData({});
       setLoading(false);
     } catch (error) {
@@ -57,27 +59,17 @@ const LocationSearchInterface = (style: any) => {
         <TouchableOpacity onPress={() => alert('Settings button pressed')} style={styles.iconButton}>
           <Icon name="settings-outline" size={24} style={styles.icon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => alert('Share button pressed')} style={styles.iconButton}>
-          <Icon name="share-outline" size={24} style={styles.icon} />
+        <TouchableOpacity onPress={handleLogout} style={styles.iconButton}>
+          <Icon name="log-out-outline" size={24} style={styles.icon} />
         </TouchableOpacity>
       </View>
 
-      {/* Start and End Point Inputs */}
+      {/* Destination Input */}
       <View style={styles.inputContainer}>
-        <View style={styles.inputRow}>
-          <Icon name="location-outline" size={24} color="blue" />
-          <TextInput 
-            placeholder="Start Point" 
-            style={styles.input} 
-          />
-        </View>
-
-        <View style={styles.separator} />
-
         <View style={styles.inputRow}>
           <Icon name="location-outline" size={24} color="red" />
           <TextInput 
-            placeholder="End Point" 
+            placeholder="Enter Destination" 
             style={styles.input} 
           />
         </View>
@@ -102,7 +94,6 @@ const LocationSearchInterface = (style: any) => {
         </View>
       </Modal>
     </View>
-
   );
 };
 
@@ -147,17 +138,11 @@ const styles = StyleSheet.create({
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
   },
   input: {
     flex: 1,
     fontSize: 16,
     marginLeft: 10,
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#E0E0E0',
-    marginVertical: 10,
   },
   goButton: {
     marginTop: 20,
@@ -188,5 +173,6 @@ const styles = StyleSheet.create({
   },
 });
 
-
 export default LocationSearchInterface;
+
+
