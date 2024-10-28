@@ -25,7 +25,7 @@ app.get('/carparkAvailability/:id', async (req, res) => {
         const totalLots = carparkData.carpark_info[0].total_lots;
 
         res.status(200).send({
-            name: `{id}`,
+            name: id,
             availability: availability,
             capacity: totalLots
         });
@@ -50,16 +50,21 @@ app.get('/searchAddress/:query', async (req, res) => {
             }
         });
 
-        const { ADDRESS, POSTAL, X, Y } = response.data.results[0];
+        console.log(response.data);
 
-        res.status(200).send({
-            Address: ADDRESS,
-            Postal: POSTAL,
-            X: X,
-            Y: Y
-        });
+        if (response.data.results && response.data.results.length > 0) {
+            const results = response.data.results.map(item => ({
+                Address: item.ADDRESS,
+                Postal: item.POSTAL,
+                X: item.X,
+                Y: item.Y
+            }));
 
-
+            res.status(200).send(results); // Send all results
+        } else {
+            res.status(404).send({ message: 'No results found' });
+        }
+        
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: 'Error searching for address' });
