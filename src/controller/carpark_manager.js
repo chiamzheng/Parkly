@@ -1,8 +1,15 @@
-import axios from 'axios';
+//import axios from 'axios';
+const axios = require("axios")
+const CarparkWrite = require("../repository/database_access/write database/carpark_write.js");
+const CarparkRead = require("../repository/database_access/read database/carpark_read.js");
+const { get_collection } = require("../repository/database_access/database_tools.js");
+const { wgs84ToSvy21 } = require("svy21");
 
-async function getAvailableLots(id){
+
+
+async function get_available_lots(car_park_id){
     try {
-        const response = await axios.get(`http://localhost:8083/carparkAvailability/${id}`);
+        const response = await axios.get(`http://localhost:8083/carparkAvailability/${car_park_id}`);
         return response.data.availability;
         } catch (error) {
         console.error("Error fetching carpark availability:", error);
@@ -10,11 +17,13 @@ async function getAvailableLots(id){
     }
 };
 
-async function getCapacity(id){
+
+
+async function get_capacity(car_park_id){
     try {
-        const response = await axios.get(`http://localhost:8083/carparkAvailability/${id}`);
+        const response = await axios.get(`http://localhost:8083/carparkAvailability/${car_park_id}`);
         const totalLots = response.data.capacity
-        const capacity = (await getAvailableLots(id)/totalLots)*100
+        const capacity = (await get_available_lots(car_park_id)/totalLots)*100
         return capacity;
         } catch (error) {
         console.error("Error fetching carpark availability:", error);
@@ -22,7 +31,10 @@ async function getCapacity(id){
     }
 };
 
-async function fetchSuggestions(search) {
+get_available_lots("ACM")
+// get_capacity("ACM")
+
+async function fetch_suggestions(search) {
     try {
         const response = await axios.get(`/searchAddress/${search}`);
         const suggestionsData = response.data;
@@ -31,10 +43,85 @@ async function fetchSuggestions(search) {
         return suggestions; // address of first 5 closest matches
     } catch (error) {
         console.error('Error fetching suggestions:', error);
-        setSuggestions([]);
+        set_suggestions([]);
     }
 }
 
 //address and features of carpark can be found using read_location under carpark_read
 
-export { getAvailableLots, getCapacity };
+
+
+// Yue Hang's part
+
+// returns an array of reviews
+async function fetch_reviews(car_park_id) {
+    reviews = await CarparkRead.read_reviews(car_park_id);
+    return reviews;
+}
+
+// utility function
+function calculate_distance(x1, y1, x2, y2) {
+    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+}
+
+// gets all carparks within a set radius
+// all distances in meters
+// user_destination of type array in WGS84 (lat, long), will be converted to SVY21 in the function (x, y)
+async function fetch_carparks_within_radius(user_destination, radius) {
+
+    // convert WGS84 to SVY21
+    user_destination = wgs84ToSvy21(user_destination[0], user_destination[1]);
+    console.log(user_destination);
+
+    x = user_destination[0];
+    y = user_destination[1];
+
+    // get all the carparks in the collection
+    const all_carparks = await get_collection("carparks").find({});
+
+    // initialize nearby carparks array
+    const nearby_carparks = [];
+
+    // define the boundaries where any carpark outside of the boundary is considered out of bounds, so we don't waste resources calculating the distances
+    const minX = x - radius
+    const maxX = x + radius
+    const minY = y - radius
+    const maxY = y + radius
+
+    console.log(minX, minY, maxX, maxY)
+
+    // iterate through all carparks in the collection "carparks" ,filter out carparks that are out of bound
+    await all_carparks.forEach(carpark => {
+
+        // initializing the x and y coordinates of carpark
+        car_park_id = carpark.car_park_id;
+        carpark_x = carpark.x_coordinate;
+        carpark_y = carpark.y_coordinate;
+
+        // if carpark is in the boundary
+        if (carpark_x >= minX && carpark_y >= minY && carpark_x <= maxX && carpark_y <= maxY) {
+
+            // calculate the euclidean distance between destination and carpark
+            distance = calculate_distance(x, y, carpark_x, carpark_y);
+
+            // if it is within the radius, add the carpark car_park_id to nearby carparks array
+            if (distance <= radius) {
+                nearby_carparks.push(car_park_id);
+            }
+        }
+
+        // carpark is out of the radius
+        // do nothing
+    })
+
+    console.log(`carparks within ${radius/1000}km of user's entered destination is ${nearby_carparks}`);
+    return nearby_carparks;
+}
+
+// test function
+// const user_destination = [1.321572, 103.884496] //wgs82
+// const user_destination = [30000, 30000]; //svy21
+// fetch_carparks_within_radius(user_destination, 500);
+
+
+module.exports = { get_available_lots, get_capacity };

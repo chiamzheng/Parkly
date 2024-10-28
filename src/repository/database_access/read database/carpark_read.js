@@ -31,7 +31,6 @@ async function read_location ( carpark_id ) {
     return location;
 }
 
-
 async function read_hourly_rate ( carpark_id ) {
 
     const document = await find_document( carpark_id );
