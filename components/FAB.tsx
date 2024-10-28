@@ -5,12 +5,38 @@ import Animated, {
     withTiming,
   } from 'react-native-reanimated';
 import { StyleSheet, View, Pressable, Image,Modal,Alert,Text } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
+import { SelectCountry } from 'react-native-element-dropdown';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import React from "react";
+import CarparkIcons from '../app/carparkIcons';
 const exitIcon = require("../assets/images/exit.png");
 const OFFSET = 60; // Distance to move FABs when expanded
-
+const radiusDropdown = [
+  {
+    value: '100',
+    label: '100m',
+  },
+  {
+    value: '200',
+    label: '200m',
+  },
+  {
+    value: '500',
+    label: '500m',
+  },
+  {
+    value: '1000',
+    label: '1 Km',
+  },
+  {
+    value: '2000',
+    label: '2 Km',
+  },
+  {
+    value: '5000',
+    label: '5 Km',
+  },
+];
 const FloatingActionButton = ({ isExpanded, index, imgsrc,setModalVisible,modalVisible }) => {
     const animatedStyles = useAnimatedStyle(() => {
     const translateY = isExpanded.value ? -OFFSET * index : 0; // Move FAB up when expanded
@@ -32,39 +58,49 @@ const FloatingActionButton = ({ isExpanded, index, imgsrc,setModalVisible,modalV
 };
   
 export default function FAB() {
-    const [time, setTime] = React.useState(new Date());
-    const [time1, setTime1] = React.useState(new Date());
-    const [timeVis, setTimeVis] = React.useState(false); 
-    const [timeVis1, setTimeVis1] = React.useState(false); 
-    const showTime = () => {
-        setTimeVis(!timeVis);
-      };  
-      const showTime1 = () => {
-        setTimeVis1(!timeVis1);
-      }; 
-      const handleConfirm = () => {
-        console.warn("A date has been picked: ", time);
-        showTime();
-      };
-      const handleConfirm1 = () => {
-        console.warn("A date has been picked: ", time1);
-        showTime();
-      };
-    const isExpanded = useSharedValue(false); // State to track if FAB is expanded
-    const containerHeight = useSharedValue(60); // Initial height of the FAB container
-    const [durationVisible, setDurationVisible] = React.useState(false);
-    const [featureVisible, setFeatureVisible] = React.useState(false);
-    const [radiusVisible, setRadiusVisible] = React.useState(false);
-    const handlePress = () => {
-      isExpanded.value = !isExpanded.value; // Toggle the expanded state
-      containerHeight.value = isExpanded.value ? 60 :245; // Update the height based on expanded state
+  const [radius, setRadius] = React.useState('1000');
+  const [time, setTime] = React.useState(new Date());
+  const [time1, setTime1] = React.useState(new Date());
+  const [timeVis, setTimeVis] = React.useState(false); 
+  const [timeVis1, setTimeVis1] = React.useState(false); 
+  const showTime = () => {
+    setTimeVis(!timeVis);
+  };  
+  const showTime1 = () => {
+    setTimeVis1(!timeVis1);
+  }; 
+  const handleConfirm = (selectedTime) => {
+    setTime(selectedTime)
+    showTime();
+  };
+  const handleConfirm1 = (selectedTime1) => {
+    setTime1(selectedTime1)
+    showTime1();
+  };
+  const applyDuration=() => {
+    setDurationVisible(!durationVisible)
+  };
+  const applyFeature=() => {
+    setFeatureVisible(!featureVisible)
+  };
+  const applyRadius=() => {
+    setRadiusVisible(!radiusVisible)
+  };
+  const isExpanded = useSharedValue(false); // State to track if FAB is expanded
+  const containerHeight = useSharedValue(60); // Initial height of the FAB container
+  const [durationVisible, setDurationVisible] = React.useState(false);
+  const [featureVisible, setFeatureVisible] = React.useState(false);
+  const [radiusVisible, setRadiusVisible] = React.useState(false);
+  const handlePress = () => {
+    isExpanded.value = !isExpanded.value; // Toggle the expanded state
+    containerHeight.value = isExpanded.value ? 60 :245; // Update the height based on expanded state
+  };
+
+  const animatedContainerStyle = useAnimatedStyle(() => {
+    return {
+      height: withTiming(containerHeight.value, { duration: 300 }), // Smooth height transition
     };
-  
-    const animatedContainerStyle = useAnimatedStyle(() => {
-      return {
-        height: withTiming(containerHeight.value, { duration: 300 }), // Smooth height transition
-      };
-    });
+  });
   
     return (
     <View style={styles.entirecontainer}>
@@ -73,20 +109,18 @@ export default function FAB() {
             transparent={true}
             visible={durationVisible}
             onRequestClose={() => {
-            Alert.alert('close durataion');
             setDurationVisible(!durationVisible);
             }}>
                <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <View style={styles.toprow}> 
-                            <Text>Set Parking Duration</Text>
+                            <Text style={styles.text}>Set Parking Duration:</Text>
                             <Pressable
-                                style={[styles.button, styles.buttonClose]}
                                 onPress={() => setDurationVisible(!durationVisible)}>
                                 <Image source={exitIcon} style={styles.exit}/>
                             </Pressable>
                         </View>
-                        <View>
+                        <View style={styles.row}>
                             <DateTimePickerModal
                                 isVisible={timeVis}
                                 mode="time"
@@ -100,14 +134,23 @@ export default function FAB() {
                                 onCancel={showTime1}
                             />
                             <Pressable style={styles.time} onPress={showTime}>
-                                <Text>{time.toLocaleTimeString()}</Text>
+                                <Text>{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</Text>
                             </Pressable>
-                            <Text>To</Text>
+                            <Text style={styles.textTo}>to</Text>
                             <Pressable style={styles.time} onPress={showTime1}>
-                                <Text>{time1.toLocaleTimeString()}</Text>
+                              <Text>{time1.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</Text>
                             </Pressable>
                         </View>
-                        
+                        <Text style={styles.text}>Set Max Average Rate:</Text>
+                        <View style={styles.row}>
+                          <Pressable style={styles.time} onPress={showTime}>
+                            <Text>$10</Text>
+                          </Pressable>
+                          <Text style={styles.text}>/hour</Text>
+                        </View>
+                        <Pressable style={styles.applybutton} onPress={applyDuration}>
+                          <Text style={styles.apply}>Apply</Text>
+                        </Pressable>
                     </View>
                 </View> 
             </Modal>
@@ -116,19 +159,21 @@ export default function FAB() {
           transparent={true}
           visible={featureVisible}
           onRequestClose={() => {
-            Alert.alert('close features');
             setFeatureVisible(!featureVisible);
           }}>
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
                     <View style={styles.toprow}>
-                        <Text>Select Carpark Features</Text>
+                        <Text style={styles.text}>Select Carpark Features:</Text>
                         <Pressable
-                            style={[styles.button, styles.buttonClose]}
                             onPress={() => setFeatureVisible(!featureVisible)}>
                             <Image source={exitIcon} style={styles.exit}/>
                         </Pressable>
                     </View>
+                    <CarparkIcons/>
+                    <Pressable style={styles.applybutton} onPress={applyFeature}>
+                      <Text style={styles.apply}>Apply</Text>
+                    </Pressable>
                 </View>
             </View> 
           </Modal>
@@ -137,19 +182,38 @@ export default function FAB() {
           transparent={true}
           visible={radiusVisible}
           onRequestClose={() => {
-            Alert.alert('close radius');
             setDurationVisible(!radiusVisible);
           }}>
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
                     <View style={styles.toprow}>
-                        <Text>Set Radius:</Text>
+                        <Text style={styles.text}>Set Radius:</Text>
                         <Pressable
-                            style={[styles.button, styles.buttonClose]}
                             onPress={() => setRadiusVisible(!radiusVisible)}>
                             <Image source={exitIcon} style={styles.exit}/>
                         </Pressable>
                     </View>
+                    <SelectCountry
+                      style={styles.dropdown}
+                      selectedTextStyle={styles.selectedTextStyle}
+                      placeholderStyle={styles.placeholderStyle}
+                      imageStyle={styles.imageStyle}
+                      iconStyle={styles.iconStyle}
+                      maxHeight={200}
+                      value={radius}
+                      data={radiusDropdown}
+                      valueField="value"
+                      labelField="label"
+                      imageField="image"
+                      placeholder="Select Radius"
+                      searchPlaceholder="Search..."
+                      onChange={e => {
+                        setRadius(e.value);
+                      }}
+                    />
+                    <Pressable style={styles.applybutton} onPress={applyRadius}>
+                      <Text style={styles.apply}>Apply</Text>
+                    </Pressable>
                 </View>
             </View> 
           </Modal>
@@ -254,10 +318,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
       },
       modalView: {
-        //margin: 20,
+        //marginVertical: 30,
         backgroundColor: '#DDD5D5',
         borderRadius: 20,
-        //padding: 35,
+        paddingVertical: 10,
         alignItems: 'center',
         shadowColor: '#000',
         width:300,
@@ -274,14 +338,78 @@ const styles = StyleSheet.create({
         height: 23,
       },
       toprow:{
+        width:300,
         flexDirection:"row",
         flexWrap:"nowrap",
+        alignItems:"center",
+        justifyContent:"space-between",
+        paddingRight:20,
       },
       time:{
-        borderRadius:25,
+        borderRadius:15,
         borderColor:"black",
-        width:100,
-        height:100,
+        width:120,
+        height:50,
+        borderWidth:3,
+        alignItems:"center",
+        justifyContent:"center",
+        backgroundColor:"#D9D9D9"
+      },
+      row:{
+        flexDirection:"row",
+        alignItems:"center",
+      },
+      text:{
+        fontWeight:'500',
+        fontSize:16,
+        marginVertical:10,
+        alignSelf:"flex-start",
+        paddingLeft:20,
+      },
+      textTo:{
+        fontWeight:'500',
+        fontSize:16,
+        marginVertical:10,
+        marginHorizontal:10,
+      },
+      apply:{
+        fontWeight:'500',
+        fontSize:14,
+        marginVertical:8,
+        marginHorizontal:10,
+        color:"white",
+      },
+      applybutton:{
+        marginTop:10,
+        backgroundColor:"#6B5293",
+        borderRadius:20,
+        width:80,
+        alignItems:'center',
+        justifyContent:"center",
+      },
+      dropdown: {
+        margin: 16,
+        height: 50,
+        width: 150,
+        backgroundColor: '#EEEEEE',
+        borderRadius: 22,
+        paddingHorizontal: 8,
+      },
+      imageStyle: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+      },
+      placeholderStyle: {
+        fontSize: 16,
+      },
+      selectedTextStyle: {
+        fontSize: 16,
+        marginLeft: 8,
+      },
+      iconStyle: {
+        width: 20,
+        height: 20,
       },
   });
   
