@@ -170,7 +170,7 @@ export default function FAB() {
                             <Image source={exitIcon} style={styles.exit}/>
                         </Pressable>
                     </View>
-                    <CarparkIcons/>
+                    <CarparkIcons buttonmode={true}/>
                     <Pressable style={styles.applybutton} onPress={applyFeature}>
                       <Text style={styles.apply}>Apply</Text>
                     </Pressable>
@@ -322,11 +322,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#DDD5D5',
         borderRadius: 20,
         paddingVertical: 10,
-        alignItems: 'center',
+        alignItems: "center",
         shadowColor: '#000',
         width:300,
         flexDirection:"column",
-        
       },
       button: {
         borderRadius: 20,
