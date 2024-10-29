@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {Alert, Modal, StyleSheet, Text, Pressable, View, Image, ScrollView} from 'react-native';
+import {Alert, Modal, StyleSheet, Text, Pressable, View, Image, ScrollView, TouchableOpacity} from 'react-native';
 import axios from 'axios';
 import CarparkIcons from './carparkIcons';
 
@@ -8,6 +8,10 @@ export default function CarparkSummary() {
   const [bigModalVisible, setBigModalVisible] = useState(false);
   const [carparkData, setCarparkData] = useState(null); // To store fetched carpark data
   const exitIcon = require("../assets/images/exit.png");
+
+  //status for notification and bookmark icons
+  const [notifIsOn,setNotifIsOn] = useState(false);
+  const [bookmarkIsOn, setBookmarkIsOn] = useState(false);
 
 
   useEffect(() => {
@@ -111,8 +115,26 @@ export default function CarparkSummary() {
 
                       
                       <View style={{flexDirection:'row', marginRight: 10}}>
-                        <Image style={[styles.exit, {width: 30, height:30, marginRight:5}]} source={require("../assets/images/notification_off.png")}/>
-                        <Image style={[styles.exit, {width: 30, height:30, marginRight:10}]} source={require("../assets/images/bookmark_off.png")}/>
+                        <TouchableOpacity onPress={() => setNotifIsOn(!notifIsOn)}>
+                      <Image
+                        source={
+                          notifIsOn
+                            ? require('../assets/images/notification_on.png')   
+                            : require('../assets/images/notification_off.png') 
+                        }
+                        style={{ width: 30, height: 30 }}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setBookmarkIsOn(!bookmarkIsOn)}>
+                      <Image
+                        source={
+                          bookmarkIsOn
+                            ? require('../assets/images/bookmark_on.png') 
+                            : require('../assets/images/bookmark_off.png') 
+                        }
+                        style={{ width: 30, height: 30 }}
+                      />
+                    </TouchableOpacity>
                         <Pressable onPress={() => {setBigModalVisible(!bigModalVisible), setModalVisible(!modalVisible)}}>
                           <Image source={require("../assets/images/return.png")} style={[styles.exit, {width: 30,height: 30}]}/>
                         </Pressable>
