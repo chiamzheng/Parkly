@@ -11,10 +11,11 @@ export default function CarparkIcons({
     basement = false,
     height = true,
     short = false,
-    free = true
+    free = true,
+    column=false,
 }) {
     return (
-        <View style={styles.aligncircle}>
+        <View style={column?styles.column:styles.aligncircle}>
             <TooltipItem tooltipEnabled={tooltipEnabled} text="Carpark Type" imgSrc={require("../assets/images/car-park-type.png")} buttonMode={buttonmode} initialActive={type} />
             <TooltipItem tooltipEnabled={tooltipEnabled} text="Payment System" imgSrc={require("../assets/images/parking-system.png")} buttonMode={buttonmode} initialActive={payment} />
             <TooltipItem tooltipEnabled={tooltipEnabled} text="Night Parking" imgSrc={require("../assets/images/night-parking.png")} buttonMode={buttonmode} initialActive={night} />
@@ -99,5 +100,14 @@ const styles = StyleSheet.create({
     },
     inactive: {
         backgroundColor: "#DF6C70",
+    },
+    column:{
+        flexDirection:"column",
+        justifyContent: 'space-between',
+        minHeight:410,
+        marginBottom: 10,
+        //alignItems: "center",
+        //alignContent:"space-between",
+        //height:"auto",
     }
 });

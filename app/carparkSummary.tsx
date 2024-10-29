@@ -155,10 +155,7 @@ export default function CarparkSummary() {
                     
                     <View style={{flexDirection:'row', alignItems: 'center'}}>
                       <CarparkIcons 
-                        flexDirection='column' 
-                        alignItems='flex-start' 
-                        width={40} 
-                        height={40}
+                        column={true} 
                         tooltipEnabled={false}
                       />
 
