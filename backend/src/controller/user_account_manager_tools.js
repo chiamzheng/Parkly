@@ -10,8 +10,6 @@ async function password_matches(email, password) {
     // read user password in database
     const user_password = await UserAccountRead.read_password(email);
 
-    console.log(user_password, password)
-
     // passwords match
     if (user_password == password) {
         return 1;

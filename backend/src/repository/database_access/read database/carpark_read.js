@@ -1,4 +1,6 @@
-const CoordinateConverter = require("svy21") ; // package with function to convert coordinate system svy21 to lat long
+// package with function to convert coordinate system svy21 to lat long if needed
+// CoordinateConverter = require("svy21") ; 
+
 const { get_collection } = require("../database_tools.js");
 const collection_name = "carparks";
 
@@ -23,13 +25,16 @@ async function read_carpark_id ( car_park_id ) {
     return result_carpark_id;
 }
 
-// returns an array of [x_coor, y_coor]
+// returns an array of [x_coor, y_coor] in SVY21 format
 async function read_location ( car_park_id ) {
     
     const document = await find_document( car_park_id );
     const x = await document.x_coordinate;
     const y = await document.y_coordinate;
+    
+    // function for converting from svy21 to wgs84 in case needed
     // location = CoordinateConverter.svy21ToWgs84(x, y);
+
     const location = [x, y];
     console.log(`Location for ${car_park_id}: ${location}`);
     return location;
