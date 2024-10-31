@@ -16,9 +16,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import validator from "validator";
 import React from "react";
 
-const {
-  register,
-} = require("../backend/src/controller/user_account_manager.js");
+//const {register} = require("../backend/src/controller/user_account_manager");
 
 export default function Register({ navigation }) {
   const [username, onChangeUser] = React.useState("");
@@ -138,7 +136,7 @@ export default function Register({ navigation }) {
                 !validator.isEmpty(password) &&
                 password == cfm
               ) {
-                setRegistered(register(username, password));
+                //setRegistered(register(username, password));
               }
             }}
           >

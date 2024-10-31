@@ -30,11 +30,11 @@ export default function Homepage({ navigation }) {
           longitudeDelta: 0.1,
         }}
       >
-        <UrlTile
+        {/*<UrlTile
           urlTemplate="https://www.onemap.gov.sg/maps/tiles/Default_HD/{z}/{x}/{y}.png"
           maximumZ={19}
           tileSize={256}
-        />
+        />*/}
       </MapView>
 
       <FAB/>
