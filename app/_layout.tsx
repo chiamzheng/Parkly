@@ -11,16 +11,16 @@ import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import Login from "./LoginUI/login";
+import Welcome from "./WelcomeUI/welcomepage";
 import Signin from "./LoginUI/signin";
-import Register from "./register";
+import Register from "./SignupUI/register";
 import Forgot from "./LoginUI/forgot";
 import EmailSent from "./LoginUI/emailsent";
 import Settings from "./SettingsUI/settings";
 import ChangeUsername from "./SettingsUI/change_username";
 import ChangePassword from "./SettingsUI/change_password";
 import SignOut from "./SettingsUI/sign_out";
-import Homepage from "./homepage";
+import Homepage from "./HomepageUI/homepage";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -44,8 +44,8 @@ export default function RootLayout() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="LoginUI/login"
-        component={Login}
+        name="WelcomeUI/welcomepage"
+        component={Welcome}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -54,7 +54,7 @@ export default function RootLayout() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="register"
+        name="SignupUI/register"
         component={Register}
         options={{ headerShown: false }}
       />
@@ -89,7 +89,7 @@ export default function RootLayout() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="homepage"
+        name="HomepageUI/homepage"
         component={Homepage}
         options={{ headerShown: false }}
       />
