@@ -46,7 +46,6 @@ export default function CarparkSummary() {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-         // Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
              
@@ -94,8 +93,8 @@ export default function CarparkSummary() {
            transparent={true}
            visible={bigModalVisible}
            onRequestClose={() => {
-            setBigModalVisible(!bigModalVisible);
-            setModalVisible(!modalVisible);
+           setBigModalVisible(!bigModalVisible);
+           setModalVisible(!modalVisible);
            }}
       >
           <View style={styles.boxLayout}>
