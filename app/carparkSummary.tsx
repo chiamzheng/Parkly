@@ -122,7 +122,7 @@ export default function CarparkSummary() {
                             ? require('../assets/images/notification_on.png')   
                             : require('../assets/images/notification_off.png') 
                         }
-                        style={{ width: 30, height: 30 }}
+                        style={{ width: 30, height: 30, marginRight: 5}}
                       />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setBookmarkIsOn(!bookmarkIsOn)}>
@@ -132,7 +132,7 @@ export default function CarparkSummary() {
                             ? require('../assets/images/bookmark_on.png') 
                             : require('../assets/images/bookmark_off.png') 
                         }
-                        style={{ width: 30, height: 30 }}
+                        style={{ width: 30, height: 30, marginRight: 10}}
                       />
                     </TouchableOpacity>
                         <Pressable onPress={() => {setBigModalVisible(!bigModalVisible), setModalVisible(!modalVisible)}}>
