@@ -8,6 +8,7 @@ const LocationSearchInterface = (style: any) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [bookmarksVisible, setBookmarksVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Function to toggle bookmarks modal visibility
   const toggleBookmarks = () => {
@@ -17,13 +18,14 @@ const LocationSearchInterface = (style: any) => {
   // Handle logout action
   const handleLogout = () => {
     alert('Logout button pressed');
-    // Add your logout logic here, like clearing user data or redirecting to login screen
   };
 
-  // Fetching data from the API
+  // Fetching data from the OneMap API
   const fetchData = async () => {
     try {
-      setData({});
+      const response = await fetch(`https://www.onemap.gov.sg/api/common/elastic/search?searchVal=${searchQuery}&returnGeom=Y&getAddrDetails=Y&pageNum=1`);
+      const result = await response.json();
+      setData(result.results);  // Adjust based on the structure of the API response
       setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -31,10 +33,12 @@ const LocationSearchInterface = (style: any) => {
     }
   };
 
-  // Use Effect to load the data when the component mounts
+  // Use Effect to load data when the component mounts or searchQuery changes
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (searchQuery) {
+      fetchData();
+    }
+  }, [searchQuery]);
 
   if (loading) {
     return <Text>Loading...</Text>;
@@ -71,14 +75,23 @@ const LocationSearchInterface = (style: any) => {
           <TextInput 
             placeholder="Enter Destination" 
             style={styles.input} 
+            value={searchQuery}
+            onChangeText={(text) => setSearchQuery(text)}
           />
         </View>
       </View>
 
       {/* Go Button */}
-      <TouchableOpacity style={styles.goButton}>
+      <TouchableOpacity onPress={fetchData} style={styles.goButton}>
         <Text style={styles.goText}>Go</Text>
       </TouchableOpacity>
+
+      {/* Display Search Results */}
+      <View>
+        {data && data.map((item, index) => (
+          <Text key={index}>{item.ADDRESS || 'No address available'}</Text>
+        ))}
+      </View>
 
       {/* Bookmarks Modal */}
       <Modal
@@ -174,5 +187,3 @@ const styles = StyleSheet.create({
 });
 
 export default LocationSearchInterface;
-
-
