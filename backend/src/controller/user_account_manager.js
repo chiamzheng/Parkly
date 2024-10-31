@@ -1,7 +1,6 @@
 const UserAccountWrite = require("../repository/database_access/write database/user_account_write");
 const UserAccountRead = require("../repository/database_access/read database/user_account_read");
-const { password_matches, email_exists, strong_password } = require("./user_account_manager_tools")
-const { email_exists } = require("./user_account_manager_tools");
+const { password_matches, email_exists, strong_password } = require("./user_account_manager_tools");
 
 
 async function register ( input_email, input_password ) {
@@ -18,7 +17,7 @@ async function register ( input_email, input_password ) {
     if (await !strong_password(input_password)) {
         
         console.log("Password too weak.");
-        return -1;
+        return -2;
     }
 
     // password is strong enough
