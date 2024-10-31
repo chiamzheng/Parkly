@@ -6,6 +6,7 @@ const { get_collection } = require("../repository/database_access/database_tools
 const { wgs84ToSvy21 } = require("svy21");
 
 
+
 async function get_available_lots(car_park_id){
     try {
         const response = await axios.get(`http://localhost:8083/carparkAvailability/${car_park_id}`);
@@ -48,24 +49,47 @@ async function fetch_suggestions(search) {
 
 //address and features of carpark can be found using read_location under carpark_read
 
+/**
+ * Retrieves reviews for a specific carpark from the database.
+ * 
+ * @param {string} car_park_id - The ID of the carpark to fetch reviews for.
+ * @returns {Promise<Array>} - An array of reviews for the carpark.
+ * 
+ * @author Yue Hang
+ */
 
-
-// Yue Hang's part
-
-// returns an array of reviews
 async function fetch_reviews(car_park_id) {
     reviews = await CarparkRead.read_reviews(car_park_id);
     return reviews;
 }
 
-// utility function
+/**
+ * Utility function to calculate the Euclidean distance between two points.
+ * 
+ * @param {number} x1 - The x-coordinate of the first point.
+ * @param {number} y1 - The y-coordinate of the first point.
+ * @param {number} x2 - The x-coordinate of the second point.
+ * @param {number} y2 - The y-coordinate of the second point.
+ * @returns {number} - The Euclidean distance between the two points.
+ * 
+ * @author Yue Hang
+ */
+
 function calculate_distance(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 }
 
-// gets all carparks within a set radius
-// all distances in meters
-// user_destination of type array in WGS84 (lat, long), will be converted to SVY21 in the function (x, y)
+/**
+ * Finds all carparks within a specified radius from the user's destination using SVY21 coordinates.
+ * 
+ * @param {number[]} user_destination - User's destination in WGS84 coordinates (latitude, longitude).
+ * @param {number} radius - Radius in meters to search for nearby carparks.
+ * @returns {Promise<string[]>} - An array of carpark IDs within the radius.
+ * @throws {Error} - Logs an error if the calculation fails.
+ * 
+ * @author Yue Hang
+ */
+
 async function fetch_carparks_within_radius(user_destination, radius) {
 
     // convert WGS84 to SVY21
