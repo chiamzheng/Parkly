@@ -5,10 +5,10 @@ const { find_document } = require("../repository/database_access/read database/u
 // alternative way
 // import { find_document as findDocument } from "../repository/database_access/read database/user_account_read";
 
-function password_matches(email, password) {
+async function password_matches(email, password) {
 
     // read user password in database
-    const user_password = UserAccountRead.read_password(email);
+    const user_password = await UserAccountRead.read_password(email);
 
     // passwords match
     if (user_password == password) {
@@ -16,12 +16,12 @@ function password_matches(email, password) {
     }
 
     // passwords do not match
-    return -1;
+    return 0;
 };
 
 function strong_password(password) {
 
-    const password_strength = passwordStrength(password).value;
+    const password_strength = passwordStrength(password).id;
 
     switch (password_strength) {
 
@@ -46,16 +46,18 @@ function strong_password(password) {
 }
 
 // check if email already exists
-function email_exists(email) {
+async function email_exists(email) {
 
     // email exists
-    if (find_document(email)) {
+
+    const document = await find_document(email);
+    if (document) { // if email already exists
 
         console.log("email already exists!");
         return 1;
     }
 
     // email does not exist
-    return -1;
+    return 0;
 }
 module.exports = { password_matches, email_exists, strong_password };
