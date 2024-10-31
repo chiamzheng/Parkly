@@ -15,6 +15,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import validator from 'validator';
 import React from "react";
+//const { register } = require('../backend/src/controller/user_account_manager');
 export default function Register({ navigation }) {
   const [username, onChangeUser] = React.useState("");
   const [password, onChangePass] = React.useState("");
@@ -30,6 +31,7 @@ export default function Register({ navigation }) {
   const [validEmail, setValidEmail] = React.useState(true);
   const [validPassword, setValidPassword] = React.useState(true);
   const [validcfm, setValidcfm] = React.useState(true);
+  const [registered, setRegistered] = React.useState(1);
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.background}>
@@ -95,6 +97,7 @@ export default function Register({ navigation }) {
           </View>
           <View>
             <Text style={validcfm?styles.hide:styles.invalidmsg}>The passwords do not match.</Text>
+            <Text style={!(registered==-2)?styles.hide:styles.invalidmsg}>The password is too weak.</Text>
           </View>
         </ThemedView>
         <View style={styles.buttoncontainer}>
@@ -125,7 +128,9 @@ export default function Register({ navigation }) {
               }else{
                 setValidcfm(false);
               }
-
+              if((validator.isEmail(username))&&(!validator.isEmpty(password))&&(password==cfm)){
+                //setRegistered(register(username,password));
+              }
             }
             
           }

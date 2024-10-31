@@ -1,7 +1,17 @@
 const UserAccountWrite = require("../repository/database_access/write database/user_account_write");
 const UserAccountRead = require("../repository/database_access/read database/user_account_read");
-const { password_matches, email_exists, strong_password } = require("./user_account_manager_tools")
+const { password_matches, email_exists, strong_password } = require("./user_account_manager_tools");
 
+/**
+ * Registers a new user by adding an account to the database if the email is not already taken and the password is strong.
+ * 
+ * @param {string} input_email - The email provided by the user for registration.
+ * @param {string} input_password - The password provided by the user for registration.
+ * @returns {Promise<number>} - Returns -1 if the email already exists, 0 if the password is too weak, 1 if registration is successful.
+ * @throws {Error} - Throws an error if writing to the database fails.
+ * 
+ * @author Yue Hang
+ */
 
 async function register ( input_email, input_password ) {
     
@@ -15,11 +25,10 @@ async function register ( input_email, input_password ) {
     } 
 
     // if password is too weak
-    const strong_password = strong_password(input_password);
-
-    if (strong_password <= 1) {
+    if (await !strong_password(input_password)) {
+        
         console.log("Password too weak. User account not added");
-        return 0;
+        return -2;
     }
 
     // password is strong enough
@@ -27,6 +36,17 @@ async function register ( input_email, input_password ) {
     await UserAccountWrite.add_user_account(input_email, input_password);
     return 1;
 }
+
+/**
+ * Logs in a user by checking if the email exists and the password matches.
+ * 
+ * @param {string} input_email - The email provided by the user for login.
+ * @param {string} input_password - The password provided by the user for login.
+ * @returns {Promise<number>} - Returns -1 if the email is not registered, 0 if the passwords do not match, 1 if login is successful.
+ * @throws {Error} - Throws an error if reading from the database fails.
+ * 
+ * @author Yue Hang
+ */
 
 async function login ( input_email, input_password ){
 
@@ -55,6 +75,15 @@ async function login ( input_email, input_password ){
 
 }
 
+/**
+ * Sends a password reset process (pin validation) for a user who forgot their password.
+ * 
+ * @param {string} input_email - The email for the account that needs a password reset.
+ * @returns {Promise<void>}
+ * 
+ * @author Yue Hang
+ */
+
 async function forgot_password ( input_email ) {
     
     // send pin to email address
@@ -66,8 +95,17 @@ async function forgot_password ( input_email ) {
 }
 
 
-// notice the variable name is user_email instead of input_email, 
-// this means that the email is retrieved from the current session intead of an input
+/**
+ * Changes the email of a user if the new email is not already registered.
+ * 
+ * @param {string} user_email - The current email of the user.
+ * @param {string} new_email - The new email to replace the current one.
+ * @returns {Promise<number>} - Returns -1 if the new email is already registered, 1 if email is successfully changed.
+ * @throws {Error} - Throws an error if writing to the database fails.
+ * 
+ * @author Yue Hang
+ */
+
 async function change_email( user_email, new_email ) {
 
     // email already registered
@@ -86,6 +124,17 @@ async function change_email( user_email, new_email ) {
     return 1;
 
 }
+
+/**
+ * Changes the password for a user if the new password is strong and different from the current password.
+ * 
+ * @param {string} user_email - The email of the user changing their password.
+ * @param {string} new_password - The new password to replace the current one.
+ * @returns {Promise<number>} - Returns -1 if the new password is the same as the old one, 0 if the new password is too weak, 1 if password is successfully changed.
+ * @throws {Error} - Throws an error if writing to the database fails.
+ * 
+ * @author Yue Hang
+ */
 
 async function change_password( user_email, new_password) {
 
@@ -117,7 +166,17 @@ async function change_password( user_email, new_password) {
 }
 
 
-// only call this function when the user wants to CHANGE the bookmark for that carpark i.e. bookmark or remove bookmark
+/**
+ * Updates the bookmark list for a user by either adding or removing a carpark ID.
+ * 
+ * @param {string} user_email - The email of the user updating their bookmark list.
+ * @param {string} carpark_id - The carpark ID to add or remove from the bookmark list.
+ * @returns {Promise<number>} - Returns 1 when the bookmark list is successfully updated.
+ * @throws {Error} - Throws an error if reading or writing to the database fails.
+ * 
+ * @author Yue Hang
+ */
+
 async function update_bookmark( user_email, carpark_id ) {
 
     const bookmark_list = await UserAccountRead.read_bookmark_list(user_email);
