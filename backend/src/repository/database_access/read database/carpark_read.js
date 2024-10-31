@@ -1,5 +1,9 @@
-// package with function to convert coordinate system svy21 to lat long if needed
-// CoordinateConverter = require("svy21") ; 
+/**
+ * Provides functions to access car park data, including car park ID, location, hourly rate, and reviews, 
+ * from a MongoDB collection. It also includes utility functions for fetching documents from the database.
+ * 
+ * @module CarparkRead
+ */
 
 const { get_collection } = require("../database_tools.js");
 const collection_name = "carparks";
@@ -13,7 +17,7 @@ const collection_name = "carparks";
  * @returns {Promise<Object|null>} - Returns the document for the specified car park ID, or null if not found.
  * @throws {Error} - Throws an error if the database query fails.
  * 
- * @author [Your Name]
+ * @author Yue Hang
  */
 
 // utility function
@@ -41,7 +45,7 @@ async function find_document ( car_park_id ) {
  * @example
  * const carparkId = await read_carpark_id("CP001");
  * 
- * @author [Your Name]
+ * @author Yue Hang
  */
 
 async function read_carpark_id ( car_park_id ) {
@@ -64,7 +68,7 @@ async function read_carpark_id ( car_park_id ) {
  * @example
  * const location = await read_location("CP001");
  * 
- * @author [Your Name]
+ * @author Yue Hang
  */
 
 async function read_location ( car_park_id ) {
@@ -93,7 +97,7 @@ async function read_location ( car_park_id ) {
  * @example
  * const rate = await read_hourly_rate("CP001");
  * 
- * @author [Your Name]
+ * @author Yue Hang
  */
 
 async function read_hourly_rate ( car_park_id ) {
@@ -116,7 +120,7 @@ async function read_hourly_rate ( car_park_id ) {
  * @example
  * const reviews = await read_reviews("CP001");
  * 
- * @author [Your Name]
+ * @author Yue Hang
  */
 
 async function read_reviews ( car_park_id ) {
