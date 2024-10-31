@@ -122,7 +122,7 @@ export default function CarparkSummary() {
                             ? require('../assets/images/notification_on.png')   
                             : require('../assets/images/notification_off.png') 
                         }
-                        style={{ width: 30, height: 30 }}
+                        style={{ width: 30, height: 30, marginRight: 5}}
                       />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setBookmarkIsOn(!bookmarkIsOn)}>
@@ -132,7 +132,7 @@ export default function CarparkSummary() {
                             ? require('../assets/images/bookmark_on.png') 
                             : require('../assets/images/bookmark_off.png') 
                         }
-                        style={{ width: 30, height: 30 }}
+                        style={{ width: 30, height: 30, marginRight: 10}}
                       />
                     </TouchableOpacity>
                         <Pressable onPress={() => {setBigModalVisible(!bigModalVisible), setModalVisible(!modalVisible)}}>
@@ -159,30 +159,15 @@ export default function CarparkSummary() {
                         tooltipEnabled={false}
                       />
 
-                    <View style={{marginLeft: 10}}>
-                        <View style={{height: 60, justifyContent: 'center'}}>
-                          <Text style={{fontSize: 15}}>Carpark Type:</Text>
-                        </View>
-                        <View style={{height: 60, justifyContent: 'center'}}>
-                          <Text style={{fontSize: 15}}>Payment System:</Text>
-                        </View>
-                        <View style={{height: 60, justifyContent: 'center'}}>
-                          <Text style={{fontSize: 15}}>Night Parking:</Text>
-                        </View>
-                        <View style={{height: 60, justifyContent: 'center'}}>
-                          <Text style={{fontSize: 15}}>Basement Parking:</Text>
-                        </View>
-                        <View style={{height: 60, justifyContent: 'center'}}>
-                          <Text style={{fontSize: 15}}>Gantry Height:</Text>
-                        </View>
-                        <View style={{height: 60, justifyContent: 'center'}}>
-                          <Text style={{fontSize: 15}}>Short Term Parking:</Text>
-                        </View>
-                        <View style={{height: 60, justifyContent: 'center'}}>
-                          <Text style={{fontSize: 15}}>Free Parking:</Text>
-                        </View>
+                      <View style={{marginLeft: 10}}>
+                          <CarparkInfo text="Carpark Type:"/>
+                          <CarparkInfo text="Payment System:"/>
+                          <CarparkInfo text="Night Parking:"/>
+                          <CarparkInfo text="Basement Parking:"/>
+                          <CarparkInfo text="Gantry Height:"/>
+                          <CarparkInfo text="Short Term Parking:"/>
+                          <CarparkInfo text="Free Parking:"/>
                       </View>
-  
                     </View>
 
                     <Text style={{fontSize:17, fontWeight:"bold", marginTop:30, marginBottom:10}}>
@@ -213,6 +198,14 @@ export default function CarparkSummary() {
       </Modal>
 
     </View>
+  );
+};
+
+const CarparkInfo = ({ text = 'Invalid' }) => {
+  return (
+      <View style={{height: 60, justifyContent: 'center'}}>
+        <Text style={{fontSize: 15}}>{text}</Text>
+      </View>
   );
 };
 

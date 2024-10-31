@@ -16,18 +16,18 @@ export default function CarparkIcons({
 }) {
     return (
         <View style={column?styles.column:styles.aligncircle}>
-            <TooltipItem tooltipEnabled={tooltipEnabled} text="Carpark Type" imgSrc={require("../assets/images/car-park-type.png")} buttonMode={buttonmode} initialActive={type} />
-            <TooltipItem tooltipEnabled={tooltipEnabled} text="Payment System" imgSrc={require("../assets/images/parking-system.png")} buttonMode={buttonmode} initialActive={payment} />
-            <TooltipItem tooltipEnabled={tooltipEnabled} text="Night Parking" imgSrc={require("../assets/images/night-parking.png")} buttonMode={buttonmode} initialActive={night} />
-            <TooltipItem tooltipEnabled={tooltipEnabled} text="Basement Parking" imgSrc={require("../assets/images/basement.png")} buttonMode={buttonmode} initialActive={basement} />
-            <TooltipItem tooltipEnabled={tooltipEnabled} text="Gantry Height" imgSrc={require("../assets/images/gantry-height.png")} buttonMode={buttonmode} initialActive={height} />
-            <TooltipItem tooltipEnabled={tooltipEnabled} text="Short Term Parking" imgSrc={require("../assets/images/short-term-parking.png")} buttonMode={buttonmode} initialActive={short} />
-            <TooltipItem tooltipEnabled={tooltipEnabled} text="Free Parking" imgSrc={require("../assets/images/free-parking.png")} buttonMode={buttonmode} initialActive={free} />
+            <TooltipItem column={column} tooltipEnabled={tooltipEnabled} text="Carpark Type" imgSrc={require("../assets/images/car-park-type.png")} buttonMode={buttonmode} initialActive={type} />
+            <TooltipItem column={column} tooltipEnabled={tooltipEnabled} text="Payment System" imgSrc={require("../assets/images/parking-system.png")} buttonMode={buttonmode} initialActive={payment} />
+            <TooltipItem column={column} tooltipEnabled={tooltipEnabled} text="Night Parking" imgSrc={require("../assets/images/night-parking.png")} buttonMode={buttonmode} initialActive={night} />
+            <TooltipItem column={column} tooltipEnabled={tooltipEnabled} text="Basement Parking" imgSrc={require("../assets/images/basement.png")} buttonMode={buttonmode} initialActive={basement} />
+            <TooltipItem column={column} tooltipEnabled={tooltipEnabled} text="Gantry Height" imgSrc={require("../assets/images/gantry-height.png")} buttonMode={buttonmode} initialActive={height} />
+            <TooltipItem column={column} tooltipEnabled={tooltipEnabled} text="Short Term Parking" imgSrc={require("../assets/images/short-term-parking.png")} buttonMode={buttonmode} initialActive={short} />
+            <TooltipItem column={column} tooltipEnabled={tooltipEnabled} text="Free Parking" imgSrc={require("../assets/images/free-parking.png")} buttonMode={buttonmode} initialActive={free} />
         </View>
     );
 }
 
-const TooltipItem = ({ tooltipEnabled = true, initialActive = true, buttonMode = false, text = 'Invalid', imgSrc }) => {
+const TooltipItem = ({ tooltipEnabled = true, initialActive = true, buttonMode = false, text = 'Invalid', imgSrc, column = false}) => {
     const [showTooltip, setShowTooltip] = useState(false);
     const [active, setActive] = useState(initialActive);
 
@@ -43,9 +43,9 @@ const TooltipItem = ({ tooltipEnabled = true, initialActive = true, buttonMode =
     };
 
     return (
-        <View style={[styles.circle, active ? styles.active : styles.inactive]}>
+        <View style={[column ? styles.circle1 : styles.circle2, active ? styles.active : styles.inactive]}>
             <Pressable onLongPress={handleLongPress} onPress={handlePress}>
-                <Image resizeMode="contain" style={styles.image} source={imgSrc} />
+                <Image resizeMode="contain" style={[column ? styles.image1 : styles.image2]} source={imgSrc} />
             </Pressable>
             {tooltipEnabled && showTooltip && (
                 <View style={styles.tooltipContainer}>
@@ -57,7 +57,16 @@ const TooltipItem = ({ tooltipEnabled = true, initialActive = true, buttonMode =
 };
 
 const styles = StyleSheet.create({
-    circle: {
+    circle1: {
+        marginTop: 10,
+        borderRadius: 50,
+        padding: 5,
+        position: 'relative',
+        alignItems: 'center',
+        width: 50,
+        height: 50,
+    },
+    circle2: {
         marginTop: 10,
         borderRadius: 50,
         padding: 5,
@@ -91,7 +100,11 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 12,
     },
-    image: {
+    image1: {
+        width: 40,
+        height: 40,
+    },
+    image2: {
         width: 30,
         height: 30,
     },
