@@ -22,29 +22,29 @@ export default function Login({ navigation }) {
         <View style={styles.imgcontainer}>
           <Image
             style={styles.cargif}
-            source={require("../assets/images/car.gif")}
+            source={require("../../assets/images/car.gif")}
           />
           <Image
             style={styles.locationgif}
-            source={require("../assets/images/nav.gif")}
+            source={require("../../assets/images/nav.gif")}
           />
         </View>
 
         <ThemedView style={styles.stepContainer}>
           <Pressable
             style={styles.button}
-            onPress={() => navigation.navigate("signin")} // Navigate to Signin
+            onPress={() => navigation.navigate("LoginUI/signin")} // Navigate to Signin
           >
             <Text style={styles.buttonText}>LOGIN</Text>
           </Pressable>
           <Pressable
             style={styles.button}
-            onPress={() => navigation.navigate("register")}
+            onPress={() => navigation.navigate("SignupUI/register")}
           >
             <Text style={styles.buttonText}>REGISTER</Text>
           </Pressable>
           <Pressable
-            onPress={() => navigation.navigate("homepage")} // shiat how do you navigate,, am i supposed to edit a route TT
+            onPress={() => navigation.navigate("HomepageUI/homepage")} // shiat how do you navigate,, am i supposed to edit a route TT
           >
             <Text style={styles.guest}>Continue as Guest</Text>
           </Pressable>

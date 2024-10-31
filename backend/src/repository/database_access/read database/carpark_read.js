@@ -1,6 +1,24 @@
-const CoordinateConverter = require("svy21") ; // package with function to convert coordinate system svy21 to lat long
+/**
+ * Provides functions to access car park data, including car park ID, location, hourly rate, and reviews, 
+ * from a MongoDB collection. It also includes utility functions for fetching documents from the database.
+ * 
+ * @module CarparkRead
+ */
+
 const { get_collection } = require("../database_tools.js");
 const collection_name = "carparks";
+
+/**
+ * Utility function to find a document in the car parks collection by car park ID.
+ * 
+ * @async
+ * @function find_document
+ * @param {string} car_park_id - The ID of the car park to find.
+ * @returns {Promise<Object|null>} - Returns the document for the specified car park ID, or null if not found.
+ * @throws {Error} - Throws an error if the database query fails.
+ * 
+ * @author Yue Hang
+ */
 
 // utility function
 async function find_document ( car_park_id ) {
@@ -15,6 +33,21 @@ async function find_document ( car_park_id ) {
     return document;
 }
 
+/**
+ * Reads and returns the car park ID for the given car park.
+ * 
+ * @async
+ * @function read_carpark_id
+ * @param {string} car_park_id - The ID of the car park to read.
+ * @returns {Promise<string>} - Returns the car park ID.
+ * @throws {Error} - Throws an error if the car park document is not found or reading fails.
+ * 
+ * @example
+ * const carparkId = await read_carpark_id("CP001");
+ * 
+ * @author Yue Hang
+ */
+
 async function read_carpark_id ( car_park_id ) {
 
     const document = await find_document( car_park_id );
@@ -23,17 +56,49 @@ async function read_carpark_id ( car_park_id ) {
     return result_carpark_id;
 }
 
-// returns an array of [x_coor, y_coor]
+/**
+ * Reads and returns the location (x, y coordinates in SVY21 format) of the given car park.
+ * 
+ * @async
+ * @function read_location
+ * @param {string} car_park_id - The ID of the car park to read.
+ * @returns {Promise<Array<number>>} - Returns an array containing [x_coor, y_coor] in SVY21 format.
+ * @throws {Error} - Throws an error if the car park document is not found or reading fails.
+ * 
+ * @example
+ * const location = await read_location("CP001");
+ * 
+ * @author Yue Hang
+ */
+
 async function read_location ( car_park_id ) {
     
     const document = await find_document( car_park_id );
     const x = await document.x_coordinate;
     const y = await document.y_coordinate;
+    
+    // function for converting from svy21 to wgs84 in case needed
     // location = CoordinateConverter.svy21ToWgs84(x, y);
+
     const location = [x, y];
     console.log(`Location for ${car_park_id}: ${location}`);
     return location;
 }
+
+/**
+ * Reads and returns the hourly rate of the given car park.
+ * 
+ * @async
+ * @function read_hourly_rate
+ * @param {string} car_park_id - The ID of the car park to read.
+ * @returns {Promise<number>} - Returns the hourly rate of the car park.
+ * @throws {Error} - Throws an error if the car park document is not found or reading fails.
+ * 
+ * @example
+ * const rate = await read_hourly_rate("CP001");
+ * 
+ * @author Yue Hang
+ */
 
 async function read_hourly_rate ( car_park_id ) {
 
@@ -43,6 +108,20 @@ async function read_hourly_rate ( car_park_id ) {
     return hourly_rate;
 }
 
+/**
+ * Reads and returns the reviews for the given car park.
+ * 
+ * @async
+ * @function read_reviews
+ * @param {string} car_park_id - The ID of the car park to read reviews for.
+ * @returns {Promise<Array>} - Returns an array of reviews for the car park.
+ * @throws {Error} - Throws an error if the car park document is not found or reading fails.
+ * 
+ * @example
+ * const reviews = await read_reviews("CP001");
+ * 
+ * @author Yue Hang
+ */
 
 async function read_reviews ( car_park_id ) {
 

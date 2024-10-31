@@ -1,4 +1,9 @@
-// deObject it to be used directly without needing databaseTools.get_collection()
+/**
+ * @module UserAccountRepository
+ * @description Module for handling user account updates in the MongoDB collection.
+ * @author Yue Hang
+ */
+
 const { get_collection } = require("../database_tools.js"); 
 
 // import the UserAccountModel model
@@ -7,8 +12,19 @@ const { UserAccountModel } = require("../../models/user_account_model.js");
 // define the collection name to be used
 const collection_name = "user_accounts";
 
+/**
+ * Updates the email address for a user.
+ * @async
+ * @function write_email
+ * @param {Object} collection - The MongoDB collection.
+ * @param {string} user_email - The current email of the user.
+ * @param {string} new_email - The new email to set.
+ * @returns {Promise<void>}
+ * @example
+ * const collection = db.collection('user_accounts');
+ * await write_email(collection, 'old@example.com', 'new@example.com');
+ */
 
-// change email
 async function write_email (user_email, new_email) {
 
     const collection = await get_collection(collection_name);
@@ -19,7 +35,19 @@ async function write_email (user_email, new_email) {
     );
 }
 
-// change password
+/**
+ * Updates the password for a user.
+ * @async
+ * @function write_password
+ * @param {Object} collection - The MongoDB collection.
+ * @param {string} user_email - The user's email.
+ * @param {string} new_password - The new password to set.
+ * @returns {Promise<void>}
+ * @example
+ * const collection = db.collection('user_accounts');
+ * await write_password(collection, 'user@example.com', 'new_password123');
+ */
+
 async function write_password (user_email, new_password) {
 
     const collection = await get_collection(collection_name);
@@ -30,7 +58,19 @@ async function write_password (user_email, new_password) {
     );
 }
 
-// change bookmark list
+/**
+ * Updates the bookmark list for a user.
+ * @async
+ * @function write_bookmark_list
+ * @param {Object} collection - The MongoDB collection.
+ * @param {string} user_email - The user's email.
+ * @param {Array<string>} new_bookmark_list - The new bookmark list.
+ * @returns {Promise<void>}
+ * @example
+ * const collection = db.collection('user_accounts');
+ * await write_bookmark_list(collection, 'user@example.com', ['carpark_1', 'carpark_2']);
+ */
+
 async function write_bookmark_list (user_email, new_bookmark_list) {
 
     const collection = await get_collection(collection_name);
@@ -41,7 +81,20 @@ async function write_bookmark_list (user_email, new_bookmark_list) {
     );
 }
 
-// add new document
+/**
+ * Adds a new user account document to the collection.
+ * @async
+ * @function add_user_account
+ * @param {Object} collection - The MongoDB collection.
+ * @param {string} user_email - The email of the new user.
+ * @param {string} user_password - The password of the new user.
+ * @param {Array<string>} [bookmark_list=[]] - The bookmark list of the new user.
+ * @returns {Promise<void>}
+ * @example
+ * const collection = db.collection('user_accounts');
+ * await add_user_account(collection, 'new@example.com', 'password123', []);
+ */
+
 async function add_user_account(user_email, user_password, bookmark_list = []) {
 
     // fetch collection

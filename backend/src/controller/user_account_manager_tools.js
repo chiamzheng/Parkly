@@ -2,13 +2,22 @@ const UserAccountRead = require("../repository/database_access/read database/use
 const { passwordStrength } = require("check-password-strength"); // https://www.npmjs.com/package/check-password-strength 
 const { find_document } = require("../repository/database_access/read database/user_account_read");
 
-// alternative way
 // import { find_document as findDocument } from "../repository/database_access/read database/user_account_read";
+/**
+ * Checks if the provided password matches the one stored in the database for a given email.
+ * 
+ * @param {string} email - The user's email to retrieve the stored password.
+ * @param {string} password - The password to check against the stored password.
+ * @returns {Promise<number>} - Returns 1 if the passwords match, 0 if they don't.
+ * @throws {Error} - Throws an error if reading the password from the database fails.
+ * 
+ * @author Yue Hang
+ */
 
-function password_matches(email, password) {
+async function password_matches(email, password) {
 
     // read user password in database
-    const user_password = UserAccountRead.read_password(email);
+    const user_password = await UserAccountRead.read_password(email);
 
     // passwords match
     if (user_password == password) {
@@ -16,12 +25,23 @@ function password_matches(email, password) {
     }
 
     // passwords do not match
-    return -1;
+    return 0;
 };
+
+/**
+ * Evaluates the strength of the provided password.
+ * 
+ * @param {string} password - The password to evaluate.
+ * @returns {number} - Returns the strength level of the password:
+ *                     0 = Very Weak, 1 = Weak, 2 = Medium, 3 = Strong.
+ * @throws {Error} - Logs the password strength result and returns its level.
+ * 
+ * @author Yue Hang
+ */
 
 function strong_password(password) {
 
-    const password_strength = passwordStrength(password).value;
+    const password_strength = passwordStrength(password).id;
 
     switch (password_strength) {
 
@@ -45,17 +65,29 @@ function strong_password(password) {
     }
 }
 
-// check if email already exists
-function email_exists(email) {
+/**
+ * Checks if an email already exists in the database.
+ * 
+ * @param {string} email - The email to check in the database.
+ * @returns {Promise<number>} - Returns 1 if the email exists, 0 if it doesn't.
+ * @throws {Error} - Throws an error if there is a failure reading from the database.
+ * 
+ * @author Yue Hang
+ */
+
+async function email_exists(email) {
 
     // email exists
-    if (find_document(email)) {
+
+    const document = await find_document(email);
+    if (document) { // if email already exists
 
         console.log("email already exists!");
         return 1;
     }
 
     // email does not exist
-    return -1;
+    return 0;
 }
+
 module.exports = { password_matches, email_exists, strong_password };

@@ -54,3 +54,5 @@ async function fetch_nearby_carparks(user_destination, radius) {
                 nearby_carparks.push(carpark_id);
             }
         }
+    })
+}

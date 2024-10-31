@@ -24,7 +24,7 @@ export default function SignOut({ navigation }: { navigation: any }) {
       <SafeAreaView style={styles.background}>
         <View style={styles.titleContainer}>
           <Image
-            source={require('../assets/images/settings.png')}
+            source={require('../../assets/images/settings.png')}
             style={styles.settingsIcon}
           />
           <Text style={styles.titletext}>Sign Out</Text>

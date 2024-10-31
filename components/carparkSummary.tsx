@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {Alert, Modal, StyleSheet, Text, Pressable, View, Image, ScrollView} from 'react-native';
+import {Alert, Modal, StyleSheet, Text, Pressable, View, Image, ScrollView, TouchableOpacity} from 'react-native';
 import axios from 'axios';
 import CarparkIcons from './carparkIcons';
 
@@ -8,6 +8,10 @@ export default function CarparkSummary() {
   const [bigModalVisible, setBigModalVisible] = useState(false);
   const [carparkData, setCarparkData] = useState(null); // To store fetched carpark data
   const exitIcon = require("../assets/images/exit.png");
+
+  //status for notification and bookmark icons
+  const [notifIsOn,setNotifIsOn] = useState(false);
+  const [bookmarkIsOn, setBookmarkIsOn] = useState(false);
 
 
   useEffect(() => {
@@ -42,7 +46,6 @@ export default function CarparkSummary() {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
              
@@ -90,8 +93,8 @@ export default function CarparkSummary() {
            transparent={true}
            visible={bigModalVisible}
            onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-            setModalVisible(!bigModalVisible);
+           setBigModalVisible(!bigModalVisible);
+           setModalVisible(!modalVisible);
            }}
       >
           <View style={styles.boxLayout}>
@@ -111,8 +114,26 @@ export default function CarparkSummary() {
 
                       
                       <View style={{flexDirection:'row', marginRight: 10}}>
-                        <Image style={[styles.exit, {width: 30, height:30, marginRight:5}]} source={require("../assets/images/notification_off.png")}/>
-                        <Image style={[styles.exit, {width: 30, height:30, marginRight:10}]} source={require("../assets/images/bookmark_off.png")}/>
+                        <TouchableOpacity onPress={() => setNotifIsOn(!notifIsOn)}>
+                      <Image
+                        source={
+                          notifIsOn
+                            ? require('../assets/images/notification_on.png')   
+                            : require('../assets/images/notification_off.png') 
+                        }
+                        style={{ width: 30, height: 30, marginRight: 5}}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setBookmarkIsOn(!bookmarkIsOn)}>
+                      <Image
+                        source={
+                          bookmarkIsOn
+                            ? require('../assets/images/bookmark_on.png') 
+                            : require('../assets/images/bookmark_off.png') 
+                        }
+                        style={{ width: 30, height: 30, marginRight: 10}}
+                      />
+                    </TouchableOpacity>
                         <Pressable onPress={() => {setBigModalVisible(!bigModalVisible), setModalVisible(!modalVisible)}}>
                           <Image source={require("../assets/images/return.png")} style={[styles.exit, {width: 30,height: 30}]}/>
                         </Pressable>
@@ -133,37 +154,19 @@ export default function CarparkSummary() {
                     
                     <View style={{flexDirection:'row', alignItems: 'center'}}>
                       <CarparkIcons 
-                        flexDirection='column' 
-                        alignItems='flex-start' 
-                        width={40} 
-                        height={40}
+                        column={true} 
                         tooltipEnabled={false}
                       />
 
-                    <View style={{marginLeft: 10}}>
-                        <View style={{height: 60, justifyContent: 'center'}}>
-                          <Text style={{fontSize: 15}}>Carpark Type:</Text>
-                        </View>
-                        <View style={{height: 60, justifyContent: 'center'}}>
-                          <Text style={{fontSize: 15}}>Payment System:</Text>
-                        </View>
-                        <View style={{height: 60, justifyContent: 'center'}}>
-                          <Text style={{fontSize: 15}}>Night Parking:</Text>
-                        </View>
-                        <View style={{height: 60, justifyContent: 'center'}}>
-                          <Text style={{fontSize: 15}}>Basement Parking:</Text>
-                        </View>
-                        <View style={{height: 60, justifyContent: 'center'}}>
-                          <Text style={{fontSize: 15}}>Gantry Height:</Text>
-                        </View>
-                        <View style={{height: 60, justifyContent: 'center'}}>
-                          <Text style={{fontSize: 15}}>Short Term Parking:</Text>
-                        </View>
-                        <View style={{height: 60, justifyContent: 'center'}}>
-                          <Text style={{fontSize: 15}}>Free Parking:</Text>
-                        </View>
+                      <View style={{marginLeft: 10}}>
+                          <CarparkInfo text="Carpark Type:"/>
+                          <CarparkInfo text="Payment System:"/>
+                          <CarparkInfo text="Night Parking:"/>
+                          <CarparkInfo text="Basement Parking:"/>
+                          <CarparkInfo text="Gantry Height:"/>
+                          <CarparkInfo text="Short Term Parking:"/>
+                          <CarparkInfo text="Free Parking:"/>
                       </View>
-  
                     </View>
 
                     <Text style={{fontSize:17, fontWeight:"bold", marginTop:30, marginBottom:10}}>
@@ -194,6 +197,14 @@ export default function CarparkSummary() {
       </Modal>
 
     </View>
+  );
+};
+
+const CarparkInfo = ({ text = 'Invalid' }) => {
+  return (
+      <View style={{height: 60, justifyContent: 'center'}}>
+        <Text style={{fontSize: 15}}>{text}</Text>
+      </View>
   );
 };
 
