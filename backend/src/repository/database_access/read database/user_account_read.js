@@ -1,3 +1,10 @@
+/**
+ * Provides functions to access user account data, including email, password, and bookmark lists, 
+ * from a MongoDB collection. It also includes utility functions for fetching documents by email.
+ * 
+ * @module UserAccountRead
+ */
+
 const { get_collection } = require("../database_tools.js")
 
 const collection_name = "user_accounts";
@@ -14,7 +21,7 @@ const collection_name = "user_accounts";
  * @example
  * const userDocument = await find_document("user@example.com");
  * 
- * @author [Your Name]
+ * @author Yue Hang
  */
 
 async function find_document ( email ) {

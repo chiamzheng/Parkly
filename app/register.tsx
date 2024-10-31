@@ -12,10 +12,14 @@ import {
 import { Dimensions, TouchableOpacity } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import validator from 'validator';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import validator from "validator";
 import React from "react";
-//const { register } = require('../backend/src/controller/user_account_manager');
+
+const {
+  register,
+} = require("../backend/src/controller/user_account_manager.js");
+
 export default function Register({ navigation }) {
   const [username, onChangeUser] = React.useState("");
   const [password, onChangePass] = React.useState("");
@@ -25,8 +29,8 @@ export default function Register({ navigation }) {
     setShowPassword(!showPassword);
   };
   const [showPassword1, setShowPassword1] = React.useState(false);
-    const toggleShowPassword1 = () => {
-      setShowPassword1(!showPassword1);
+  const toggleShowPassword1 = () => {
+    setShowPassword1(!showPassword1);
   };
   const [validEmail, setValidEmail] = React.useState(true);
   const [validPassword, setValidPassword] = React.useState(true);
@@ -44,7 +48,7 @@ export default function Register({ navigation }) {
         <ThemedView style={styles.stepContainer}>
           <Text style={styles.subtitle}>Enter Email</Text>
           <TextInput
-            style={validEmail?styles.input:styles.invalidinput}
+            style={validEmail ? styles.input : styles.invalidinput}
             onChangeText={onChangeUser}
             value={username}
             placeholder="you@example.com"
@@ -54,7 +58,7 @@ export default function Register({ navigation }) {
           <Text style={styles.subtitle}>Enter New Password</Text>
           <View style={styles.password}>
             <TextInput
-              style={validPassword?styles.input:styles.invalidinput}
+              style={validPassword ? styles.input : styles.invalidinput}
               onChangeText={onChangePass}
               value={password}
               placeholder="Enter 6 characters or more"
@@ -64,20 +68,18 @@ export default function Register({ navigation }) {
             />
             <TouchableOpacity style={styles.icon}>
               <MaterialCommunityIcons
-                        name={showPassword ? 'eye-off' : 'eye'}
-                        size={24}
-                        color="#aaa"
-                        
-                        onPress={toggleShowPassword}
+                name={showPassword ? "eye-off" : "eye"}
+                size={24}
+                color="#aaa"
+                onPress={toggleShowPassword}
               />
             </TouchableOpacity>
-            
           </View>
-          
+
           <Text style={styles.subtitle}>Confirm Password</Text>
           <View style={styles.password}>
             <TextInput
-              style={validcfm?styles.input:styles.invalidinput}
+              style={validcfm ? styles.input : styles.invalidinput}
               onChangeText={onChangeCfm}
               value={cfm}
               placeholder="Enter 6 characters or more"
@@ -87,17 +89,20 @@ export default function Register({ navigation }) {
             />
             <TouchableOpacity style={styles.icon}>
               <MaterialCommunityIcons
-                        name={showPassword1 ? 'eye-off' : 'eye'}
-                        size={24}
-                        color="#aaa"
-                        
-                        onPress={toggleShowPassword1}
+                name={showPassword1 ? "eye-off" : "eye"}
+                size={24}
+                color="#aaa"
+                onPress={toggleShowPassword1}
               />
             </TouchableOpacity>
           </View>
           <View>
-            <Text style={validcfm?styles.hide:styles.invalidmsg}>The passwords do not match.</Text>
-            <Text style={!(registered==-2)?styles.hide:styles.invalidmsg}>The password is too weak.</Text>
+            <Text style={validcfm ? styles.hide : styles.invalidmsg}>
+              The passwords do not match.
+            </Text>
+            <Text style={!(registered == -2) ? styles.hide : styles.invalidmsg}>
+              The password is too weak.
+            </Text>
           </View>
         </ThemedView>
         <View style={styles.buttoncontainer}>
@@ -113,27 +118,29 @@ export default function Register({ navigation }) {
           <Pressable
             style={styles.button}
             onPress={() => {
-              if(validator.isEmail(username)){
+              if (validator.isEmail(username)) {
                 setValidEmail(true);
-              }else{
-                  setValidEmail(false);
-                }
-              if(validator.isEmpty(password)){
-                setValidPassword(false)
-              }else{
+              } else {
+                setValidEmail(false);
+              }
+              if (validator.isEmpty(password)) {
+                setValidPassword(false);
+              } else {
                 setValidPassword(true);
               }
-              if(password==cfm){
+              if (password == cfm) {
                 setValidcfm(true);
-              }else{
+              } else {
                 setValidcfm(false);
               }
-              if((validator.isEmail(username))&&(!validator.isEmpty(password))&&(password==cfm)){
-                //setRegistered(register(username,password));
+              if (
+                validator.isEmail(username) &&
+                !validator.isEmpty(password) &&
+                password == cfm
+              ) {
+                setRegistered(register(username, password));
               }
-            }
-            
-          }
+            }}
           >
             <Text style={styles.buttonText}>Let's Go!</Text>
           </Pressable>
@@ -228,7 +235,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     fontWeight: "800",
     color: "black",
-    marginBottom:8,
+    marginBottom: 8,
   },
   img: {
     height: 30,
@@ -252,17 +259,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     margin: 20,
   },
-  password:{
-    flexDirection:"row",
-    alignItems:"center",
-    justifyContent:"flex-end",
-    paddingHorizontal:14,
-    
+  password: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    paddingHorizontal: 14,
   },
-  icon:{
-    position:"absolute",
-    paddingBottom:8,
-    paddingRight:Dimensions.get("window").width / 14,
+  icon: {
+    position: "absolute",
+    paddingBottom: 8,
+    paddingRight: Dimensions.get("window").width / 14,
   },
   invalidinput: {
     //fontFamily: "Ubuntu",
@@ -275,14 +281,14 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     fontWeight: "800",
     color: "black",
-    marginBottom:20,
+    marginBottom: 20,
   },
-  hide:{
-    display:'none',
+  hide: {
+    display: "none",
   },
-  invalidmsg:{
-    color:'red',
-    fontWeight:'800',
-    alignSelf:"center",
-  }
+  invalidmsg: {
+    color: "red",
+    fontWeight: "800",
+    alignSelf: "center",
+  },
 });
