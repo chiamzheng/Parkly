@@ -72,7 +72,7 @@ export default function Signin({ navigation }: { navigation: any }) {
               checked={check1}
               onPress={() => setCheck1(!check1)}
             />
-            <Pressable onPress={() => navigation.navigate("forgot")}>
+            <Pressable onPress={() => navigation.navigate("LoginUI/forgot")}>
               <Text style={styles.guest}>Forgot Password</Text>
             </Pressable>
           </View>
@@ -88,7 +88,7 @@ export default function Signin({ navigation }: { navigation: any }) {
           >
             <Image
               style={styles.img}
-              source={require("../assets/images/back.png")}
+              source={require("../../assets/images/back.png")}
             />
           </Pressable>
           <Pressable

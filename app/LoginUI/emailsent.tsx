@@ -34,7 +34,7 @@ import {
             </View>
             <Pressable
                 style={styles.button}
-                onPress={() => navigation.navigate("signin")} // Navigate to Signin
+                onPress={() => navigation.navigate("LoginUI/signin")} // Navigate to Signin
              >
                 <Text style={styles.buttonText}>Return To Login Page</Text>
           </Pressable>

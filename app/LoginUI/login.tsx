@@ -22,18 +22,18 @@ export default function Login({ navigation }) {
         <View style={styles.imgcontainer}>
           <Image
             style={styles.cargif}
-            source={require("../assets/images/car.gif")}
+            source={require("../../assets/images/car.gif")}
           />
           <Image
             style={styles.locationgif}
-            source={require("../assets/images/nav.gif")}
+            source={require("../../assets/images/nav.gif")}
           />
         </View>
 
         <ThemedView style={styles.stepContainer}>
           <Pressable
             style={styles.button}
-            onPress={() => navigation.navigate("signin")} // Navigate to Signin
+            onPress={() => navigation.navigate("LoginUI/signin")} // Navigate to Signin
           >
             <Text style={styles.buttonText}>LOGIN</Text>
           </Pressable>

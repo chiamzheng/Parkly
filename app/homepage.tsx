@@ -8,7 +8,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import CarparkSummary from './carparkSummary';
+import CarparkSummary from '../components/carparkSummary';
 import React from "react";
 import FAB from '../components/FAB'
 

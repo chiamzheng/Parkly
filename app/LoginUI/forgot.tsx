@@ -49,7 +49,7 @@ export default function Forgot({ navigation }) {
           >
             <Image
               style={styles.img}
-              source={require("../assets/images/back.png")}
+              source={require("../../assets/images/back.png")}
             />
           </Pressable>
           <Pressable
@@ -57,7 +57,7 @@ export default function Forgot({ navigation }) {
             onPress={() => {
               if(validator.isEmail(username)){
                 setValidEmail(true);
-                navigation.navigate('emailsent', { email: username });
+                navigation.navigate('LoginUI/emailsent', { email: username });
               }else{
                   setValidEmail(false);
                 }

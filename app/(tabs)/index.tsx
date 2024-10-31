@@ -6,7 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { green } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import * as Animatable from 'react-native-animatable';
-import Signin from '../signin';
+import Signin from '../LoginUI/signin';
 
 export default function HomeScreen({ navigation}) {
   return (

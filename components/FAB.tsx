@@ -8,7 +8,7 @@ import { StyleSheet, View, Pressable, Image,Modal,Alert,Text } from 'react-nativ
 import { SelectCountry } from 'react-native-element-dropdown';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import React from "react";
-import CarparkIcons from '../app/carparkIcons';
+import CarparkIcons from './carparkIcons';
 const exitIcon = require("../assets/images/exit.png");
 const OFFSET = 60; // Distance to move FABs when expanded
 const radiusDropdown = [
