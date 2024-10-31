@@ -39,7 +39,7 @@ export default function Login({ navigation }) {
           </Pressable>
           <Pressable
             style={styles.button}
-            onPress={() => navigation.navigate("register")}
+            onPress={() => navigation.navigate("SignupUI/register")}
           >
             <Text style={styles.buttonText}>REGISTER</Text>
           </Pressable>

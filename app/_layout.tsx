@@ -13,7 +13,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import Login from "./LoginUI/login";
 import Signin from "./LoginUI/signin";
-import Register from "./register";
+import Register from "./SignupUI/register";
 import Forgot from "./LoginUI/forgot";
 import EmailSent from "./LoginUI/emailsent";
 import Settings from "./SettingsUI/settings";
@@ -54,7 +54,7 @@ export default function RootLayout() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="register"
+        name="SignupUI/register"
         component={Register}
         options={{ headerShown: false }}
       />

@@ -110,7 +110,7 @@ export default function Register({ navigation }) {
           >
             <Image
               style={styles.img}
-              source={require("../assets/images/back.png")}
+              source={require("../../assets/images/back.png")}
             />
           </Pressable>
           <Pressable
