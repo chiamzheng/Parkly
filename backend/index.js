@@ -5,7 +5,19 @@ const PORT = 8083;
 
 app.use(express.json()); // To parse incoming JSON data
 
-// GET endpoint to return carpark availability for a specific carpark
+/**
+ * @route GET /carparkAvailability/:id
+ * @description Fetches number of available lots information for a specific carpark by its ID.
+ *
+ * @param {string} id - The ID of the carpark (carpark number).
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} res.json - JSON response containing carpark availability data
+ * @throws {Error} - Throws a 404 error if the carpark is not found or a 500 error if the fetch fails
+ *
+ * @author Jamie
+ */
+
 app.get('/carparkAvailability/:id', async (req, res) => {
     const { id } = req.params;
     
@@ -35,8 +47,19 @@ app.get('/carparkAvailability/:id', async (req, res) => {
     }
 });
 
-// GET endpoint to search for an address using OneMap API, locate x, y coordinates to pin destination
-// Note you need to convert to WGS84 longtitude n latitude
+/**
+ * @route GET /searchAddress/:query
+ * @description Searches for addresses based on the provided query (keyword)
+ *
+ * @param {string} query - The search term
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Array} res.json - JSON array of matching address results
+ * @throws {Error} - Throws a 404 error if no results are found or a 500 error if the search fails
+ *
+ * @author Jamie
+ */
+
 app.get('/searchAddress/:query', async (req, res) => {
     const { query } = req.params;
 
@@ -71,8 +94,22 @@ app.get('/searchAddress/:query', async (req, res) => {
     }
 });
 
-//get carRoute from starting to destination (carpark), takes in WGS84 longtitude and latitude
-//need to decode route geometry
+// tryna figure out how to renew token without explicitely copypasting token,, NOT USABLE unless you copy paste your token into Authorization
+
+/**
+ * @route GET /carRoute/:start/:end
+ * @description Fetches driving route information between the specified start (takes in WGS84 longtitude and latitude) and end locations.
+ *
+ * @param {string} start - The starting location for the route.
+ * @param {string} end - The destination location for the route.
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} res.json - JSON response containing route information
+ * @throws {Error} - Throws a 404 error if no routes are found or a 500 error if the fetch fails
+ * 
+ * @author Jamie
+ */
+
 app.get('/carRoute/:start/:end', async (req, res) => {
     const { start, end } = req.params; // Extract start and end locations from URL parameters
 
@@ -112,6 +149,20 @@ app.get('/carRoute/:start/:end', async (req, res) => {
         res.status(500).send({ message: 'Error fetching route data' });
     }
 });
+
+/**
+ * @route GET /walkRoute/:start/:end
+ * @description Fetches walking route information between the specified start (takes in WGS84 longtitude and latitude) and end locations.
+ *
+ * @param {string} start - The starting location for the route.
+ * @param {string} end - The destination location for the route.
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} res.json - JSON response containing route information
+ * @throws {Error} - Throws a 404 error if no routes are found or a 500 error if the fetch fails
+ *
+ * @author Jamie
+ */
 
 app.get('/walkRoute/:start/:end', async (req, res) => {
     const { start, end } = req.params; // Extract start and end locations from URL parameters
@@ -157,5 +208,77 @@ app.get('/walkRoute/:start/:end', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+
+
+
+// WIP
+
+/**
+ * @route POST /api/auth/post/getToken
+ * @description Generates an access token using user credentials.
+ *
+ * @param {Object} req - Express request object containing email and password in the body.
+ * @param {Object} res - Express response object
+ * @returns {Object} res.json - JSON response containing the access token and its expiry timestamp.
+ * @throws {Error} - Throws a 500 error if token generation fails
+ *
+ * @author Jamie
+ */
+
+/*
+app.post('/api/auth/post/getToken', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        const response = await axios.post('https://www.onemap.gov.sg/api/auth/post/getToken', {
+            email: email,
+            password: password,
+        });
+
+        const { access_token, expiry_timestamp } = response.data;
+        oneMapToken = access_token;
+        tokenExpiry = parseInt(expiry_timestamp);
+
+        res.status(200).send({ access_token, expiry_timestamp });
+    } catch (error) {
+        console.error("Error generating token:", error);
+        res.status(500).send({ message: 'Error generating token' });
+    }
+});*
+
+/**
+ * @function ensureToken
+ * @description Function to check validity of token and renew if expired.
+ *
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ * @throws {Error} - Throws an error if the token refresh fails
+ *
+ * @author Jamie
+ */
+/*
+async function ensureToken(req, res, next) {
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+
+    if (currentTimestamp >= tokenExpiry) {
+        try {
+            const response = await axios.post('/api/auth/post/getToken', {
+                email: email,
+                password: password,
+            });
+
+            oneMapToken = response.data.access_token;
+            tokenExpiry = parseInt(response.data.expiry_timestamp);
+        } catch (error) {
+            return res.status(500).send({ message: 'Failed to refresh token' });
+        }
+    }
+    next();
+}
+
+*/
+
 
 
