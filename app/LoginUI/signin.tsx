@@ -107,7 +107,7 @@ export default function Signin({ navigation }: { navigation: any }) {
                 setValidPassword(true);
               }
               if(validPassword && validEmail){
-                navigation.navigate("homepage");
+                navigation.navigate("HomepageUI/homepage");
               }
             }
             }
