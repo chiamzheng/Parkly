@@ -25,7 +25,7 @@ export default function CarparkSummary() {
   const fetchCarparkAvailability = async () => {
     try {
       // note I am using an andriod emulator so i have to use 10.0.2.2 instead of localhost - jamie
-      const response = await axios.get('http://10.0.2.2:8083/carparkAvailability/JM23'); // Have to edit so that you pass in respective the carpark id
+      const response = await axios.get('http://10.0.2.2:8083/carparkAvailability/HE12'); // Have to edit so that you pass in respective the carpark id
       setCarparkData(response.data);
     } catch (error) {
       console.error('Error fetching carpark availability:', error);
