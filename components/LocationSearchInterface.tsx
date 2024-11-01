@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { View, TextInput, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BookmarkList from './Bookmark';
 import { Modal } from 'react-native';
 
-const LocationSearchInterface = (style: any) => {
+  const navigation = useNavigation();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [bookmarksVisible, setBookmarksVisible] = useState(false);
@@ -60,7 +61,7 @@ const LocationSearchInterface = (style: any) => {
         <TouchableOpacity onPress={toggleBookmarks} style={styles.iconButton}>
           <Icon name="bookmark-outline" size={24} style={styles.icon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => alert('Settings button pressed')} style={styles.iconButton}>
+        <TouchableOpacity onPress={() => navigation.navigate("./app/SettingsUI/settings.tsx")} style={styles.iconButton}>
           <Icon name="settings-outline" size={24} style={styles.icon} />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleLogout} style={styles.iconButton}>
