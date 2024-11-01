@@ -24,7 +24,7 @@ import { Modal } from 'react-native';
   // Fetching data from the OneMap API
   const fetchData = async () => {
     try {
-      const response = await fetch(`https://www.onemap.gov.sg/api/common/elastic/search?searchVal=${searchQuery}&returnGeom=Y&getAddrDetails=Y&pageNum=1`);
+      const response = await fetch(`http://10.0.2.2:8083//searchAddress/1.35238866039921,103.959877071858`);
       const result = await response.json();
       setData(result.results);  // Adjust based on the structure of the API response
       setLoading(false);
@@ -38,6 +38,8 @@ import { Modal } from 'react-native';
   useEffect(() => {
     if (searchQuery) {
       fetchData();
+    } else {
+      setLoading(false); // Set loading to false if searchQuery is empty
     }
   }, [searchQuery]);
 
