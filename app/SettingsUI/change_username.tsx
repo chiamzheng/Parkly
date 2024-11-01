@@ -19,7 +19,7 @@ export default function ChangeUsername({ navigation }: { navigation: any }) {
     // Here you would typically handle the username change logic
     Alert.alert('Username changed', `New username: ${newUsername}`);
     // After changing the username, navigate back to homepage
-    navigation.navigate('./HomepageUI/homepage.tsx');
+    navigation.navigate('HomepageUI/homepage');
   };
 
   return (

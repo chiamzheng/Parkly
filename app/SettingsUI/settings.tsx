@@ -26,19 +26,19 @@ export default function Settings({ navigation }: { navigation: any }) {
         <ThemedView style={styles.settingsContainer}>
           <Pressable
             style={styles.button}
-            onPress={() => Alert.alert('Change Username')}
+            onPress={() => navigation.navigate('SettingsUI/change_username')}
           >
             <Text style={styles.buttonText}>Change Username</Text>
           </Pressable>
           <Pressable
             style={styles.button}
-            onPress={() => Alert.alert('Change Password')}
+            onPress={() => navigation.navigate('SettingsUI/change_password')}
           >
             <Text style={styles.buttonText}>Change Password</Text>
           </Pressable>
           <Pressable
             style={[styles.button, styles.signOutButton]}
-            onPress={() => navigation.navigate('login')}
+            onPress={() => navigation.navigate('WelcomeUI/welcomepage')}
           >
             <Text style={styles.buttonText}>Sign Out</Text>
           </Pressable>

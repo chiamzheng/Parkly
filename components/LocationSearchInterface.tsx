@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import BookmarkList from './Bookmark';
 import { Modal } from 'react-native';
 
+const LocationSearchInterface = (style:any) =>{
   const navigation = useNavigation();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -44,9 +45,9 @@ import { Modal } from 'react-native';
   }, [searchQuery]);
 
   if (loading) {
-    return <Text>Loading...</Text>;
+    return (<Text>Loading...</Text>);
   }
-
+  
   return (
     <View style={{
             ...style?.style,
@@ -63,7 +64,7 @@ import { Modal } from 'react-native';
         <TouchableOpacity onPress={toggleBookmarks} style={styles.iconButton}>
           <Icon name="bookmark-outline" size={24} style={styles.icon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("./app/SettingsUI/settings.tsx")} style={styles.iconButton}>
+        <TouchableOpacity onPress={() => navigation.navigate("SettingsUI/settings")} style={styles.iconButton}>
           <Icon name="settings-outline" size={24} style={styles.icon} />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleLogout} style={styles.iconButton}>
