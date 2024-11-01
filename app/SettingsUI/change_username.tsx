@@ -18,8 +18,8 @@ export default function ChangeUsername({ navigation }: { navigation: any }) {
   const handleConfirm = () => {
     // Here you would typically handle the username change logic
     Alert.alert('Username changed', `New username: ${newUsername}`);
-    // After changing the username, you might want to navigate back or to another screen
-    // navigation.goBack();
+    // After changing the username, navigate back to homepage
+    navigation.navigate('./HomepageUI/homepage.tsx');
   };
 
   return (

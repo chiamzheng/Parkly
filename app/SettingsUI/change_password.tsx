@@ -23,8 +23,8 @@ export default function ChangePassword({ navigation }: { navigation: any }) {
     }
     // Here you would typically handle the password change logic
     Alert.alert('Password changed', 'Your password has been updated');
-    // After changing the password, you might want to navigate back or to another screen
-    // navigation.goBack();
+    // After changing the password, navigate back or to homepage
+    navigation.navigate('./HomepageUI/homepage.tsx');
   };
 
   return (
