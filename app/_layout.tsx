@@ -16,7 +16,7 @@ import Signin from "./LoginUI/signin";
 import Register from "./SignupUI/register";
 import Forgot from "./LoginUI/forgot";
 import EmailSent from "./LoginUI/emailsent";
-import Settings from "./SettingsUI/settings";
+import Settings from "./SettingsUI/settingspage";
 import ChangeUsername from "./SettingsUI/change_username";
 import ChangePassword from "./SettingsUI/change_password";
 import SignOut from "./SettingsUI/sign_out";
@@ -69,7 +69,7 @@ export default function RootLayout() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="SettingsUI/settings"
+        name="SettingsUI/settingspage"
         component={Settings}
         options={{ headerShown: false }}
       />
