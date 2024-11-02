@@ -40,7 +40,7 @@ export default function Homepage({ navigation }) {
       <FAB/>
 
       <View style={styles.carpark}>
-        <CarparkSummary />
+        <CarparkSummary/>
       </View>
 
       <StatusBar style="auto" />
