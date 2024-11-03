@@ -2,6 +2,19 @@ import { useState, useEffect } from 'react';
 import { Modal, StyleSheet, Text, Pressable, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import CarparkIcons from './carparkIcons';
+import NotificationScreen from './Notifications'
+import * as carpark_read from '../backend/src/repository/database_access/read database/carpark_read'
+
+const carpark_temp = 'JM23' //Test for now
+
+const carpark = async () => {
+  try {
+      const id = await carpark_read.read_carpark_id(carpark_temp);
+      return 
+  } catch (error) {
+      console.error('Error fetching carpark ID:', error);
+  }
+};
 
 export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [carparkAvailability, setCarparkAvailability] = useState(null);
@@ -9,6 +22,9 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [bookmarkIsOn, setBookmarkIsOn] = useState(false);
   const [bigModalVisible, setBigModalVisible] = useState(false);
   const exitIcon = require("../assets/images/exit.png");
+
+  //status for notification and bookmark icons
+  const [bookmarkIsOn, setBookmarkIsOn] = useState(false);
 
   useEffect(() => {
     if (visible && carparkData) {
@@ -48,7 +64,8 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                 </Pressable>
               </View>
             </View>
-            <Text style={styles.lot}>Lots Available: {carparkAvailability ? carparkAvailability.availability : 'Loading...'}</Text>
+            
+            <Text style={styles.lot}>Lots Available: {id}</Text>
             <Text style={styles.rate}>Rate: $1.12/hour</Text>
             <CarparkIcons />
 
@@ -89,24 +106,26 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                   <Text style={styles.name}>{carparkData?.title || 'Carpark'}</Text>
                 </View>
 
-                <View style={{ flexDirection: 'row', marginRight: 10 }}>
-                  <TouchableOpacity onPress={() => setNotifIsOn(!notifIsOn)}>
-                    <Image
-                      source={notifIsOn ? require('../assets/images/notification_on.png') : require('../assets/images/notification_off.png')}
-                      style={{ width: 30, height: 30, marginRight: 5 }}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => setBookmarkIsOn(!bookmarkIsOn)}>
-                    <Image
-                      source={bookmarkIsOn ? require('../assets/images/bookmark_on.png') : require('../assets/images/bookmark_off.png')}
-                      style={{ width: 30, height: 30, marginRight: 10 }}
-                    />
-                  </TouchableOpacity>
-                  <Pressable onPress={() => { setBigModalVisible(false); }}>
-                    <Image source={require("../assets/images/return.png")} style={[styles.exit, { width: 30, height: 30 }]}/>
-                  </Pressable>
-                </View>
-              </View>
+                      
+                      <View style={{flexDirection:'row', marginRight: 10}}>
+                        <NotificationScreen/>
+                      
+                        <TouchableOpacity onPress={() => setBookmarkIsOn(!bookmarkIsOn)}>
+                          <Image
+                            source={
+                              bookmarkIsOn
+                                ? require('../assets/images/bookmark_on.png') 
+                                : require('../assets/images/bookmark_off.png') 
+                            }
+                            style={{ width: 30, height: 30, marginRight: 10}}
+                          />
+                        </TouchableOpacity>
+                      
+                        <Pressable onPress={() => {setBigModalVisible(!bigModalVisible), setModalVisible(!modalVisible)}}>
+                          <Image source={require("../assets/images/return.png")} style={[styles.exit, {width: 30,height: 30}]}/>
+                        </Pressable>
+                      </View>
+                    </View>
 
               <View style={styles.reviewBox}>
                 <Text style={{ fontSize: 15, marginLeft: 10, marginTop: 7 }}>Reviews:</Text>
