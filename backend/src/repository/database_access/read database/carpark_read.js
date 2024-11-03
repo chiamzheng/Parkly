@@ -56,6 +56,39 @@ async function read_carpark_id ( car_park_id ) {
     return result_carpark_id;
 }
 
+async function read_address( car_park_id ) {
+    const document = await find_document( car_park_id );
+    const address = document.address;
+    return address
+}
+
+async function read_parking_system_type ( car_park_id ) {
+    const document = await find_document(car_park_id);
+    const parking_system_type = document.parking_system_type;
+    return parking_system_type;
+}
+
+async function read_parking_available_time (car_park_id) {
+    const document = await find_document(car_park_id);
+    const short_term = document.short_term_parking;
+    const whole_day = document.whole_day_parking;
+    // const morning_evening = document.0700to1900_parking;
+    // const morning_night = document.0800to2230_parking;
+    const night_parking = document.night_parking;
+    return short_term, whole_day, night_parking;
+}
+
+async function read_free_parking (car_park_id) {
+    const document = await find_document(car_park_id);
+    const free_parking = document.free_parking;
+    return free_parking; 
+}
+
+async function read_carpark_rate ( car_park_id ) {
+    const document = await find_document(car_park_id);
+    // const morning_evening = document.0700to1700_motorcars_rate;
+}
+
 /**
  * Reads and returns the location (x, y coordinates in SVY21 format) of the given car park.
  * 
