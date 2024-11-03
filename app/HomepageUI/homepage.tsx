@@ -11,9 +11,9 @@ export default function Homepage({ navigation }) {
   const [selectedCarpark, setSelectedCarpark] = useState(null);
 
   const carparkLocations = [
-    { id: 1, latitude: 1.3521, longitude: 103.8100, title: 'JM23',capacity:88 },
-    { id: 2, latitude: 1.3531, longitude: 103.8200, title: 'PT99',capacity:30 },
-    { id: 3, latitude: 1.3541, longitude: 103.8300, title: 'LF28',capacity:20 },
+    { id: 1, latitude: 1.3521, longitude: 103.8100, title: 'JM23',capacity:88, availability:22,rate:1.22 },
+    { id: 2, latitude: 1.3531, longitude: 103.8200, title: 'PT99',capacity:30 , availability:3,rate:1.23},
+    { id: 3, latitude: 1.3541, longitude: 103.8300, title: 'LF28',capacity:20, availability:2,rate:1.24},
   ];
 
   const handleMarkerPress = (carpark) => {

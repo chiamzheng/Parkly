@@ -1,4 +1,4 @@
-const functions = require('../backend/src/controller/carpark_manager');
+//const functions = require('../backend/src/controller/carpark_manager');
 const { get_available_lots, get_capacity, fetch_suggestions, fetch_reviews, fetch_carparks_within_radius } = functions;
 
 const carParkId = 'JM23'; // Replace with a valid car park ID

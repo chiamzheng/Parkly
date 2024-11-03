@@ -3,8 +3,8 @@ import * as Notifications from "expo-notifications";
 import React, { useEffect, useState } from 'react';
 
 
-const functions = require('../backend/src/controller/carpark_manager');
-const { get_available_lots, get_capacity, fetch_suggestions, fetch_reviews, fetch_carparks_within_radius } = functions;
+//const functions = require('../backend/src/controller/carpark_manager');
+//const { get_available_lots, get_capacity, fetch_suggestions, fetch_reviews, fetch_carparks_within_radius } = functions;
 
 const NotificationScreen = () => {
     const [notifIsOn,setNotifIsOn] = useState(false);

@@ -3,6 +3,7 @@ import { Modal, StyleSheet, Text, Pressable, View, Image, ScrollView, TouchableO
 import axios from 'axios';
 import CarparkIcons from './carparkIcons';
 import NotificationScreen from './Notifications'
+/*
 import * as carpark_read from '../backend/src/repository/database_access/read database/carpark_read'
 
 const carpark_temp = 'JM23' //Test for now
@@ -15,11 +16,10 @@ const carpark = async () => {
       console.error('Error fetching carpark ID:', error);
   }
 };
-
+*/
 export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [carparkAvailability, setCarparkAvailability] = useState(null);
   const [notifIsOn, setNotifIsOn] = useState(false);
-  const [bookmarkIsOn, setBookmarkIsOn] = useState(false);
   const [bigModalVisible, setBigModalVisible] = useState(false);
   const exitIcon = require("../assets/images/exit.png");
 
@@ -65,8 +65,8 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               </View>
             </View>
             
-            <Text style={styles.lot}>Lots Available: {id}</Text>
-            <Text style={styles.rate}>Rate: $1.12/hour</Text>
+            <Text style={styles.lot}>Lots Available: {carparkData?.availability||0}</Text>
+            <Text style={styles.rate}>Rate: ${carparkData?.rate||0}/hour</Text>
             <CarparkIcons />
 
             <View style={[styles.nameContainer, { marginTop: 3 }]}>
@@ -121,7 +121,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                           />
                         </TouchableOpacity>
                       
-                        <Pressable onPress={() => {setBigModalVisible(!bigModalVisible), setModalVisible(!modalVisible)}}>
+                        <Pressable onPress={() => {setBigModalVisible(!bigModalVisible)}}>
                           <Image source={require("../assets/images/return.png")} style={[styles.exit, {width: 30,height: 30}]}/>
                         </Pressable>
                       </View>
