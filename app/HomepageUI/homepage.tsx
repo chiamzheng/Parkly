@@ -1,47 +1,57 @@
 import LocationSearchInterface from '@/components/LocationSearchInterface';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Pressable, Image } from 'react-native';
-import MapView, { UrlTile } from 'react-native-maps';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
+import { StyleSheet, View } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
+import React, { useState } from "react";
 import CarparkSummary from '../../components/carparkSummary';
-import React from "react";
-import FAB from '../../components/FAB'
-
-
+import FAB from '../../components/FAB';
 
 export default function Homepage({ navigation }) {
-  
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedCarpark, setSelectedCarpark] = useState(null);
+
+  const carparkLocations = [
+    { id: 1, latitude: 1.3521, longitude: 103.8100, title: 'JM23',capacity:88 },
+    { id: 2, latitude: 1.3531, longitude: 103.8200, title: 'PT99',capacity:30 },
+    { id: 3, latitude: 1.3541, longitude: 103.8300, title: 'LF28',capacity:20 },
+  ];
+
+  const handleMarkerPress = (carpark) => {
+    setSelectedCarpark(carpark); // Pass carpark data to CarparkSummary
+    setModalVisible(true); // Open modal
+  };
 
   return (
     <View style={styles.container}>
       <LocationSearchInterface style={styles.search} />
 
-      <MapView 
+      <MapView
         style={styles.map}
         initialRegion={{
-          latitude: 1.3521, // Center on Singapore
+          latitude: 1.3521,
           longitude: 103.8198,
           latitudeDelta: 0.1,
           longitudeDelta: 0.1,
         }}
       >
-        {/*<UrlTile
-          urlTemplate="https://www.onemap.gov.sg/maps/tiles/Default_HD/{z}/{x}/{y}.png"
-          maximumZ={19}
-          tileSize={256}
-        />*/}
+        {carparkLocations.map((location) => (
+          <Marker
+            key={location.id}
+            coordinate={{ latitude: location.latitude, longitude: location.longitude }}
+            title={location.title}
+            onPress={() => handleMarkerPress(location)}
+          />
+        ))}
       </MapView>
 
-      <FAB/>
+      <FAB />
 
-      <View style={styles.carpark}>
-        <CarparkSummary />
-      </View>
+      {/* Pass modalVisible, selectedCarpark, and setModalVisible as props to CarparkSummary */}
+      <CarparkSummary
+        visible={modalVisible}
+        carparkData={selectedCarpark}
+        onClose={() => setModalVisible(false)}
+      />
 
       <StatusBar style="auto" />
     </View>
@@ -63,13 +73,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 20,
     elevation: 1,
-    zIndex:1,
-  },
-  carpark: {
-    position: 'absolute',
-    top: 500,
-    left: 0,
-    right: 0,
-    alignItems: 'center',
+    zIndex: 1,
   },
 });
