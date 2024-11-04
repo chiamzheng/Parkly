@@ -142,9 +142,9 @@ async function fetch_carparks_within_radius(user_destination, radius) {
 }
 
 // test function
-const user_destination = [1.321572, 103.884496] //wgs82
+// const user_destination = [1.321572, 103.884496] //wgs82
 // const user_destination = [30000, 30000]; //svy21
-fetch_carparks_within_radius(user_destination, 1000);
+// fetch_carparks_within_radius(user_destination, 1000);
 
 
 module.exports = { get_available_lots, get_capacity, fetch_suggestions, fetch_reviews, fetch_carparks_within_radius };
