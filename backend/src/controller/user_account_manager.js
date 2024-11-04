@@ -34,6 +34,7 @@ async function register ( input_email, input_password ) {
     // password is strong enough
     // register account to database
     await UserAccountWrite.add_user_account(input_email, input_password);
+    console.log("Successfully Registered!")
     return 1;
 }
 

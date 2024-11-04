@@ -15,6 +15,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import validator from "validator";
 import React from "react";
+const axios = require("axios");
 
 //const {register} = require("../backend/src/controller/user_account_manager");
 
@@ -34,6 +35,10 @@ export default function Register({ navigation }) {
   const [validPassword, setValidPassword] = React.useState(true);
   const [validcfm, setValidcfm] = React.useState(true);
   const [registered, setRegistered] = React.useState(1);
+
+  React.useEffect(() => {
+    axios.post("https://localhost3000/api/register");
+  });
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.background}>
@@ -136,6 +141,10 @@ export default function Register({ navigation }) {
                 !validator.isEmpty(password) &&
                 password == cfm
               ) {
+                axios.post("http://localhost:3000/api/register", {
+                  email: "apitest",
+                  password: "apitest",
+                });
                 //setRegistered(register(username, password));
               }
             }}

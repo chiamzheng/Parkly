@@ -13,7 +13,7 @@ const collection_name = "carparks";
  * 
  * @async
  * @function find_document
- * @param {string} car_park_id - The ID of the car park to find.
+ * @param {string} carpark_id - The ID of the car park to find.
  * @returns {Promise<Object|null>} - Returns the document for the specified car park ID, or null if not found.
  * @throws {Error} - Throws an error if the database query fails.
  * 
@@ -21,13 +21,13 @@ const collection_name = "carparks";
  */
 
 // utility function
-async function find_document ( car_park_id ) {
+async function find_document ( carpark_id ) {
 
     // connect to collection in database
     const user_accounts_collection = await get_collection(collection_name);
 
     // query for results
-    const query = { car_park_id : car_park_id };
+    const query = { carpark_id : carpark_id };
     const document = await user_accounts_collection.findOne(query);
 
     return document;
@@ -38,7 +38,7 @@ async function find_document ( car_park_id ) {
  * 
  * @async
  * @function read_carpark_id
- * @param {string} car_park_id - The ID of the car park to read.
+ * @param {string} carpark_id - The ID of the car park to read.
  * @returns {Promise<string>} - Returns the car park ID.
  * @throws {Error} - Throws an error if the car park document is not found or reading fails.
  * 
@@ -48,45 +48,18 @@ async function find_document ( car_park_id ) {
  * @author Yue Hang
  */
 
-async function read_carpark_id ( car_park_id ) {
+async function read_carpark_id ( carpark_id ) {
 
-    const document = await find_document( car_park_id );
-    const result_carpark_id = await document.car_park_id;
-    console.log(`Carpark ID for ${car_park_id}: ${result_carpark_id}`);
+    const document = await find_document( carpark_id );
+    const result_carpark_id = await document.carpark_id;
+    console.log(`Carpark ID for ${carpark_id}: ${result_carpark_id}`);
     return result_carpark_id;
 }
 
-async function read_address( car_park_id ) {
-    const document = await find_document( car_park_id );
+async function read_address( carpark_id ) {
+    const document = await find_document( carpark_id );
     const address = document.address;
     return address
-}
-
-async function read_parking_system_type ( car_park_id ) {
-    const document = await find_document(car_park_id);
-    const parking_system_type = document.parking_system_type;
-    return parking_system_type;
-}
-
-async function read_parking_available_time (car_park_id) {
-    const document = await find_document(car_park_id);
-    const short_term = document.short_term_parking;
-    const whole_day = document.whole_day_parking;
-    // const morning_evening = document.0700to1900_parking;
-    // const morning_night = document.0800to2230_parking;
-    const night_parking = document.night_parking;
-    return short_term, whole_day, night_parking;
-}
-
-async function read_free_parking (car_park_id) {
-    const document = await find_document(car_park_id);
-    const free_parking = document.free_parking;
-    return free_parking; 
-}
-
-async function read_carpark_rate ( car_park_id ) {
-    const document = await find_document(car_park_id);
-    // const morning_evening = document.0700to1700_motorcars_rate;
 }
 
 /**
@@ -94,7 +67,7 @@ async function read_carpark_rate ( car_park_id ) {
  * 
  * @async
  * @function read_location
- * @param {string} car_park_id - The ID of the car park to read.
+ * @param {string} carpark_id - The ID of the car park to read.
  * @returns {Promise<Array<number>>} - Returns an array containing [x_coor, y_coor] in SVY21 format.
  * @throws {Error} - Throws an error if the car park document is not found or reading fails.
  * 
@@ -104,49 +77,67 @@ async function read_carpark_rate ( car_park_id ) {
  * @author Yue Hang
  */
 
-async function read_location ( car_park_id ) {
+async function read_location ( carpark_id ) {
     
-    const document = await find_document( car_park_id );
-    const x = await document.x_coordinate;
-    const y = await document.y_coordinate;
+    const document = await find_document( carpark_id );
+    const x = await document.x_coord;
+    const y = await document.y_coord;
     
     // function for converting from svy21 to wgs84 in case needed
     // location = CoordinateConverter.svy21ToWgs84(x, y);
 
     const location = [x, y];
-    console.log(`Location for ${car_park_id}: ${location}`);
+    console.log(`Location for ${carpark_id}: ${location}`);
     return location;
 }
 
-/**
- * Reads and returns the hourly rate of the given car park.
- * 
- * @async
- * @function read_hourly_rate
- * @param {string} car_park_id - The ID of the car park to read.
- * @returns {Promise<number>} - Returns the hourly rate of the car park.
- * @throws {Error} - Throws an error if the car park document is not found or reading fails.
- * 
- * @example
- * const rate = await read_hourly_rate("CP001");
- * 
- * @author Yue Hang
- */
-
-async function read_hourly_rate ( car_park_id ) {
-
-    const document = await find_document( car_park_id );
-    const hourly_rate = await document.hourly_rate;
-    console.log(`Hourly rate for ${car_park_id}: ${hourly_rate}`);
-    return hourly_rate;
+async function read_parking_system_type ( carpark_id ) {
+    const document = await find_document(carpark_id);
+    const parking_system_type = document.parking_system_type;
+    return parking_system_type;
 }
+
+async function read_parking_available_time (carpark_id) {
+    const document = await find_document(carpark_id);
+    const short_term = document.short_term_parking;
+    const whole_day = document.whole_day_parking;
+    const morning_evening = document.morning_evening;
+    const morning_night = document.morning_night;
+    const night_parking = document.night_parking;
+    return short_term, whole_day, morning_evening, morning_night, night_parking; // "YES" or "NO"
+}
+
+async function read_free_parking (carpark_id) {
+    const document = await find_document(carpark_id);
+    const free_parking = document.free_parking;
+    return free_parking; // "YES" or "NO"
+}
+
+async function read_carpark_rate ( carpark_id ) {
+    const document = await find_document(carpark_id);
+    const morning_evening_motorcar_rate = document.morning_evening_motorcar_rate;
+    const evening_morning_motorcar_rate = document.evening_morning_motorcar_rate;
+    const morning_night_motorcycle_rate = document.morning_night_motorcycle_rate;
+    const night_morning_motorcycle_rate = document.night_morning_motorcycle_rate;
+    return [morning_evening_motorcar_rate, evening_morning_motorcar_rate, morning_night_motorcycle_rate, night_morning_motorcycle_rate];
+    // Number data type stored as an array
+}
+
+// // example code of how to use read_carpark_rate
+// async function main(){
+//     const [morn_eve, eve_morn, morn_night, night_morn] = await read_carpark_rate("ACB");
+//     console.log(morn_eve,eve_morn,morn_night, night_morn);
+// }; 
+
+// main()
+
 
 /**
  * Reads and returns the reviews for the given car park.
  * 
  * @async
  * @function read_reviews
- * @param {string} car_park_id - The ID of the car park to read reviews for.
+ * @param {string} carpark_id - The ID of the car park to read reviews for.
  * @returns {Promise<Array>} - Returns an array of reviews for the car park.
  * @throws {Error} - Throws an error if the car park document is not found or reading fails.
  * 
@@ -156,14 +147,14 @@ async function read_hourly_rate ( car_park_id ) {
  * @author Yue Hang
  */
 
-async function read_reviews ( car_park_id ) {
+async function read_reviews ( carpark_id ) {
 
-    const document = await find_document( car_park_id );
+    const document = await find_document( carpark_id );
     const reviews = await document.reviews;
-    console.log(`Reviews for ${car_park_id}: ${reviews}`);
+    console.log(`Reviews for ${carpark_id}: ${reviews}`);
     return reviews;
 }
 
 
-module.exports = { read_carpark_id, read_location, read_hourly_rate, read_reviews };
+module.exports = { read_carpark_id, read_location, read_parking_system_type, read_parking_available_time, read_free_parking, read_carpark_rate, read_reviews };
 
