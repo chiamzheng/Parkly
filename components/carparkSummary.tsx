@@ -29,8 +29,10 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
   //status for notification and bookmark icons
   const [bookmarkIsOn, setBookmarkIsOn] = useState(false);
 
-  /*
+
   useEffect(() => {
+    if (!carparkData) return;
+  
     const fetchData = async () => {
       const lots = await getAvailableCarparkLot(carparkData.title);
       setAvailableLots(lots?.availableLots || 0);
@@ -40,22 +42,8 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
     };
 
     fetchData();
-}, [carparkData.title]);
+}, [carparkData]);
 
-  /*useEffect(() => {
-    if (visible && carparkData) {
-      getAvailableCarparkLot(carparkData.id);
-    }
-  }, [visible, carparkData]);
-
-  const fetchCarparkAvailability = async (carparkId) => {
-    try {
-      const response = await axios.get(`http://10.0.2.2:8083/carparkAvailability/${carparkId}`);
-      setCarparkAvailability(response.data);
-    } catch (error) {
-      console.error('Error fetching carpark availability:', error);
-    }
-  };*/
 
   return (
     <>
