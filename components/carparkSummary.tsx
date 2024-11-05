@@ -32,15 +32,15 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const lots = await getAvailableCarparkLot('JM23');
+      const lots = await getAvailableCarparkLot(carparkData.title);
       setAvailableLots(lots?.availableLots || 0);
 
-      const cap = await getCarparkCapacity('JM23');
+      const cap = await getCarparkCapacity(carparkData.title);
       setCapacity(cap?.capacity || 0);
     };
 
     fetchData();
-}, ['JM23']);
+}, [carparkData.title]);
 
   /*useEffect(() => {
     if (visible && carparkData) {
@@ -149,7 +149,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
 
               <Text style={styles.rate}>
                 Address: {'\n'}
-                Lots available: {availableLots}
+                Lots available: {availableLots}{'\n'}
                 Parking fees: {'\n'}
               </Text>
 
