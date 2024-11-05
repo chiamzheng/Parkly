@@ -15,17 +15,18 @@ export default function CarparkIcons({
     free = true,
     column = false,
     carparkID = 'Unknown Carpark',
-}) 
+}) {
 
-    //no function yet
-
+    const crpk_type = carpark_read.read_carpark_type(carparkID);
+    const crpk_system = carpark_read.read_parking_system_type(carparkID);
+    
     // // example code of how to use read_carpark_rate
 // async function main(){
 //     const [morn_eve, eve_morn, morn_night, night_morn] = await read_carpark_rate("ACB");
 //     console.log(morn_eve,eve_morn,morn_night, night_morn);
 // }; 
 
-    {
+
     return (
         <View style={column?styles.column:styles.aligncircle}>
             <TooltipItem column={column} tooltipEnabled={tooltipEnabled} text="Carpark Type" imgSrc={require("../assets/images/car-park-type.png")} buttonMode={buttonmode} initialActive={type} />
