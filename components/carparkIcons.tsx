@@ -17,7 +17,7 @@ export default function CarparkIcons({
     carparkID = 'Unknown Carpark',
 }) 
 
-    const type //no function yet
+    //no function yet
 
     // // example code of how to use read_carpark_rate
 // async function main(){
