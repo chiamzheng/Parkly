@@ -1,51 +1,32 @@
-//import axios from 'axios';
 const axios = require("axios")
+const CarparkService = require('../service/carparkService');
 const CarparkWrite = require("../repository/database_access/write database/carpark_write.js");
 const CarparkRead = require("../repository/database_access/read database/carpark_read.js");
 const { get_collection } = require("../repository/database_access/database_tools.js");
 const { wgs84ToSvy21 } = require("svy21");
 
-
-
-async function get_available_lots(car_park_id){
+async function fetch_available_lot(req, res) {
+    const carparkId = req.query.carpark_id; // Get carpark ID from query parameter
+    console.log("processed")
     try {
-        const response = await axios.get(`http://localhost:8083/carparkAvailability/${car_park_id}`);
-        return response.data.availability;
-        } catch (error) {
-        console.error("Error fetching carpark availability:", error);
-        throw new Error("Failed to fetch availability.");
-    }
-};
-
-
-
-async function get_capacity(car_park_id){
-    try {
-        const response = await axios.get(`http://localhost:8083/carparkAvailability/${car_park_id}`);
-        const totalLots = response.data.capacity
-        const capacity = (await get_available_lots(car_park_id)/totalLots)*100
-        return capacity;
-        } catch (error) {
-        console.error("Error fetching carpark availability:", error);
-        throw new Error("Failed to fetch capacity.");
-    }
-};
-
-// get_available_lots("ACM")
-// get_capacity("ACM")
-
-async function fetch_suggestions(search) {
-    try {
-        const response = await axios.get(`/searchAddress/${search}`);
-        const suggestionsData = response.data;
-        const suggestions = suggestionsData.slice(0, 5).map(item => item.Address);
-
-        return suggestions; // address of first 5 closest matches
+        const availability = await CarparkService.getCarparkAvailability(carparkId);
+        res.status(200).json(availability);
     } catch (error) {
-        console.error('Error fetching suggestions:', error);
-        set_suggestions([]);
+        res.status(404).json({ error: error.message });
     }
 }
+
+
+async function fetch_capacity(req, res){
+    const carparkId = req.query.carpark_id;
+
+    try {
+        const capacity = await CarparkService.getCarparkCapacity(carparkId);
+        res.status(200).json(capacity);
+    } catch (error) {
+        res.status(404).json({ error: error.message });
+    }
+};
 
 //address and features of carpark can be found using read_location under carpark_read
 
@@ -147,4 +128,4 @@ async function fetch_carparks_within_radius(user_destination, radius) {
 // fetch_carparks_within_radius(user_destination, 1000);
 
 
-module.exports = { get_available_lots, get_capacity, fetch_suggestions, fetch_reviews, fetch_carparks_within_radius };
+module.exports = { fetch_available_lot, fetch_capacity, fetch_reviews, fetch_carparks_within_radius };
