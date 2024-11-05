@@ -93,7 +93,7 @@ async function read_location ( carpark_id ) {
 
 async function read_parking_system_type ( carpark_id ) {
     const document = await find_document(carpark_id);
-    const parking_system_type = document.parking_system_type;
+    const parking_system_type = document.type_of_parking_system;
     return parking_system_type;
 }
 
