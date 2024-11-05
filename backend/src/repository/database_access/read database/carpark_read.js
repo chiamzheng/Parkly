@@ -104,7 +104,7 @@ async function read_parking_available_time (carpark_id) {
     const morning_evening = document.morning_evening;
     const morning_night = document.morning_night;
     const night_parking = document.night_parking;
-    return short_term, whole_day, morning_evening, morning_night, night_parking; // "YES" or "NO"
+    return {short_term, whole_day, morning_evening, morning_night, night_parking}; // "YES" or "NO"
 }
 
 async function read_free_parking (carpark_id) {
@@ -113,13 +113,19 @@ async function read_free_parking (carpark_id) {
     return free_parking; // "YES" or "NO"
 }
 
+async function read_carpark_type (carpark_id) {
+    const document = await find_document(carpark_id);
+    const car_park_type = document.car_park_type;
+    return car_park_type;
+}
+
 async function read_carpark_rate ( carpark_id ) {
     const document = await find_document(carpark_id);
     const morning_evening_motorcar_rate = document.morning_evening_motorcar_rate;
     const evening_morning_motorcar_rate = document.evening_morning_motorcar_rate;
     const morning_night_motorcycle_rate = document.morning_night_motorcycle_rate;
     const night_morning_motorcycle_rate = document.night_morning_motorcycle_rate;
-    return [morning_evening_motorcar_rate, evening_morning_motorcar_rate, morning_night_motorcycle_rate, night_morning_motorcycle_rate];
+    return {morning_evening_motorcar_rate, evening_morning_motorcar_rate, morning_night_motorcycle_rate, night_morning_motorcycle_rate};
     // Number data type stored as an array
 }
 
@@ -155,6 +161,4 @@ async function read_reviews ( carpark_id ) {
     return reviews;
 }
 
-
-module.exports = { read_carpark_id, read_location, read_parking_system_type, read_parking_available_time, read_free_parking, read_carpark_rate, read_reviews };
-
+module.exports = { read_carpark_type, read_carpark_id, read_location, read_parking_system_type, read_parking_available_time, read_free_parking, read_carpark_rate, read_reviews };

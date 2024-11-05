@@ -1,6 +1,7 @@
 import { View, Image, StyleSheet, Pressable } from 'react-native';
 import { Text } from '@rneui/themed';
 import { useState } from 'react';
+import * as carpark_read from '../backend/src/repository/database_access/read database/carpark_read'
 
 export default function CarparkIcons({
     tooltipEnabled = true,
@@ -12,8 +13,19 @@ export default function CarparkIcons({
     height = true,
     short = false,
     free = true,
-    column=false,
-}) {
+    column = false,
+    carparkID = 'Unknown Carpark',
+}) 
+
+    const type //no function yet
+
+    // // example code of how to use read_carpark_rate
+// async function main(){
+//     const [morn_eve, eve_morn, morn_night, night_morn] = await read_carpark_rate("ACB");
+//     console.log(morn_eve,eve_morn,morn_night, night_morn);
+// }; 
+
+    {
     return (
         <View style={column?styles.column:styles.aligncircle}>
             <TooltipItem column={column} tooltipEnabled={tooltipEnabled} text="Carpark Type" imgSrc={require("../assets/images/car-park-type.png")} buttonMode={buttonmode} initialActive={type} />

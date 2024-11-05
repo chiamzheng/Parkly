@@ -121,7 +121,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                           />
                         </TouchableOpacity>
                       
-                        <Pressable onPress={() => {setBigModalVisible(!bigModalVisible)}}>
+                        <Pressable onPress={() => {setBigModalVisible(!bigModalVisible) }}>
                           <Image source={require("../assets/images/return.png")} style={[styles.exit, {width: 30,height: 30}]}/>
                         </Pressable>
                       </View>
