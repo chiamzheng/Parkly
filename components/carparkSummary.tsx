@@ -29,7 +29,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
   //status for notification and bookmark icons
   const [bookmarkIsOn, setBookmarkIsOn] = useState(false);
 
-
+  /*
   useEffect(() => {
     const fetchData = async () => {
       const lots = await getAvailableCarparkLot(carparkData.title);
