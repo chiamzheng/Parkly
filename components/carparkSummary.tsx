@@ -29,33 +29,21 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
   //status for notification and bookmark icons
   const [bookmarkIsOn, setBookmarkIsOn] = useState(false);
 
-  /*
+
   useEffect(() => {
+    if (!carparkData) return;
+  
     const fetchData = async () => {
-      const lots = await getAvailableCarparkLot('JM23');
+      const lots = await getAvailableCarparkLot(carparkData.title);
       setAvailableLots(lots?.availableLots || 0);
 
-      const cap = await getCarparkCapacity('JM23');
+      const cap = await getCarparkCapacity(carparkData.title);
       setCapacity(cap?.capacity || 0);
     };
 
     fetchData();
-}, ['JM23']);
-*/
-  /*useEffect(() => {
-    if (visible && carparkData) {
-      getAvailableCarparkLot(carparkData.id);
-    }
-  }, [visible, carparkData]);
+}, [carparkData]);
 
-  const fetchCarparkAvailability = async (carparkId) => {
-    try {
-      const response = await axios.get(`http://10.0.2.2:8083/carparkAvailability/${carparkId}`);
-      setCarparkAvailability(response.data);
-    } catch (error) {
-      console.error('Error fetching carpark availability:', error);
-    }
-  };*/
 
   return (
     <>
@@ -149,7 +137,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
 
               <Text style={styles.rate}>
                 Address: {'\n'}
-                Lots available: {availableLots}
+                Lots available: {availableLots}{'\n'}
                 Parking fees: {'\n'}
               </Text>
 

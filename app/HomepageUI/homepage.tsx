@@ -5,15 +5,16 @@ import MapView, { Marker } from 'react-native-maps';
 import React, { useState } from "react";
 import CarparkSummary from '../../components/carparkSummary';
 import FAB from '../../components/FAB';
+import PolylineComponent from '@/components/Polyline';
 
 export default function Homepage({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCarpark, setSelectedCarpark] = useState(null);
 
   const carparkLocations = [
-    { id: 1, latitude: 1.3521, longitude: 103.8100, title: 'JM23',capacity:88, availability:22,rate:1.22 },
-    { id: 2, latitude: 1.3531, longitude: 103.8200, title: 'PT99',capacity:30 , availability:3,rate:1.23},
-    { id: 3, latitude: 1.3541, longitude: 103.8300, title: 'LF28',capacity:20, availability:2,rate:1.24},
+    { id: 1, latitude: 1.3521, longitude: 103.8100, title: 'JM23',rate:1.22 },
+    { id: 2, latitude: 1.3531, longitude: 103.8200, title: 'Y24',rate:1.23},
+    { id: 3, latitude: 1.3541, longitude: 103.8300, title: 'SK71',rate:1.24},
   ];
 
   const handleMarkerPress = (carpark) => {
@@ -42,6 +43,13 @@ export default function Homepage({ navigation }) {
             onPress={() => handleMarkerPress(location)}
           />
         ))}
+        {/*testing polyline*/}
+        {/*to get lat and long of starting position from GPS/manual input TYPE: number*/}
+        {/*to convert the x and y coordinates of carparks to lat and long TYPE: number*/}
+        <PolylineComponent
+          start={{ latitude: 1.304833, longitude: 103.831833 }} 
+          end={{ latitude: 1.36310057764065, longitude: 103.962012302637 }}
+        />
       </MapView>
 
       <FAB />

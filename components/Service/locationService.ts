@@ -1,5 +1,10 @@
 const BASE_URL = 'http://10.0.2.2:8083/api';
 
+interface Coordinate {
+    latitude: number;
+    longitude: number;
+}
+
 export async function getLocationSuggestions(searchQuery: string): Promise<any> {
     try {
         const response = await fetch(`${BASE_URL}/location/suggestions?search=${encodeURIComponent(searchQuery)}`);
@@ -13,9 +18,9 @@ export async function getLocationSuggestions(searchQuery: string): Promise<any> 
     }
 }
 
-export async function getRouteDetails(start: string, end: string): Promise<any> {
+export async function getRouteDetails(start: Coordinate, end: Coordinate): Promise<any> {
     try {
-        const response = await fetch(`${BASE_URL}/location/route?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`);
+        const response = await fetch(`${BASE_URL}/location/route?startLat=${start.latitude}&startLng=${start.longitude}&endLat=${end.latitude}&endLng=${end.longitude}`);
         if (!response.ok) throw new Error('Failed to fetch route details');
 
         const data = await response.json();
@@ -26,9 +31,9 @@ export async function getRouteDetails(start: string, end: string): Promise<any> 
     }
 }
 
-export async function getRoutePolyline(start: string, end: string): Promise<any> {
+export async function getRoutePolyline(start: Coordinate, end: Coordinate): Promise<any> {
     try {
-        const response = await fetch(`${BASE_URL}/location/route-polyline?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`);
+        const response = await fetch(`${BASE_URL}/location/route-polyline?startLat=${start.latitude}&startLng=${start.longitude}&endLat=${end.latitude}&endLng=${end.longitude}`);
         if (!response.ok) throw new Error('Failed to fetch route polyline');
 
         const data = await response.json();

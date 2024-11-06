@@ -74,7 +74,7 @@ class LocationService {
         const { route_geometry, route_instructions, route_summary } = response.data;
 
         return {
-            routeGeometry: route_geometry,         // to decode for the polyline
+            routeGeometry: route_geometry,
             totalDistance: route_summary.total_distance,
             totalTime: route_summary.total_time
         };
