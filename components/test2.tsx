@@ -1,3 +1,5 @@
+// Run to test fetching mongoDB data
+
 /*const functions = require('../backend/src/repository/database_access/read database/carpark_read');
 const { read_carpark_type, read_parking_system_type, read_parking_available_time, read_free_parking } = functions;
 
