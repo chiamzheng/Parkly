@@ -43,6 +43,14 @@ export default function Settings({ navigation }: { navigation: any }) {
             <Text style={styles.buttonText}>Sign Out</Text>
           </Pressable>
         </ThemedView>
+        <View style={styles.returnButtonContainer}>
+          <Pressable onPress={() => navigation.navigate('HomepageUI/homepage')}>
+            <Image
+              source={require('../../assets/images/return.png')}
+              style={styles.returnButton}
+            />
+          </Pressable>
+        </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -65,8 +73,9 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   settingsIcon: {   
-    width: Dimensions.get('window').width / 16,
-    height: Dimensions.get('window').width / 16,
+    width: Dimensions.get('window').width / 8,
+    height: Dimensions.get('window').width / 8,
+    marginLeft:30
   },
   settingsContainer: {
     gap: 16,
@@ -92,5 +101,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '500',
     color: 'white',
+  },
+  returnButtonContainer: {
+    position: 'absolute',
+    bottom: 60,
+    left: 33,
+  },
+  returnButton: {
+    width: 50,
+    height: 50,
   },
 });
