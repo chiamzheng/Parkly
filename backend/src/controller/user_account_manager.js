@@ -28,7 +28,7 @@ async function register ( input_email, input_password ) {
     if (await !strong_password(input_password)) {
         
         console.log("Password too weak. User account not added");
-        return -2;
+        return 0;
     }
 
     // password is strong enough

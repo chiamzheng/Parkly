@@ -13,8 +13,13 @@ async function fetch_suggestions(req, res) {
 }
 
 async function fetch_route_details(req, res){
-    const { start, end } = req.query;
+    const { startLat, startLng, endLat, endLng } = req.query;
     try {
+        const start = `${startLat},${startLng}`;
+        const end = `${endLat},${endLng}`;
+        
+        console.log("Start:", start);
+        console.log("End:", end);
         const routeDetails = await LocationService.getRouteDetails(start, end);
         res.status(200).json(routeDetails); 
     } catch (error) {
@@ -22,10 +27,15 @@ async function fetch_route_details(req, res){
     }
 }
 async function fetch_route_polyline(req, res){
-    const { start, end } = req.query;
+    const { startLat, startLng, endLat, endLng } = req.query;
     try {
-        const routeDetails = await LocationService.getRouteDetails(startpoint, endpoint);
+        // Convert coordinates to strings for API
+        const start = `${startLat},${startLng}`;
+        const end = `${endLat},${endLng}`;
+
+        const routeDetails = await LocationService.getRouteDetails(start, end);
         const routeGeometry = routeDetails.routeGeometry;
+        //console.log(routeGeometry)
         const polyline = await LocationService.decodeRouteGeometry(routeGeometry);
         res.status(200).json(polyline); 
     } catch (error) {

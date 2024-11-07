@@ -5,6 +5,7 @@ import MapView, { Marker } from 'react-native-maps';
 import React, { useState } from "react";
 import CarparkSummary from '../../components/carparkSummary';
 import FAB from '../../components/FAB';
+import PolylineComponent from '@/components/Polyline';
 
 export default function Homepage({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -42,6 +43,13 @@ export default function Homepage({ navigation }) {
             onPress={() => handleMarkerPress(location)}
           />
         ))}
+        {/*testing polyline*/}
+        {/*to get lat and long of starting position from GPS/manual input TYPE: number*/}
+        {/*to convert the x and y coordinates of carparks to lat and long TYPE: number*/}
+        <PolylineComponent
+          start={{ latitude: 1.304833, longitude: 103.831833 }} 
+          end={{ latitude: 1.36310057764065, longitude: 103.962012302637 }}
+        />
       </MapView>
 
       <FAB />

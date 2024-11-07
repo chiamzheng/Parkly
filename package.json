@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.4",
+    "@mapbox/polyline": "^1.2.1",
     "@react-native-community/datetimepicker": "^8.2.0",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
@@ -24,6 +25,7 @@
     "@types/react": "^18.3.11",
     "axios": "^1.7.7",
     "check-password-strength": "^2.0.10",
+    "crypto": "^1.0.1",
     "datetimepicker": "^0.1.39",
     "events": "^3.3.0",
     "expo": "~51.0.36",
