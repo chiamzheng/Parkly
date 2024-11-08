@@ -1,8 +1,8 @@
 import LocationSearchInterface from '@/components/LocationSearchInterface';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import CarparkSummary from '../../components/carparkSummary';
 import FAB from '../../components/FAB';
 import PolylineComponent from '@/components/Polyline';
@@ -12,11 +12,25 @@ export default function Homepage({ navigation }) {
   const [selectedCarpark, setSelectedCarpark] = useState(null);
 
   const carparkLocations = [
-    { id: 1, latitude: 1.3521, longitude: 103.8100, title: 'JM23',rate:1.22 },
-    { id: 2, latitude: 1.3531, longitude: 103.8200, title: 'Y24',rate:1.23},
-    { id: 3, latitude: 1.3541, longitude: 103.8300, title: 'SK71',rate:1.24},
+    { id: 1, latitude: 1.3521, longitude: 103.8100, title: 'JM23',rate:1.22,capacity:80 },
+    { id: 2, latitude: 1.3531, longitude: 103.8200, title: 'Y24',rate:1.23,capacity:50},
+    { id: 3, latitude: 1.3541, longitude: 103.8300, title: 'SK71',rate:1.24,capacity:20},
   ];
-
+  //use below if want to use marker icons seen in figma 
+  /*
+  const getMarkerImage = (capacity) => {
+    return capacity > 79
+      ? require("../../assets/images/redcapacity.png")
+      : capacity > 49
+      ? require("../../assets/images/orangecapacity.png")
+      : require("../../assets/images/greencapacity.png");
+  };
+  */
+  const getPinColor = (capacity) => {
+    if (capacity > 79) return 'red';
+    if (capacity > 49) return 'orange';
+    return 'green';
+  };
   const handleMarkerPress = (carpark) => {
     setSelectedCarpark(carpark); // Pass carpark data to CarparkSummary
     setModalVisible(true); // Open modal
@@ -40,14 +54,33 @@ export default function Homepage({ navigation }) {
           longitudeDelta: 0.1,
         }}
       >
-        {carparkLocations.map((location) => (
+        {carparkLocations.map((location) => {
+            //const imageSource = useMemo(() => getMarkerImage(location.capacity), [location.capacity]);
+        
+          return(
           <Marker
             key={location.id}
             coordinate={{ latitude: location.latitude, longitude: location.longitude }}
             title={location.title}
             onPress={() => handleMarkerPress(location)}
-          />
-        ))}
+            pinColor={getPinColor(location.capacity)}  // Set pinColor based on capacity
+          >
+            {/*use below if want to use marker icons seen in figma*/}
+            {/*
+            <Image
+              style={styles.marker}
+              source={
+                location.capacity > 80
+                  ? require("../../assets/images/redcapacity.png")
+                  : location.capacity > 49
+                  ? require("../../assets/images/orangecapacity.png")
+                  : require("../../assets/images/greencapacity.png")
+              }
+            />
+        */}
+          </Marker>
+          );
+        })}
         {/*testing polyline*/}
         {/*to get lat and long of starting position from GPS/manual input TYPE: number*/}
         {/*to convert the x and y coordinates of carparks to lat and long TYPE: number*/}
@@ -87,5 +120,9 @@ const styles = StyleSheet.create({
     top: 20,
     elevation: 1,
     zIndex: 1,
+  },
+  marker:{
+    width:41,
+    height:50,
   },
 });
