@@ -2,89 +2,95 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from "react-native";
 import { MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import { Dimensions } from "react-native";
-import { ThemedView } from "@/components/ThemedView";
 
-const ReviewScreen = () => {
+const ReviewScreen = (style:any) => {
     const [rating, setRating] = useState(5);
     const [review, setReview] = useState("");
+    const [isBookmarked, setIsBookmarked] = useState(false);
+
     const handleRatingPress = (rate: number) => {
         setRating(rate);
     };
 
-    return (
-        <View style={styles.container}>
-            <ThemedView style={styles.card}>
-                <View style={styles.header}>
-                    <MaterialIcons name="local-parking" size={24} color="green" />
-                    <Text style={styles.title}>JM23 • 15 mins away</Text>
-                    <FontAwesome name="bookmark-o" size={24} color="black" style={styles.bookmarkIcon} />
-                </View>
+    const toggleBookmark = () => {
+        setIsBookmarked(!isBookmarked);
+    };
 
-                <View style={styles.starContainer}>
-                    {Array.from({ length: 5 }).map((_, index) => (
+    return (
+        <View style={{
+            ...style?.style,
+            ...styles.container,
+            }}>
+            <View style={styles.header}>
+                <MaterialIcons name="local-parking" size={24} color="green" />
+                <Text style={styles.title}>JM23 • 15 mins away</Text>
+                <TouchableOpacity onPress={toggleBookmark}>
+                    <FontAwesome
+                        name={isBookmarked ? "bookmark" : "bookmark-o"}
+                        size={24}
+                        color="black"
+                        style={styles.bookmarkIcon}
+                    />
+                </TouchableOpacity>
+            </View>
+
+            <View style={styles.starContainer}> 
+                {Array.from({ length: 5 }).map((_, index) => (
+                    <FontAwesome
+                        key={index}
+                        name="star"
+                        size={24}
+                        color={index < rating ? "#FFA500" : "#E0E0E0"}
+                    />// TODO: Get real data from API
+                ))}
+            </View>
+
+            <View style={styles.reviewSection}>
+                <Text style={styles.reviewLabel}>Reviews:</Text>
+                <View style={styles.reviewerInfo}>
+                    <Image
+                        source={{ uri: "https://via.placeholder.com/50" }} // Need actual image URL
+                        style={styles.avatar}
+                    />
+                    <Text style={styles.reviewerName}>Jackson Lim</Text>
+                </View>
+            </View>
+
+            <Text style={styles.myRating}>My rating:</Text>
+            <View style={styles.starContainer}>
+                {Array.from({ length: 5 }).map((_, index) => (
+                    <TouchableOpacity key={index} onPress={() => handleRatingPress(index + 1)}>
                         <FontAwesome
-                            key={index}
                             name="star"
                             size={24}
                             color={index < rating ? "#FFA500" : "#E0E0E0"}
                         />
-                    ))}
-                </View>
+                    </TouchableOpacity>
+                ))}
+            </View>
 
-                <View style={styles.reviewSection}>
-                    <Text style={styles.reviewLabel}>Reviews:</Text>
-                    <View style={styles.reviewerInfo}>
-                        <Image
-                            source={{ uri: "" }} // Need actual image URL
-                            style={styles.avatar}
-                        />
-                        <Text style={styles.reviewerName}>Jackson Lim</Text>
-                    </View>
-                </View>
+            <TextInput
+                style={styles.input}
+                placeholder="Please share more..."
+                multiline
+            />
 
-                <Text style={styles.myRating}>My rating:</Text>
-                <View style={styles.starContainer}>
-                    {Array.from({ length: 5 }).map((_, index) => (
-                        <TouchableOpacity key={index} onPress={() => handleRatingPress(index + 1)}>
-                            <FontAwesome
-                                name="star"
-                                size={24}
-                                color={index < rating ? "#FFA500" : "#E0E0E0"}
-                            />
-                        </TouchableOpacity>
-                    ))}
-                </View>
-
-                <TextInput
-                    style={styles.input}
-                    placeholder="Please share more..."
-                    multiline
-                />
-
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText}>Publish Review</Text>
-                </TouchableOpacity>
-            </ThemedView>
+            <TouchableOpacity style={styles.button}>
+                <Text style={styles.buttonText}>Publish Review</Text>
+            </TouchableOpacity>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: "#DDD5D5",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    card: {
-        width: "90%",
         padding: 20,
-        backgroundColor: "#EEE6D3",
-        borderRadius: 10,
-        shadowColor: "#000",
-        shadowOpacity: 0.2,
-        shadowRadius: 5,
-        shadowOffset: { width: 0, height: 2 },
+        backgroundColor: '#F5F5F5',
+        borderRadius: 20,
+        borderWidth: 2,
+        borderColor: '#EDEDED',
+        width: Dimensions.get('window').width * 0.8,
+        alignSelf: 'center',
     },
     header: {
         flexDirection: "row",
@@ -95,10 +101,9 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         marginLeft: 5,
-        fontFamily: "SpaceMono",
     },
     bookmarkIcon: {
-        marginLeft: "auto",
+        marginLeft: 75, // Adjusted margin to add space between text and icon
     },
     starContainer: {
         flexDirection: "row",
@@ -111,7 +116,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
         marginBottom: 5,
-        fontFamily: "SpaceMono",
     },
     reviewerInfo: {
         flexDirection: "row",
@@ -125,13 +129,11 @@ const styles = StyleSheet.create({
     },
     reviewerName: {
         fontSize: 16,
-        fontFamily: "SpaceMono",
     },
     myRating: {
         fontSize: 16,
         fontWeight: "bold",
         marginTop: 10,
-        fontFamily: "SpaceMono",
     },
     input: {
         height: 80,
@@ -142,7 +144,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         backgroundColor: "#fff",
         textAlignVertical: "top",
-        fontFamily: "SpaceMono",
     },
     button: {
         marginTop: 15,
@@ -155,7 +156,6 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontSize: 16,
         fontWeight: "bold",
-        fontFamily: "SpaceMono",
     },
 });
 
