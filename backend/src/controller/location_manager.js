@@ -2,7 +2,7 @@ const axios = require("axios")
 const LocationService = require('../service/locationService');
 
 async function fetch_suggestions(req, res) {
-    const search = req.query.query
+    const search = req.query.search
 
     try {
         const locations = await LocationService.getSuggestions(search);

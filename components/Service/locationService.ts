@@ -1,4 +1,4 @@
-const BASE_URL = 'http://10.0.2.2:8083/api';
+const BASE_URL = 'http://localhost:8083/api';
 
 interface Coordinate {
     latitude: number;
@@ -7,6 +7,7 @@ interface Coordinate {
 
 export async function getLocationSuggestions(searchQuery: string): Promise<any> {
     try {
+        console.log('Fetching location suggestions for:', searchQuery);
         const response = await fetch(`${BASE_URL}/location/suggestions?search=${encodeURIComponent(searchQuery)}`);
         if (!response.ok) throw new Error('Failed to fetch location suggestions');
 

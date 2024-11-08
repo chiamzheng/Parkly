@@ -2,14 +2,20 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const BookmarkList = (
-    onPress: any,
-) => {
+const BookmarkList = ({
+  onPress,
+  onClickBookmark,
+}) => {
   const [bookmarks, setBookmarks] = useState([
     { id: '1', code: 'JM23', name: 'Boon Lay', color: 'green' },
-    { id: '2', code: 'W31', name: 'Woodlands', color: 'red' },
-    { id: '3', code: 'SK46', name: 'Sengkang', color: 'orange' },
+    { id: '2', code: 'Y24', name: 'Woodlands', color: 'red' },
+    { id: '3', code: 'SK71', name: 'Sengkang', color: 'orange' },
   ]);
+
+  const handleMarkerPress = (markerCode) => {
+    onPress();
+    onClickBookmark(markerCode);
+  };
 
   // Remove a bookmark from the list
   const handleDelete = (id) => {
@@ -18,20 +24,20 @@ const BookmarkList = (
   };
 
   const renderItem = ({ item }) => (
-    <View style={styles.bookmarkRow}>
+    <TouchableOpacity style={styles.bookmarkRow} onPress={() => handleMarkerPress(item.code)}>
       {/* Color marker */}
       <View style={[styles.colorMarker, { backgroundColor: item.color }]} />
 
       {/* Text */}
       <Text style={styles.bookmarkText}>
-        {item.code} ({item.name})
+      {item.code} ({item.name})
       </Text>
 
       {/* Delete button */}
       <TouchableOpacity onPress={() => handleDelete(item.id)}>
-        <Icon name="trash-outline" size={24} color="#000" />
+      <Icon name="trash-outline" size={24} color="#000" />
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -40,7 +46,7 @@ const BookmarkList = (
       <View style={styles.header}>
         <Icon name="bookmark" size={24} color="#000" />
         <Text style={styles.headerText}>Bookmarks</Text>
-        <TouchableOpacity style={styles.closeButton} onPress={onPress.onPress}>
+        <TouchableOpacity style={styles.closeButton} onPress={onPress}>
           <Icon name="close" size={24} color="#000" />
         </TouchableOpacity>
       </View>

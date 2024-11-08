@@ -22,9 +22,14 @@ export default function Homepage({ navigation }) {
     setModalVisible(true); // Open modal
   };
 
+  const handleBookmarkPress = (markerCode) => {
+    const idx = carparkLocations.findIndex((location) => location.title === markerCode);
+    handleMarkerPress(carparkLocations[idx]);
+  }
+
   return (
     <View style={styles.container}>
-      <LocationSearchInterface style={styles.search} />
+      <LocationSearchInterface style={styles.search} onClickBookmark={handleBookmarkPress} />
 
       <MapView
         style={styles.map}
