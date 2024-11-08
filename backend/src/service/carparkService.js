@@ -16,6 +16,23 @@ const axios = require('axios');
 
 class CarparkService {
 
+     /**
+     * Retrieves detailed carpark data from the carpark availability API.
+     * 
+     * This function makes a request to the carpark availability API, and 
+     * retrieves the carpark data for a given `carparkId`. The data is then 
+     * processed and returned in a specific format for use by other functions.
+     * 
+     * @param {string} carparkId - The ID of the carpark to retrieve data for.
+     * @returns {Promise<Object>} - An object containing the `carparkNumber`, `totalLots`, 
+     *                              `availableLots`, and `updateTime` for the carpark.
+     * 
+     * @throws {Error} - If the API request fails or the carpark ID is not found.
+     * 
+     * @author Jamie
+     * 
+     */
+
     static async getCarparkData(carparkId) {
         const response = await axios.get('https://api.data.gov.sg/v1/transport/carpark-availability');
 
@@ -30,6 +47,22 @@ class CarparkService {
         };
     }
 
+    /**
+     * Retrieves the availability of parking lots for a specific carpark.
+     * 
+     * This function fetches the carpark data for the given `carparkId` using 
+     * `getCarparkData()` and returns only the number of available parking lots 
+     * and the time of the last update.
+     * 
+     * @param {string} carparkId - The ID of the carpark to retrieve availability for.
+     * @returns {Promise<Object>} - An object containing `availableLots` and `updateTime`.
+     * 
+     * @throws {Error} - If the carpark ID is not found or the API request fails.
+     * 
+     * @author Jamie
+     * 
+     */
+
     static async getCarparkAvailability(carparkId) {
         const carparkData = await CarparkService.getCarparkData(carparkId);
         
@@ -39,6 +72,22 @@ class CarparkService {
             updateTime: carparkData.updateTime
         };
     }
+
+    /**
+     * Retrieves the parking capacity of a specific carpark as a percentage.
+     * 
+     * This function calculates the parking capacity as a percentage using the 
+     * number of available lots and the total lots in the carpark. The capacity is 
+     * returned with two significant figures.
+     * 
+     * @param {string} carparkId - The ID of the carpark to retrieve capacity for.
+     * @returns {Promise<Object>} - An object containing the `capacity` as a percentage.
+     * 
+     * @throws {Error} - If the carpark ID is not found or the API request fails.
+     * 
+     * @author Jamie
+     * 
+     */
 
      static async getCarparkCapacity(carparkId) {
         const carparkData = await CarparkService.getCarparkData(carparkId);
