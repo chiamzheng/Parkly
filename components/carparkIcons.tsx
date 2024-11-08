@@ -1,6 +1,7 @@
 import { View, Image, StyleSheet, Pressable } from 'react-native';
 import { Text } from '@rneui/themed';
 import { useState } from 'react';
+import * as carpark_read from '../backend/src/repository/database_access/read database/carpark_read'
 
 export default function CarparkIcons({
     tooltipEnabled = true,
@@ -12,7 +13,8 @@ export default function CarparkIcons({
     height = true,
     short = false,
     free = true,
-    column=false,
+    column = false,
+    carparkID = 'Unknown Carpark',
 }) {
     return (
         <View style={column?styles.column:styles.aligncircle}>

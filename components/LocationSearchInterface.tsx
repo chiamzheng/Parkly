@@ -4,13 +4,18 @@ import { View, TextInput, TouchableOpacity, Text, Image, StyleSheet } from 'reac
 import Icon from 'react-native-vector-icons/Ionicons';
 import BookmarkList from './Bookmark';
 import { Modal } from 'react-native';
+import LocationScreen from './Geolocation';
+import { getLocationSuggestions } from './Service/locationService';
 
-const LocationSearchInterface = (style:any) =>{
+const LocationSearchInterface = ({ style, onClickBookmark }) =>{
   const navigation = useNavigation();
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [bookmarksVisible, setBookmarksVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const handleSearchQueryChange = (query) => {
+    setSearchQuery(query); 
+  };
 
   // Function to toggle bookmarks modal visibility
   const toggleBookmarks = () => {
@@ -25,9 +30,8 @@ const LocationSearchInterface = (style:any) =>{
   // Fetching data from the OneMap API
   const fetchData = async () => {
     try {
-      const response = await fetch(`http://10.0.2.2:8083//searchAddress/1.35238866039921,103.959877071858`);
-      const result = await response.json();
-      setData(result.results);  // Adjust based on the structure of the API response
+      const response = await getLocationSuggestions(searchQuery);
+      setData(response);  // Adjust based on the structure of the API response
       setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -50,7 +54,7 @@ const LocationSearchInterface = (style:any) =>{
   
   return (
     <View style={{
-            ...style?.style,
+            ...style,
             ...styles.container,
             }}>
       {/* User Profile Section */}
@@ -73,17 +77,7 @@ const LocationSearchInterface = (style:any) =>{
       </View>
 
       {/* Destination Input */}
-      <View style={styles.inputContainer}>
-        <View style={styles.inputRow}>
-          <Icon name="location-outline" size={24} color="red" />
-          <TextInput 
-            placeholder="Enter Destination" 
-            style={styles.input} 
-            value={searchQuery}
-            onChangeText={(text) => setSearchQuery(text)}
-          />
-        </View>
-      </View>
+      <LocationScreen onSearchQueryChange={handleSearchQueryChange} />
 
       {/* Go Button */}
       <TouchableOpacity onPress={fetchData} style={styles.goButton}>
@@ -93,7 +87,7 @@ const LocationSearchInterface = (style:any) =>{
       {/* Display Search Results */}
       <View>
         {data && data.map((item, index) => (
-          <Text key={index}>{item.ADDRESS || 'No address available'}</Text>
+          <Text key={index}>{item.Address || 'No address available'}</Text>
         ))}
       </View>
 
@@ -106,7 +100,7 @@ const LocationSearchInterface = (style:any) =>{
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <BookmarkList onPress={toggleBookmarks} />
+            <BookmarkList onPress={toggleBookmarks} onClickBookmark={onClickBookmark} />
           </View>
         </View>
       </Modal>

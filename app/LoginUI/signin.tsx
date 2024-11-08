@@ -26,6 +26,25 @@ export default function Signin({ navigation }: { navigation: any }) {
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
 };
+const handlePassword = () => {
+  if(validator.isEmpty(password)){
+    setValidPassword(false)
+  }else{
+    setValidPassword(true);
+  }
+};
+const handleEmail = () => {
+  if(validator.isEmail(username)){
+    setValidEmail(true);
+  }else{
+      setValidEmail(false);
+    }
+};
+const handleSignin = () => {
+  if(!(validator.isEmpty(password)) && (validator.isEmail(username))){
+    navigation.navigate("HomepageUI/homepage");
+  }
+};
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.background}>
@@ -94,23 +113,11 @@ export default function Signin({ navigation }: { navigation: any }) {
           <Pressable
             style={styles.button}
             onPress={() => {
-              if(validator.isEmail(username)){
-                setValidEmail(true);
-              }
-              else{
-                  setValidEmail(false);
-                }
-              if(validator.isEmpty(password)){
-                setValidPassword(false)
-              }
-              else{
-                setValidPassword(true);
-              }
-              if(validPassword && validEmail){
-                navigation.navigate("HomepageUI/homepage");
-              }
+              handleEmail();
+              handlePassword();
+              handleSignin();
             }
-            }
+          }
           >
             <Text style={styles.buttonText}>Let's Go!</Text>
           </Pressable>
