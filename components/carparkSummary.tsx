@@ -4,6 +4,8 @@ import axios from 'axios';
 import CarparkIcons from './carparkIcons';
 import NotificationScreen from './Notifications'
 import { getAvailableCarparkLot, getCarparkCapacity } from './Service/carparkService';
+import CarparkReviews from './CarparkReviews';
+import { Linking } from 'react-native';
 
 /*
 import * as carpark_read from '../backend/src/repository/database_access/read database/carpark_read'
@@ -132,7 +134,8 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                     </View>
 
               <View style={styles.reviewBox}>
-                <Text style={{ fontSize: 15, marginLeft: 10, marginTop: 7 }}>Reviews:</Text>
+                <Text style={{ fontSize: 15, marginTop: 3, marginBottom: 7 }}>Reviews:</Text>
+                <CarparkReviews/>
               </View>
 
               <Text style={styles.rate}>
@@ -159,15 +162,37 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               </Text>
 
               <View style={[styles.nameContainer, { marginRight: 10 }]}>
-                <Pressable style={[styles.selectButton, { flexDirection: 'row', borderRadius: 15, width: 60 }]}>
-                  <Image style={[styles.exit, { marginRight: 2, tintColor: 'white', width: 20, height: 20 }]} source={require("../assets/images/taxi.png")}/>
-                  <Text style={styles.buttonText}>Taxi</Text>
-                </Pressable>
-                <Pressable style={[styles.selectButton, { padding: 13, flexDirection: 'row', borderRadius: 15, width: 150, justifyContent: "space-between" }]}>
-                  <Image style={[styles.exit, { tintColor: 'white', width: 20, height: 20 }]} source={require("../assets/images/public-transport.png")}/>
-                  <Text style={styles.buttonText}>Public Transport</Text>
-                </Pressable>
-                <Pressable style={[styles.selectButton, { flexDirection: 'row', borderRadius: 15, width: 60 }]}>
+              <Pressable 
+                style={[styles.selectButton, { flexDirection: 'row', borderRadius: 15, width: 60 }]}
+                onPress={() => {
+                  Linking.openURL('grab://')
+                    .catch(() => {
+                      // Open the Grab website if the app isn't available
+                      Linking.openURL('https://play.google.com/store/apps/details?id=com.grabtaxi.passenger');
+                    });
+                }}>
+                <Image style={[styles.exit, { marginRight: 2, tintColor: 'white', width: 20, height: 20 }]} source={require("../assets/images/taxi.png")}/>
+                <Text style={styles.buttonText}>Taxi</Text>
+              </Pressable>
+              <Pressable 
+                style={[styles.selectButton, { padding: 13, flexDirection: 'row', borderRadius: 15, width: 150, justifyContent: "space-between" }]}
+                onPress={() => {
+                  Linking.openURL('citymapper://')
+                    .catch(() => {
+                      Linking.openURL('https://play.google.com/store/apps/details?id=com.citymapper.app.release');
+                    });
+                }}>
+                <Image style={[styles.exit, { tintColor: 'white', width: 20, height: 20 }]} source={require("../assets/images/public-transport.png")}/>
+                <Text style={styles.buttonText}>Public Transport</Text>
+              </Pressable>
+              <Pressable 
+                style={[styles.selectButton, { flexDirection: 'row', borderRadius: 15, width: 60 }]}
+                onPress={() => {
+                  Linking.openURL('citymapper://')
+                    .catch(() => {
+                      Linking.openURL('https://play.google.com/store/apps/details?id=com.citymapper.app.release');
+                    });
+                  }}>
                   <Image style={[styles.exit, { tintColor: 'white', width: 20, height: 20 }]} source={require("../assets/images/walk.png")}/>
                   <Text style={styles.buttonText}>Walk</Text>
                 </Pressable>
@@ -262,6 +287,7 @@ const styles = StyleSheet.create({
   reviewBox: {
     width: 280,
     height: 200,
+    padding: 7,
     borderRadius: 20,
     borderColor: "black",
     borderWidth: 2,

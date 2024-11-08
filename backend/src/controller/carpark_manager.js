@@ -5,6 +5,19 @@ const CarparkRead = require("../repository/database_access/read database/carpark
 const { get_collection } = require("../repository/database_access/database_tools.js");
 const { wgs84ToSvy21 } = require("svy21");
 
+/**
+ * Fetches the available lot count and update time for a specific carpark.
+ * 
+ * 
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object to send the availability data or error.
+ * @returns {Promise<void>} - Returns a JSON response with the availableLots and updateTime
+ * 
+ * @throws {Error} - If the carpark availability data cannot be fetched.
+ * 
+ * @author Jamie
+ */
+
 async function fetch_available_lot(req, res) {
     const carparkId = req.query.carpark_id; // Get carpark ID from query parameter
     console.log("processed")
@@ -16,6 +29,18 @@ async function fetch_available_lot(req, res) {
     }
 }
 
+/**
+ * Fetches the capacity (in %) for a specific carpark.
+ * 
+ * 
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object to send the availability data or error.
+ * @returns {Promise<void>} - Returns a JSON response with the capacity.
+ * 
+ * @throws {Error} - If the capacity of carpark cannot be fetched.
+ * 
+ * @author Jamie
+ */
 
 async function fetch_capacity(req, res){
     const carparkId = req.query.carpark_id;
