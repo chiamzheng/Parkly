@@ -18,12 +18,50 @@ const { wgs84ToSvy21 } = require("svy21");
  * @author Jamie
  */
 
+<<<<<<< HEAD
+
+async function fetch_available_lots(carpark_id){
+    try {
+        const response = await axios.get(`http://localhost:8083/carparkAvailability/${carpark_id}`);
+        return response.data.availability;
+        } catch (error) {
+        console.error("Error fetching carpark availability:", error);
+        throw new Error("Failed to fetch availability.");
+    }
+};
+
+
+
+async function fetch_capacity(carpark_id){
+    try {
+        const response = await axios.get(`http://localhost:8083/carparkAvailability/${carpark_id}`);
+        const totalLots = response.data.capacity
+        const capacity = (await get_available_lots(carpark_id)/totalLots)*100
+        return capacity;
+        } catch (error) {
+        console.error("Error fetching carpark availability:", error);
+        throw new Error("Failed to fetch capacity.");
+    }
+};
+
+// get_available_lots("ACM")
+// get_capacity("ACM")
+
+async function fetch_suggestions(search) {
+    try {
+        const response = await axios.get(`/searchAddress/${search}`);
+        const suggestionsData = response.data;
+        const suggestions = suggestionsData.slice(0, 5).map(item => item.Address);
+
+        return suggestions; // address of first 5 closest matches
+=======
 async function fetch_available_lot(req, res) {
     const carparkId = req.query.carpark_id; // Get carpark ID from query parameter
     console.log("processed")
     try {
         const availability = await CarparkService.getCarparkAvailability(carparkId);
         res.status(200).json(availability);
+>>>>>>> 382fd9d18f7dd49c8cdaa21b43f9a1ac776c5e99
     } catch (error) {
         res.status(404).json({ error: error.message });
     }
@@ -55,17 +93,19 @@ async function fetch_capacity(req, res){
 
 //address and features of carpark can be found using read_location under carpark_read
 
+
+
 /**
  * Retrieves reviews for a specific carpark from the database.
  * 
- * @param {string} car_park_id - The ID of the carpark to fetch reviews for.
+ * @param {string} carpark_id - The ID of the carpark to fetch reviews for.
  * @returns {Promise<Array>} - An array of reviews for the carpark.
  * 
  * @author Yue Hang
  */
 
-async function fetch_reviews(car_park_id) {
-    reviews = await CarparkRead.read_reviews(car_park_id);
+async function fetch_reviews(carpark_id) {
+    reviews = await CarparkRead.read_reviews(carpark_id);
     return reviews;
 }
 
@@ -123,19 +163,18 @@ async function fetch_carparks_within_radius(user_destination, radius) {
     await all_carparks.forEach(carpark => {
 
         // initializing the x and y coordinates of carpark
-        car_park_id = carpark.car_park_id;
-        carpark_x = carpark.x_coordinate;
-        carpark_y = carpark.y_coordinate;
+        carpark_id = carpark.carpark_id;
+        carpark_x = carpark.x_coord;
+        carpark_y = carpark.y_coord;
 
         // if carpark is in the boundary
         if (carpark_x >= minX && carpark_y >= minY && carpark_x <= maxX && carpark_y <= maxY) {
 
             // calculate the euclidean distance between destination and carpark
             distance = calculate_distance(x, y, carpark_x, carpark_y);
-
-            // if it is within the radius, add the carpark car_park_id to nearby carparks array
+            // if it is within the radius, add the carpark carpark_id to nearby carparks array
             if (distance <= radius) {
-                nearby_carparks.push(car_park_id);
+                nearby_carparks.push(carpark_id);
             }
         }
 
@@ -147,10 +186,18 @@ async function fetch_carparks_within_radius(user_destination, radius) {
     return nearby_carparks; // return array of nearby carparks
 }
 
-// test function
-// const user_destination = [1.321572, 103.884496] //wgs82
-// const user_destination = [30000, 30000]; //svy21
-// fetch_carparks_within_radius(user_destination, 1000);
+// // test function
+// async function main(){
+//     const user_destination = [1.321572, 103.884496] //wgs82
+//     // const user_destination = [30000, 30000]; //svy21
+//     const carparks = await fetch_carparks_within_radius(user_destination, 1000);
+//     console.log(carparks);
+// }
 
+// main();
 
+<<<<<<< HEAD
+module.exports = { fetch_available_lots, fetch_capacity, fetch_suggestions, fetch_reviews, fetch_carparks_within_radius };
+=======
 module.exports = { fetch_available_lot, fetch_capacity, fetch_reviews, fetch_carparks_within_radius };
+>>>>>>> 382fd9d18f7dd49c8cdaa21b43f9a1ac776c5e99
