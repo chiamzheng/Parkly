@@ -6,15 +6,17 @@ import React, { useState, useMemo } from "react";
 import CarparkSummary from '../../components/carparkSummary';
 import FAB from '../../components/FAB';
 import PolylineComponent from '@/components/Polyline';
+import carparkData from '../../CarparkInformation.json'; 
+import computeLatLon from '../../scripts/computeLatLon';
 
 export default function Homepage({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCarpark, setSelectedCarpark] = useState(null);
-
+  const [capacity, setCapacity] = useState(60);// placeholder for actual capacity
   const carparkLocations = [
-    { id: 1, latitude: 1.3521, longitude: 103.8100, title: 'JM23',rate:1.22,capacity:80 },
-    { id: 2, latitude: 1.3531, longitude: 103.8200, title: 'Y24',rate:1.23,capacity:50},
-    { id: 3, latitude: 1.3541, longitude: 103.8300, title: 'SK71',rate:1.24,capacity:20},
+    { id: 1, title: 'JM23',latitude: 1.3521, longitude: 103.8100, rate:1.22,capacity:80,type:'ELECTRONIC PARKING' },
+    { id: 2, title: 'Y24',latitude: 1.3531, longitude: 103.8200, rate:1.23,capacity:50, type:'COUPON PARKING'},
+    { id: 3, title: 'SK71',latitude: 1.3541, longitude: 103.8300, rate:1.24,capacity:20,type:'ELECTRONIC PARKING' },
   ];
   //use below if want to use marker icons seen in figma 
   /*
@@ -37,8 +39,8 @@ export default function Homepage({ navigation }) {
   };
 
   const handleBookmarkPress = (markerCode) => {
-    const idx = carparkLocations.findIndex((location) => location.title === markerCode);
-    handleMarkerPress(carparkLocations[idx]);
+    const idx = carparkData.findIndex((carparkData) => carparkData.car_park_no === markerCode);
+    handleMarkerPress(carparkData[idx]);
   }
 
   return (
@@ -54,16 +56,16 @@ export default function Homepage({ navigation }) {
           longitudeDelta: 0.1,
         }}
       >
-        {carparkLocations.map((location) => {
+        {carparkData.map((location) => {
             //const imageSource = useMemo(() => getMarkerImage(location.capacity), [location.capacity]);
-        
+            const { lat, lon } = computeLatLon(location.y_coord, location.x_coord)
           return(
           <Marker
-            key={location.id}
-            coordinate={{ latitude: location.latitude, longitude: location.longitude }}
-            title={location.title}
+            key={location.FIELD1}
+            coordinate={{ latitude:lat , longitude:lon }}
+            title={location.car_park_no}
             onPress={() => handleMarkerPress(location)}
-            pinColor={getPinColor(location.capacity)}  // Set pinColor based on capacity
+            pinColor={getPinColor(capacity)}  // Set pinColor based on capacity
           >
             {/*use below if want to use marker icons seen in figma*/}
             {/*

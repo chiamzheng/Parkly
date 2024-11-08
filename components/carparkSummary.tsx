@@ -61,7 +61,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
             <View style={[styles.nameContainer, { marginTop: 5 }]}> 
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image style={[styles.exit, { width: 30, height: 30, tintColor: 'green' }]} source={require("../assets/images/location_icon.png")}/>
-                <Text style={[styles.name]}>{carparkData?.title || 'Carpark'}</Text>
+                <Text style={[styles.name]}>{carparkData?.car_park_no || 'Carpark'}</Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={[styles.name, { marginBottom: 0, marginRight: 4 }]}> Capacity: <Text style={{ color: 'green' }}>{capacity || 0} %</Text> </Text>
@@ -72,7 +72,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
             </View>
             
             <Text style={styles.lot}>Lots Available: {availableLots||0}</Text>
-            <Text style={styles.rate}>Rate: ${carparkData?.rate||0}/hour</Text>
+            <Text style={styles.rate}>Rate: ${carparkData?.morningtoevening_0700to1700_motorcars_rate||0}/hour</Text>
             <CarparkIcons />
 
             <View style={[styles.nameContainer, { marginTop: 3 }]}>
@@ -109,7 +109,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15, marginTop: 15 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image style={[styles.exit, { width: 30, height: 30 }]} source={require("../assets/images/location_icon.png")}/>
-                  <Text style={styles.name}>{carparkData?.title || 'Carpark'}</Text>
+                  <Text style={styles.name}>{carparkData?.car_park_no || 'Carpark'}</Text>
                 </View>
 
                       

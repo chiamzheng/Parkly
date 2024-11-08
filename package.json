@@ -32,6 +32,7 @@
     "expo-constants": "~16.0.2",
     "expo-font": "~12.0.10",
     "expo-linking": "~6.3.1",
+    "expo-location": "~17.0.1",
     "expo-notifications": "^0.28.19",
     "expo-router": "~3.5.23",
     "expo-splash-screen": "^0.27.6",
@@ -57,10 +58,8 @@
     "react-native-screens": "3.31.1",
     "react-native-web": "~0.19.10",
     "stream": "^0.0.3",
-    "svy21": "github:phonglk/SVY21#master",
     "timers": "^0.1.1",
-    "validator": "^13.12.0",
-    "expo-location": "~17.0.1"
+    "validator": "^13.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
