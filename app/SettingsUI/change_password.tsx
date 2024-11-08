@@ -58,11 +58,17 @@ export default function ChangePassword({ navigation }: { navigation: any }) {
         </View>
 
         <View style={styles.buttonContainer}>
+        <Pressable onPress={() => navigation.navigate('SettingsUI/settingspage')}>
+            <Image
+              source={require('../../assets/images/return.png')}
+              style={styles.returnButton}
+            />
+          </Pressable>
           <Pressable
             style={styles.button}
             onPress={handleConfirm}
           >
-            <Text style={styles.buttonText}>Confirm</Text>
+            <Text style={styles.confirmButton}>Confirm</Text>
           </Pressable>
         </View>
       </SafeAreaView>
@@ -81,7 +87,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 60,
     marginBottom: 40,
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
   },
   titletext: {
     fontSize: Dimensions.get('window').width / 16,
@@ -89,12 +95,12 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   settingsIcon: {   
-    width: Dimensions.get('window').width / 16,
-    height: Dimensions.get('window').width / 16,
+    width: Dimensions.get('window').width / 8,
+    height: Dimensions.get('window').width / 8,
   },
   inputContainer: {
     marginTop: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
   },
   inputLabel: {
     fontSize: 18,
@@ -109,21 +115,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonContainer: {
+    flexDirection: 'row',
     paddingBottom: 40,
-    alignItems: 'center',
+    justifyContent: 'space-between', // Ensure buttons are spaced evenly
+    paddingHorizontal: 30,
   },
   button: {
     borderRadius: 25,
     backgroundColor: '#65558F',
     justifyContent: 'center',
     height: 50,
-    width: Dimensions.get('window').width / 1.2,
+    width: (Dimensions.get('window').width / 1.2) / 2 - 10, // Adjust width to fit two buttons side by side with some margin
     alignItems: 'center',
+    marginHorizontal: 5, // Add horizontal margin between buttons
   },
-  buttonText: {
+  confirmButton: {
     fontSize: 20,
     fontWeight: '500',
     color: 'white',
+  },
+  returnButton: {
+    width: 50,
+    height: 50,
   },
 });
 

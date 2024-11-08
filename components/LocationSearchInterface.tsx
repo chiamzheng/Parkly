@@ -4,6 +4,7 @@ import { View, TextInput, TouchableOpacity, Text, Image, StyleSheet } from 'reac
 import Icon from 'react-native-vector-icons/Ionicons';
 import BookmarkList from './Bookmark';
 import { Modal } from 'react-native';
+import LocationScreen from './Geolocation';
 
 const LocationSearchInterface = (style:any) =>{
   const navigation = useNavigation();
@@ -11,6 +12,11 @@ const LocationSearchInterface = (style:any) =>{
   const [loading, setLoading] = useState(true);
   const [bookmarksVisible, setBookmarksVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const handleSearchQueryChange = (query) => {
+    setSearchQuery(query); 
+  };
+
+  
 
   // Function to toggle bookmarks modal visibility
   const toggleBookmarks = () => {
@@ -73,17 +79,7 @@ const LocationSearchInterface = (style:any) =>{
       </View>
 
       {/* Destination Input */}
-      <View style={styles.inputContainer}>
-        <View style={styles.inputRow}>
-          <Icon name="location-outline" size={24} color="red" />
-          <TextInput 
-            placeholder="Enter Destination" 
-            style={styles.input} 
-            value={searchQuery}
-            onChangeText={(text) => setSearchQuery(text)}
-          />
-        </View>
-      </View>
+      <LocationScreen onSearchQueryChange={handleSearchQueryChange} />
 
       {/* Go Button */}
       <TouchableOpacity onPress={fetchData} style={styles.goButton}>

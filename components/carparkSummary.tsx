@@ -4,6 +4,7 @@ import axios from 'axios';
 import CarparkIcons from './carparkIcons';
 import NotificationScreen from './Notifications'
 import { getAvailableCarparkLot, getCarparkCapacity } from './Service/carparkService';
+import CarparkReviews from './CarparkReviews';
 
 /*
 import * as carpark_read from '../backend/src/repository/database_access/read database/carpark_read'
@@ -132,7 +133,8 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                     </View>
 
               <View style={styles.reviewBox}>
-                <Text style={{ fontSize: 15, marginLeft: 10, marginTop: 7 }}>Reviews:</Text>
+                <Text style={{ fontSize: 15, marginTop: 3, marginBottom: 7 }}>Reviews:</Text>
+                <CarparkReviews/>
               </View>
 
               <Text style={styles.rate}>
@@ -262,6 +264,7 @@ const styles = StyleSheet.create({
   reviewBox: {
     width: 280,
     height: 200,
+    padding: 7,
     borderRadius: 20,
     borderColor: "black",
     borderWidth: 2,
