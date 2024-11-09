@@ -1,6 +1,6 @@
 const express = require("express");
 const user_account_route = express.Router();
-const { register_api, login_api, change_email_api, change_password_api, update_bookmark_api } = require("../controllers/user_account_controller.js");
+const { register_api, login_api, change_email_api, change_password_api, update_bookmark_api } = require("../controller/user_account_controller.js");
 
 user_account_route.get("/register/:input_email/:input_password", register_api);
 user_account_route.get("/login/:input_email/:input_password", login_api);
