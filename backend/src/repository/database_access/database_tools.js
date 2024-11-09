@@ -36,5 +36,16 @@ function get_collection(collection_name) {
         return client.db("Parkly").collection(collection_name);
 }
 
-module.exports = { get_database, get_collection }
+async function initializeReviewsInAllDocuments () {
+    
+        const collection = await get_collection(collection_name);
+        const result = await collection.updateMany(
+            {}, // Empty filter i.e. get all documents
+            { $set: {reviews: []} }, // Initialize reviews to an empty array
+            { upsert: false } // do not create new documents if they don't exist
+        );
+        console.log("All carparks' reviews field initialized to empty array!")
+    }
+    
+module.exports = { get_database, get_collection, initializeReviewsInAllDocuments }
 

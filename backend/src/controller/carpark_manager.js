@@ -14,8 +14,13 @@ const { wgs84ToSvy21 } = require("svy21");
  */
 
 async function fetch_reviews(carpark_id) {
-    reviews = await CarparkRead.read_reviews(carpark_id);
+    const reviews = await CarparkRead.read_reviews(carpark_id);
     return reviews;
+}
+
+async function fetch_address(carpark_id) {
+    const address = await CarparkRead.read_address(carpark_id);
+    return address;
 }
 
 async function fetch_location(carpark_id) {
@@ -44,6 +49,21 @@ async function fetch_free_parking(carpark_id) {
 async function fetch_carpark_rates(carpark_id) {
     const carpark_location = await CarparkRead.read_carpark_rate(carpark_id);
     return carpark_location;
+}
+
+async function fetch_night_parking(carpark_id) {
+    const night_parking = await CarparkRead.read_night_parking(carpark_id);
+    return night_parking;
+}
+
+async function fetch_gantry_height(carpark_id) {
+    const gantry_height = await CarparkRead.read_gantry_height(carpark_id);
+    return gantry_height;
+}
+
+async function fetch_carpark_basement(carpark_id) {
+    const carpark_basement = await CarparkRead.read_carpark_basement(carpark_id);
+    return carpark_basement;
 }
 
 /**
@@ -137,13 +157,11 @@ async function fetch_carparks_within_radius(user_destination, radius) {
 //     CarparkWrite.write_reviews(carpark_id)
 // }
 
-async function update_reviews(carpark_id, user_email, review){
+async function add_review(carpark_id, user_email, review){
     const reviews = await CarparkRead.read_reviews(carpark_id);
-    reviews.push(review)
-    CarparkWrite.write_reviews(carpark_id, new_reviews);
-}
+    reviews.push(`${user_email}: ${review}`);
+    const new_reviews = await CarparkWrite.write_reviews(carpark_id, reviews);
+};
 
-// module.exports = { write_carpark_id, write_location, write_hourly_rate, write_reviews, add_carpark };
-
-module.exports = { fetch_reviews, fetch_carpark_rates, fetch_carpark_type, fetch_free_parking, fetch_location, fetch_parking_available_time, fetch_parking_system_type, fetch_carparks_within_radius };
+module.exports = { fetch_address, fetch_reviews, fetch_carpark_rates, fetch_carpark_type, fetch_free_parking, fetch_location, fetch_parking_available_time, fetch_parking_system_type, fetch_night_parking, fetch_carpark_basement, fetch_gantry_height, fetch_carparks_within_radius, add_review };
 
