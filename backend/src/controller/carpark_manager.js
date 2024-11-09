@@ -1,5 +1,4 @@
 const axios = require("axios")
-const CarparkService = require('../../APIServer/service/carparkService.js');
 const CarparkWrite = require("../repository/database_access/write database/carpark_write.js");
 const CarparkRead = require("../repository/database_access/read database/carpark_read.js");
 const { get_collection } = require("../repository/database_access/database_tools.js");

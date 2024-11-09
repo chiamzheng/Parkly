@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8083/api'; //if you use emulator
+const BASE_URL = 'http://10.0.2.2:8083/api/external'; //if you use emulator
 // const BASE_URL = 'http://localhost:8083/api';
 
 interface Coordinate {
