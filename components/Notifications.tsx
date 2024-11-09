@@ -9,6 +9,8 @@ const NotificationScreen = ({ carparkID }) => {
 
     // Load notification state from AsyncStorage on mount
     useEffect(() => {
+        if (!carparkID) return; // Exit early if carparkID is null or undefined
+
         const loadNotificationState = async () => {
             try {
                 const savedState = await AsyncStorage.getItem('notificationStates');
@@ -24,7 +26,6 @@ const NotificationScreen = ({ carparkID }) => {
         loadNotificationState();
     }, [carparkID]);
 
-    // Request notification permissions
     useEffect(() => {
         const requestPermissions = async () => {
             const { status } = await Notifications.requestPermissionsAsync();
@@ -35,7 +36,6 @@ const NotificationScreen = ({ carparkID }) => {
         requestPermissions();
     }, []);
 
-    // Notification handler for foreground notifications
     Notifications.setNotificationHandler({
         handleNotification: async () => ({
             shouldShowAlert: true,
@@ -45,6 +45,8 @@ const NotificationScreen = ({ carparkID }) => {
     });
 
     const toggleNotification = async () => {
+        if (!carparkID) return; // Exit early if carparkID is null or undefined
+
         const currentStatus = notificationStates[carparkID] || false;
         const updatedStates = {
             ...notificationStates,
@@ -59,7 +61,6 @@ const NotificationScreen = ({ carparkID }) => {
             console.error("Error saving notification state:", error);
         }
 
-        // Schedule notification if it's being turned on
         if (!currentStatus) {
             await Notifications.scheduleNotificationAsync({
                 content: {
@@ -70,6 +71,11 @@ const NotificationScreen = ({ carparkID }) => {
             });
         }
     };
+
+    // Render nothing if carparkID is null or undefined
+    if (!carparkID) {
+        return null; // Avoid rendering the component if carparkID is not available
+    }
 
     return (
         <TouchableOpacity onPress={toggleNotification}>
