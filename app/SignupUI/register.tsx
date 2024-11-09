@@ -16,8 +16,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import validator from "validator";
 import React from "react";
 import axios from "axios";
+// import { register } from "@/components/Service/dbUserAccount"; for the function 
 
-//const {register} = require("../backend/src/controller/user_account_manager");
 
 export default function Register({ navigation }) {
   const [username, onChangeUser] = React.useState("");
@@ -35,6 +35,7 @@ export default function Register({ navigation }) {
   const [validPassword, setValidPassword] = React.useState(true);
   const [validcfm, setValidcfm] = React.useState(true);
   const [registered, setRegistered] = React.useState(1);
+  // const [registerValue, setRegisterValue] = React.useState(null);
 
   // React.useEffect(() => {
   //   const fetch_carparks = async () => {
@@ -136,7 +137,7 @@ export default function Register({ navigation }) {
           </Pressable>
           <Pressable
             style={styles.button}
-            onPress={() => {
+            onPress={async () => {
               if (validator.isEmail(username)) {
                 setValidEmail(true);
               } else {
@@ -157,6 +158,7 @@ export default function Register({ navigation }) {
                 !validator.isEmpty(password) &&
                 password == cfm
               ) {
+
                 // reference of how to call an API
                 axios
                   .get(
@@ -168,6 +170,20 @@ export default function Register({ navigation }) {
                   .catch((error) => {
                     console.error("Error fetching data:", error);
                   });
+
+                /*const result = await register(email, password); 
+                  setRegisterValue(result); // Store the result,, possibility that it might be null, need to check
+                  console.log(result); // to check
+
+                  // Handle different cases based on the response
+                  if (result === -1) {
+                    Alert.alert("Error", "Email already exists.");
+                  } else if (result === 0) {
+                    Alert.alert("Error", "Password is too weak.");
+                  } else if (result === 1) {
+                    Alert.alert("Success", "Registration successful.");
+                    navigation.goBack(); // Navigate back to previous screen
+                  }*/
               }
             }}
           >
