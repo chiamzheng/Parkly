@@ -157,6 +157,7 @@ export default function Register({ navigation }) {
                 !validator.isEmpty(password) &&
                 password == cfm
               ) {
+                // reference of how to call an API
                 axios
                   .get(
                     `http://192.168.0.218:8083/api/user_account/register/${username}/${password}`

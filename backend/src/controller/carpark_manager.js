@@ -18,8 +18,6 @@ const { wgs84ToSvy21 } = require("svy21");
  * @author Jamie
  */
 
-<<<<<<< HEAD
-
 async function fetch_available_lots(carpark_id){
     try {
         const response = await axios.get(`http://localhost:8083/carparkAvailability/${carpark_id}`);
@@ -54,14 +52,6 @@ async function fetch_suggestions(search) {
         const suggestions = suggestionsData.slice(0, 5).map(item => item.Address);
 
         return suggestions; // address of first 5 closest matches
-=======
-async function fetch_available_lot(req, res) {
-    const carparkId = req.query.carpark_id; // Get carpark ID from query parameter
-    console.log("processed")
-    try {
-        const availability = await CarparkService.getCarparkAvailability(carparkId);
-        res.status(200).json(availability);
->>>>>>> 382fd9d18f7dd49c8cdaa21b43f9a1ac776c5e99
     } catch (error) {
         res.status(404).json({ error: error.message });
     }
@@ -196,8 +186,5 @@ async function fetch_carparks_within_radius(user_destination, radius) {
 
 // main();
 
-<<<<<<< HEAD
 module.exports = { fetch_available_lots, fetch_capacity, fetch_suggestions, fetch_reviews, fetch_carparks_within_radius };
-=======
-module.exports = { fetch_available_lot, fetch_capacity, fetch_reviews, fetch_carparks_within_radius };
->>>>>>> 382fd9d18f7dd49c8cdaa21b43f9a1ac776c5e99
+
