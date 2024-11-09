@@ -63,7 +63,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
             <View style={[styles.nameContainer, { marginTop: 5 }]}> 
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image style={[styles.exit, { width: 30, height: 30, tintColor: 'green' }]} source={require("../assets/images/location_icon.png")}/>
-                <Text style={[styles.name]}>{carparkData?.car_park_no || 'Carpark'}</Text>
+                <Text style={[styles.name]}>{carparkData?.car_park_no || 'Carpark' }</Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={[styles.name, { marginBottom: 0, marginRight: 4 }]}> Capacity: <Text style={{ color: 'green' }}>{capacity || 0} %</Text> </Text>
@@ -116,7 +116,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
 
                       
                       <View style={{flexDirection:'row', marginRight: 10}}>
-                        <NotificationScreen carparkID={carparkData.car_park_no}/>
+                        <NotificationScreen/>
                       
                         <TouchableOpacity onPress={() => setBookmarkIsOn(!bookmarkIsOn)}>
                           <Image
