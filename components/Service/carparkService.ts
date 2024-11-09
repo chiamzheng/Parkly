@@ -17,7 +17,7 @@ const BASE_URL = 'http://192.168.0.218:8083/api/external'; // where my API serve
 
 export async function getAvailableCarparkLot(carparkId: string): Promise<any> {
     try {
-        const response = await fetch(`${BASE_URL}/carpark/available-lot?carpark_id=${encodeURIComponent(carparkId)}`);
+        const response = await fetch(`${BASE_URL}/carpark/available-lot?carpark_id=${carparkId}`);
         if (!response.ok) throw new Error('Failed to fetch carpark availability');
         
         const data = await response.json();
@@ -45,7 +45,7 @@ export async function getAvailableCarparkLot(carparkId: string): Promise<any> {
 
 export async function getCarparkCapacity(carparkId: string): Promise<any> {
     try {
-        const response = await fetch(`${BASE_URL}/carpark/capacity?carpark_id=${encodeURIComponent(carparkId)}`);
+        const response = await fetch(`${BASE_URL}/carpark/capacity?carpark_id=${carparkId}`);
         if (!response.ok) throw new Error('Failed to fetch carpark capacity');
         const data = await response.json();
         console.log('Carpark Capacity:', data);

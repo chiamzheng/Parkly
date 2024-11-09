@@ -1,85 +1,52 @@
-const axios = require("axios")
-const LocationService = require('../service/locationService');
-const CarparkService = require('../service/carparkService');
+const axios = require("axios");
+const CarparkService = require("../service/carparkService");
 
 /*
- * Fetches first 5 closest suggestions based on search/query entry.
+ * Fetches the available lot count and update time for a specific carpark.
+ * 
  * 
  * @param {Object} req - The request object.
- * @param {Object} res - The response object to send the address of the closest 5 suggestions.
- * @returns {Promise<void>} - Returns an array of JSON response (up to 5) with the Address, and Postal.
+ * @param {Object} res - The response object to send the availability data or error.
+ * @returns {Promise<void>} - Returns a JSON response with the availableLots and updateTime
  * 
- * @throws {Error} - If the addresses cannot be fetched.
+ * @throws {Error} - If the carpark availability data cannot be fetched.
  * 
  * @author Jamie
  */
 
-async function fetch_suggestions(req, res) {
-    const search = req.query.search
-
+async function fetch_available_lots(req, res) {
+    const carparkId = req.query.carpark_id; // Get carpark ID from query parameter
+    console.log("processed")
     try {
-        const locations = await LocationService.getSuggestions(search);
-        res.status(200).json(locations);
+        const availability = await CarparkService.getCarparkAvailability(carparkId);
+        res.status(200).json(availability);
     } catch (error) {
         res.status(404).json({ error: error.message });
     }
 }
 
 /*
- * Fetches route details - used for routing from starting point to selected carpark.
+ * Fetches the capacity (in %) for a specific carpark.
+ * 
  * 
  * @param {Object} req - The request object.
- * @param {Object} res - The response object to send the address of the closest 5 suggestions.
- * @returns {Promise<void>} - Returns JSON response including (encoded) routeGeometry, totalDistance and totalTime.
+ * @param {Object} res - The response object to send the availability data or error.
+ * @returns {Promise<void>} - Returns a JSON response with the capacity.
  * 
- * @throws {Error} - If the data cannot be fetched.
+ * @throws {Error} - If the capacity of carpark cannot be fetched.
  * 
  * @author Jamie
  */
 
-async function fetch_route_details(req, res){
-    const { startLat, startLng, endLat, endLng } = req.query;
+async function fetch_capacity(req, res){
+    const carparkId = req.query.carpark_id;
+
     try {
-        const start = ${startLat},${startLng};
-        const end = ${endLat},${endLng};
-        
-        console.log("Start:", start);
-        console.log("End:", end);
-        const routeDetails = await LocationService.getRouteDetails(start, end);
-        res.status(200).json(routeDetails); 
+        const capacity = await CarparkService.getCarparkCapacity(carparkId);
+        res.status(200).json(capacity);
     } catch (error) {
         res.status(404).json({ error: error.message });
     }
-}
+};
 
-/**
- * Fetch array of latitude and logititude coordinates from encoded routeGeometry for polyline.
- * 
- * @param {Object} req - The request object.
- * @param {Object} res - The response object to send the address of the closest 5 suggestions.
- * @returns {Promise<void>} - Returns array JSON data of latitude and longtitude coordinates.
- * 
- * @throws {Error} - If the data cannot be fetched.
- * 
- * @author Jamie
- */
-
-async function fetch_route_polyline(req, res){
-    const { startLat, startLng, endLat, endLng } = req.query;
-    console.log(req.query)
-    try {
-        // Convert coordinates to strings for API
-        const start = ${startLat},${startLng};
-        const end = ${endLat},${endLng};
-
-        const routeDetails = await LocationService.getRouteDetails(start, end);
-        const routeGeometry = routeDetails.routeGeometry;
-        //console.log(routeGeometry)
-        const polyline = await LocationService.decodeRouteGeometry(routeGeometry);
-        res.status(200).json(polyline); 
-    } catch (error) {
-        res.status(404).json({ error: error.message });
-    }
-}
-
-module.exports = { fetch_suggestions, fetch_route_details, fetch_route_polyline };
+module.exports = { fetch_available_lots, fetch_capacity }

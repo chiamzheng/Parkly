@@ -1,7 +1,7 @@
 const express = require('express');
 const external_api_route = express.Router();
 const { fetch_suggestions, fetch_route_details, fetch_route_polyline } = require('../controller/location_manager.js');
-const { fetch_available_lots, fetch_capacity } = require('../../src/controller/carpark_manager.js');
+const { fetch_available_lots, fetch_capacity } = require('../controller/external_api_controller.js');
 
 //console.log("fetch_suggestions:", fetch_suggestions);
 //console.log("fetch_route_details:", fetch_route_details);

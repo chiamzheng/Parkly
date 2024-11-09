@@ -202,7 +202,6 @@ async function update_bookmark( user_email, carpark_id ) {
     await UserAccountWrite.write_bookmark_list(user_email, bookmark_list);
     console.log("Bookmark updated")
     return 1; 
-
 }
 
 

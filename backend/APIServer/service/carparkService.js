@@ -14,6 +14,20 @@
 
 const axios = require('axios');
 
+async function getCarparkData(carparkId) {
+    const response = await axios.get('https://api.data.gov.sg/v1/transport/carpark-availability');
+
+    const carparkData = response.data.items[0].carpark_data.find(carpark => carpark.carpark_number === carparkId);
+
+    // Process and return the data fetched from API in a specific format for other functions to refer and utilise
+    return {
+        carparkNumber: carparkData.carpark_number,
+        totalLots: carparkData.carpark_info[0].total_lots,
+        availableLots: carparkData.carpark_info[0].lots_available,
+        updateTime: carparkData.update_datetime
+    };
+}
+
 class CarparkService {
 
      /**
@@ -33,19 +47,7 @@ class CarparkService {
      * 
      */
 
-    static async getCarparkData(carparkId) {
-        const response = await axios.get('https://api.data.gov.sg/v1/transport/carpark-availability');
 
-        const carparkData = response.data.items[0].carpark_data.find(carpark => carpark.carpark_number === carparkId);
-    
-        // Process and return the data fetched from API in a specific format for other functions to refer and utilise
-        return {
-            carparkNumber: carparkData.carpark_number,
-            totalLots: carparkData.carpark_info[0].total_lots,
-            availableLots: carparkData.carpark_info[0].lots_available,
-            updateTime: carparkData.update_datetime
-        };
-    }
 
     /**
      * Retrieves the availability of parking lots for a specific carpark.
@@ -64,7 +66,7 @@ class CarparkService {
      */
 
     static async getCarparkAvailability(carparkId) {
-        const carparkData = await CarparkService.getCarparkData(carparkId);
+        const carparkData = await getCarparkData(carparkId);
         
         // Returns ONLY available parking lots and update time
         return {
@@ -90,7 +92,7 @@ class CarparkService {
      */
 
      static async getCarparkCapacity(carparkId) {
-        const carparkData = await CarparkService.getCarparkData(carparkId);
+        const carparkData = await getCarparkData(carparkId);
         
         // return 2sf percentage capacity
         return {

@@ -17,6 +17,7 @@ const fetch_carparks_within_radius_api = async (req, res) => {
         const user_destination = req.params.destination.split(',');
         const radius = req.params.radius;
         const carparks_within_radius = await fetch_carparks_within_radius(user_destination, radius);
+        
         res.status(200).json(carparks_within_radius);
     } catch (error) {
         res.status(500).json({message: error.message});
