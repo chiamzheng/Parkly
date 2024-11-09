@@ -81,8 +81,6 @@ async function email_exists(email) {
 
     const document = await find_document(email);
     if (document) { // if email already exists
-
-        console.log("email already exists!");
         return 1;
     }
 

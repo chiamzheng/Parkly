@@ -5,8 +5,8 @@ const register_api = async (req, res) => {
     try{
         const input_email = req.params.input_email;
         const input_password = req.params.input_password;
-        await register(input_email, input_password);
-        res.status(200).json(`User added: ${input_email}, ${input_password}`);
+        const value = await register(input_email, input_password);
+        res.status(200).json(value);
     } catch (error) {
         res.status(500).json({message: error.message});
     }

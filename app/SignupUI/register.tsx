@@ -160,7 +160,7 @@ export default function Register({ navigation }) {
                 // reference of how to call an API
                 axios
                   .get(
-                    `http://192.168.1.143:8083/api/user_account/register/${username}/${password}`
+                    `http://192.168.0.218:8083/api/user_account/register/${username}/${password}`
                   )
                   .then((response) => {
                     console.log(response.data);

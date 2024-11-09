@@ -9,12 +9,12 @@ import {
   View,
   TextInput,
 } from "react-native";
-import { Dimensions,TouchableOpacity } from "react-native";
+import { Dimensions, TouchableOpacity } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { CheckBox } from "@rneui/themed";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import validator from 'validator';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import validator from "validator";
 import React from "react";
 import axios from "axios";
 export default function Signin({ navigation }: { navigation: any }) {
@@ -26,37 +26,37 @@ export default function Signin({ navigation }: { navigation: any }) {
   const [showPassword, setShowPassword] = React.useState(false);
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
-};
-const handlePassword = () => {
-  if(validator.isEmpty(password)){
-    setValidPassword(false)
-  }else{
-    setValidPassword(true);
-  }
-};
-const handleEmail = () => {
-  if(validator.isEmail(username)){
-    setValidEmail(true);
-  }else{
+  };
+  const handlePassword = () => {
+    if (validator.isEmpty(password)) {
+      setValidPassword(false);
+    } else {
+      setValidPassword(true);
+    }
+  };
+  const handleEmail = () => {
+    if (validator.isEmail(username)) {
+      setValidEmail(true);
+    } else {
       setValidEmail(false);
     }
-};
-const handleSignin = () => {
-  if(!(validator.isEmpty(password)) && (validator.isEmail(username))){
-    const value =
-    axios.get(
-      `http://192.168.1.143:8083/api/user_account/login/${username}/${password}`
-    )
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-    });
-    console.log(value);
-    navigation.navigate("HomepageUI/homepage");
-  }
-};
+  };
+  const handleSignin = () => {
+    if (!validator.isEmpty(password) && validator.isEmail(username)) {
+      const value = axios
+        .get(
+          `http://192.168.0.218:8083/api/user_account/login/${username}/${password}`
+        )
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+      console.log(value);
+      navigation.navigate("HomepageUI/homepage");
+    }
+  };
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.background}>
@@ -68,7 +68,7 @@ const handleSignin = () => {
         <Text style={styles.title}>Login</Text>
         <ThemedView style={styles.stepContainer}>
           <TextInput
-            style={validEmail?styles.input:styles.invalidinput}
+            style={validEmail ? styles.input : styles.invalidinput}
             onChangeText={onChangeUser}
             value={username}
             placeholder="Email"
@@ -77,7 +77,7 @@ const handleSignin = () => {
           />
           <View style={styles.password}>
             <TextInput
-              style={validPassword?styles.input:styles.invalidinput}
+              style={validPassword ? styles.input : styles.invalidinput}
               onChangeText={onChangePass}
               value={password}
               placeholder="Password"
@@ -85,17 +85,16 @@ const handleSignin = () => {
               inputMode="text"
               secureTextEntry={!showPassword}
             />
-            <TouchableOpacity  style={styles.icon}>
+            <TouchableOpacity style={styles.icon}>
               <MaterialCommunityIcons
-                        name={showPassword ? 'eye-off' : 'eye'}
-                        size={24}
-                        color="#aaa"
-                        onPress={toggleShowPassword}
+                name={showPassword ? "eye-off" : "eye"}
+                size={24}
+                color="#aaa"
+                onPress={toggleShowPassword}
               />
             </TouchableOpacity>
-            
           </View>
-          
+
           <View style={styles.bottomline}>
             <CheckBox
               containerStyle={styles.checkbox}
@@ -108,9 +107,11 @@ const handleSignin = () => {
             </Pressable>
           </View>
         </ThemedView>
-        
+
         <View>
-          <Text style={validPassword?styles.hide:styles.invalidmsg}>The username or password you entered is incorrect.</Text>
+          <Text style={validPassword ? styles.hide : styles.invalidmsg}>
+            The username or password you entered is incorrect.
+          </Text>
         </View>
         <View style={styles.buttoncontainer}>
           <Pressable
@@ -128,8 +129,7 @@ const handleSignin = () => {
               handleEmail();
               handlePassword();
               handleSignin();
-            }
-          }
+            }}
           >
             <Text style={styles.buttonText}>Let's Go!</Text>
           </Pressable>
@@ -172,7 +172,6 @@ const styles = StyleSheet.create({
     fontSize: Dimensions.get("window").width / 6,
     fontWeight: "800",
     //fontFamily: "Erica",
-    
   },
   button: {
     borderRadius: 40,
@@ -228,7 +227,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     fontWeight: "800",
     color: "black",
-    marginBottom:20,
+    marginBottom: 20,
   },
   img: {
     height: 30,
@@ -237,7 +236,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "800",
     fontSize: 20,
-    marginLeft: Dimensions.get("window").width / 12 ,
+    marginLeft: Dimensions.get("window").width / 12,
     margin: 10,
   },
   buttoncontainer: {
@@ -255,21 +254,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal:Dimensions.get("window").width / 12,
-    paddingBottom:Dimensions.get("window").height / 12,
-    width:Dimensions.get("window").width,
+    paddingHorizontal: Dimensions.get("window").width / 12,
+    paddingBottom: Dimensions.get("window").height / 12,
+    width: Dimensions.get("window").width,
   },
-  password:{
-    flexDirection:"row",
+  password: {
+    flexDirection: "row",
     //alignItems:"center",
-    justifyContent:"flex-end",
-    paddingHorizontal:14,
-    
+    justifyContent: "flex-end",
+    paddingHorizontal: 14,
   },
-  icon:{
-    position:"absolute",
-    marginTop:14,
-    paddingRight:Dimensions.get("window").width / 14,
+  icon: {
+    position: "absolute",
+    marginTop: 14,
+    paddingRight: Dimensions.get("window").width / 14,
   },
   invalidinput: {
     //fontFamily: "Ubuntu",
@@ -282,14 +280,14 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     fontWeight: "800",
     color: "black",
-    marginBottom:20,
+    marginBottom: 20,
   },
-  hide:{
-    display:'none',
+  hide: {
+    display: "none",
   },
-  invalidmsg:{
-    color:'red',
-    fontWeight:'800',
-    alignSelf:"center",
-  }
+  invalidmsg: {
+    color: "red",
+    fontWeight: "800",
+    alignSelf: "center",
+  },
 });
