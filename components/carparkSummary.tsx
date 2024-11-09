@@ -6,6 +6,7 @@ import NotificationScreen from './Notifications'
 import { getAvailableCarparkLot, getCarparkCapacity } from './Service/carparkService';
 import CarparkReviews from './CarparkReviews';
 import { Linking } from 'react-native';
+import ReviewScreen from '../app/review_popup';
 
 /*
 import * as carpark_read from '../backend/src/repository/database_access/read database/carpark_read'
@@ -26,6 +27,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [capacity, setCapacity] = useState(null);
   const [notifIsOn, setNotifIsOn] = useState(false);
   const [bigModalVisible, setBigModalVisible] = useState(false);
+  const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const exitIcon = require("../assets/images/exit.png");
 
   //status for notification and bookmark icons
@@ -136,6 +138,14 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               <View style={styles.reviewBox}>
                 <Text style={{ fontSize: 15, marginTop: 3, marginBottom: 7 }}>Reviews:</Text>
                 <CarparkReviews/>
+                <Pressable 
+                  style={styles.selectButton} 
+                  onPress={() => {setReviewModalVisible(true); 
+                  setBigModalVisible(false);
+                  }}
+                >
+                  <Text style={styles.buttonText}>Leave Review</Text>
+                </Pressable>
               </View>
 
               <Text style={styles.rate}>
@@ -199,6 +209,18 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               </View>
             </ScrollView>
           </View>
+        </View>
+      </Modal>
+
+      {/* Review Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={reviewModalVisible}
+        onRequestClose={() => setReviewModalVisible(false)}
+      >
+        <View style={styles.boxLayout}>
+          <ReviewScreen style={styles.reviewPopup} />
         </View>
       </Modal>
     </>
@@ -294,5 +316,17 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 20,
     marginTop: 5,
+  },
+  reviewPopup: {
+    width: '90%',
+    height: '90%',
+    backgroundColor: '#FFF',
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });
