@@ -91,6 +91,12 @@ async function read_location ( carpark_id ) {
     return location;
 }
 
+async function read_carpark_type (carpark_id) {
+    const document = await find_document(carpark_id);
+    const car_park_type = document.car_park_type;
+    return car_park_type;
+}
+
 async function read_parking_system_type ( carpark_id ) {
     const document = await find_document(carpark_id);
     const parking_system_type = document.type_of_parking_system;
@@ -113,29 +119,36 @@ async function read_free_parking (carpark_id) {
     return free_parking; // "YES" or "NO"
 }
 
-async function read_carpark_type (carpark_id) {
+async function read_night_parking (carpark_id) {
     const document = await find_document(carpark_id);
-    const car_park_type = document.car_park_type;
-    return car_park_type;
+    const night_parking = document.night_parking;
+    return night_parking;
+}
+
+async function read_gantry_height (carpark_id) {
+    const document = await find_document(carpark_id);
+    const gantry_height = document.gantry_height;
+    return gantry_height;
+}
+
+async function read_carpark_basement (carpark_id) {
+    const document = await find_document(carpark_id);
+    const carpark_basement = document.car_park_basement;
+    return carpark_basement;
 }
 
 async function read_carpark_rate ( carpark_id ) {
     const document = await find_document(carpark_id);
     const morning_evening_motorcar_rate = document.morning_evening_motorcar_rate;
     const evening_morning_motorcar_rate = document.evening_morning_motorcar_rate;
-    const morning_night_motorcycle_rate = document.morning_night_motorcycle_rate;
-    const night_morning_motorcycle_rate = document.night_morning_motorcycle_rate;
-    return {morning_evening_motorcar_rate, evening_morning_motorcar_rate, morning_night_motorcycle_rate, night_morning_motorcycle_rate};
+    return {morning_evening_motorcar_rate, evening_morning_motorcar_rate};
     // Number data type stored as an array
 }
 
-// // example code of how to use read_carpark_rate
-// async function main(){
-//     const [morn_eve, eve_morn, morn_night, night_morn] = await read_carpark_rate("ACB");
-//     console.log(morn_eve,eve_morn,morn_night, night_morn);
-// }; 
+// usage instruction
+//   const [morn_eve, eve_morn] = await read_carpark_rate("ACB");
+//   console.log(morn_eve,eve_morn);
 
-// main()
 
 
 /**
@@ -161,4 +174,4 @@ async function read_reviews ( carpark_id ) {
     return reviews;
 }
 
-module.exports = { read_carpark_type, read_carpark_id, read_location, read_parking_system_type, read_parking_available_time, read_free_parking, read_carpark_rate, read_reviews };
+module.exports = { read_address, read_carpark_type, read_carpark_id, read_location, read_parking_system_type, read_parking_available_time, read_free_parking, read_carpark_rate, read_reviews, read_night_parking, read_gantry_height, read_carpark_basement };

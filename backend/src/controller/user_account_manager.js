@@ -187,13 +187,15 @@ async function update_bookmark( user_email, carpark_id ) {
     // if bookmark already exists, then remove the carpark from the bookmark list
     if (bookmark_list.includes(carpark_id)) {
 
-        const index = array.indexOf(carpark_id);
+        const index = bookmark_list.indexOf(carpark_id);
+
+        console.log(`${carpark_id} removed from ${user_email}'s bookmark`);
 
         // remove carpark_id from index
         bookmark_list.splice(index); 
 
     } else { // bookmark does not exist
-        console.log()
+        console.log(`${carpark_id} added to ${user_email}'s bookmark`)
         
         // add carpark to the bookmark list
         bookmark_list.push(carpark_id);
@@ -201,10 +203,9 @@ async function update_bookmark( user_email, carpark_id ) {
 
     // update new bookmark list on the database
     await UserAccountWrite.write_bookmark_list(user_email, bookmark_list);
-    console.log("Bookmark updated")
     return 1; 
-
 }
 
+update_bookmark("chiamzheng@gmail.com", "ACB")
 
 module.exports = { register, login, change_email, change_password, update_bookmark };
