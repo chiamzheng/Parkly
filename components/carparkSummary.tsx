@@ -4,6 +4,8 @@ import axios from 'axios';
 import CarparkIcons from './carparkIcons';
 import NotificationScreen from './Notifications'
 import { getAvailableCarparkLot, getCarparkCapacity } from './Service/carparkService';
+import { getNearbyCarparks } from './Service/dbCarparkService';
+import { register } from './Service/dbUserAccount';
 import CarparkReviews from './CarparkReviews';
 import { Linking } from 'react-native';
 import ReviewScreen from '../app/review_popup';
@@ -26,6 +28,8 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [availableLots, setAvailableLots] = useState(null);
   const [capacity, setCapacity] = useState(null);
   const [notifIsOn, setNotifIsOn] = useState(false);
+  const [nearbyCarparks, setNearbyCarparks] = useState(null); //test
+  const [registerValue, setRegisterValue ] = useState(null); // test
   const [bigModalVisible, setBigModalVisible] = useState(false);
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const exitIcon = require("../assets/images/exit.png");
@@ -43,6 +47,18 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
 
       const cap = await getCarparkCapacity(carparkData.car_park_no);
       setCapacity(cap?.capacity || 0);
+
+      /*test calling nearby Carparks*/
+      const destination = { latitude: 1.321572, longitude: 103.884496 };
+      const nearbycp = await getNearbyCarparks(destination, 1000);
+      setNearbyCarparks(nearbycp); // data from function is correct and is being fetched properly, need to handle storage of returned data 
+      // i think its not being set properly and you get null instead because it takes time for response to be returned
+
+      /*test register*/ 
+      const regist = await register('jamir.tanpw@gmail.com','123456TESTING*');
+      setRegisterValue(regist);
+      console.log(registerValue) //same issue
+
     };
 
     fetchData();
