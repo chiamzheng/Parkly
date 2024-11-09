@@ -65,8 +65,8 @@ async function read_email ( email ) {
 async function read_password ( email ) {
     
     const document = await find_document(email);
+    console.log(document)
     const password = await document.password;
-    console.log(`Password for ${email}: ${password}`);
     return password
 }
 
