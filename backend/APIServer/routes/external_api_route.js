@@ -1,7 +1,7 @@
 const express = require('express');
 const external_api_route = express.Router();
 const { fetch_suggestions, fetch_route_details, fetch_route_polyline } = require('../controller/location_manager.js');
-const { fetch_available_lots, fetch_capacity } = require('../controller/external_api');
+const { fetch_available_lot, fetch_capacity } = require('../controller/external_api_controller.js');
 
 //console.log("fetch_suggestions:", fetch_suggestions);
 //console.log("fetch_route_details:", fetch_route_details);
@@ -18,4 +18,4 @@ external_api_route.get('/location/route-polyline', fetch_route_polyline);
 external_api_route.get('/carpark/available-lot', fetch_available_lot);
 external_api_route.get('/carpark/capacity', fetch_capacity);
 
-module.exports = { external_api_route };
+module.exports = external_api_route;
