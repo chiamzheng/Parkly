@@ -1,5 +1,5 @@
 // test_carpark_manager.js
-const { get_available_lots, get_capacity, fetch_suggestions, fetch_reviews, fetch_carparks_within_radius } = require('./carpark_manager');
+const { get_available_lots, get_capacity, fetch_suggestions, fetch_reviews, fetch_carparks_within_radius } = require('../../src/controller/carpark_manager');
 
 // Mock testing function
 (async () => {

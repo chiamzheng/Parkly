@@ -1,89 +1,9 @@
 const axios = require("axios")
-const CarparkService = require('../service/carparkService');
+const CarparkService = require('../../APIServer/service/carparkService.js');
 const CarparkWrite = require("../repository/database_access/write database/carpark_write.js");
 const CarparkRead = require("../repository/database_access/read database/carpark_read.js");
 const { get_collection } = require("../repository/database_access/database_tools.js");
 const { wgs84ToSvy21 } = require("svy21");
-
-/**
- * Fetches the available lot count and update time for a specific carpark.
- * 
- * 
- * @param {Object} req - The request object.
- * @param {Object} res - The response object to send the availability data or error.
- * @returns {Promise<void>} - Returns a JSON response with the availableLots and updateTime
- * 
- * @throws {Error} - If the carpark availability data cannot be fetched.
- * 
- * @author Jamie
- */
-
-async function fetch_available_lots(carpark_id){
-    try {
-        const response = await axios.get(`http://localhost:8083/carparkAvailability/${carpark_id}`);
-        return response.data.availability;
-        } catch (error) {
-        console.error("Error fetching carpark availability:", error);
-        throw new Error("Failed to fetch availability.");
-    }
-};
-
-
-
-async function fetch_capacity(carpark_id){
-    try {
-        const response = await axios.get(`http://localhost:8083/carparkAvailability/${carpark_id}`);
-        const totalLots = response.data.capacity
-        const capacity = (await get_available_lots(carpark_id)/totalLots)*100
-        return capacity;
-        } catch (error) {
-        console.error("Error fetching carpark availability:", error);
-        throw new Error("Failed to fetch capacity.");
-    }
-};
-
-// get_available_lots("ACM")
-// get_capacity("ACM")
-
-async function fetch_suggestions(search) {
-    try {
-        const response = await axios.get(`/searchAddress/${search}`);
-        const suggestionsData = response.data;
-        const suggestions = suggestionsData.slice(0, 5).map(item => item.Address);
-
-        return suggestions; // address of first 5 closest matches
-    } catch (error) {
-        res.status(404).json({ error: error.message });
-    }
-}
-
-/**
- * Fetches the capacity (in %) for a specific carpark.
- * 
- * 
- * @param {Object} req - The request object.
- * @param {Object} res - The response object to send the availability data or error.
- * @returns {Promise<void>} - Returns a JSON response with the capacity.
- * 
- * @throws {Error} - If the capacity of carpark cannot be fetched.
- * 
- * @author Jamie
- */
-
-async function fetch_capacity(req, res){
-    const carparkId = req.query.carpark_id;
-
-    try {
-        const capacity = await CarparkService.getCarparkCapacity(carparkId);
-        res.status(200).json(capacity);
-    } catch (error) {
-        res.status(404).json({ error: error.message });
-    }
-};
-
-//address and features of carpark can be found using read_location under carpark_read
-
-
 
 /**
  * Retrieves reviews for a specific carpark from the database.
@@ -99,8 +19,6 @@ async function fetch_reviews(carpark_id) {
     return reviews;
 }
 
-<<<<<<< Updated upstream
-=======
 async function fetch_location(carpark_id) {
     const carpark_location = await CarparkRead.read_location(carpark_id);
     return carpark_location;
@@ -129,7 +47,6 @@ async function fetch_carpark_rates(carpark_id) {
     return carpark_location;
 }
 
->>>>>>> Stashed changes
 /**
  * Utility function to calculate the Euclidean distance between two points.
  * 
@@ -217,21 +134,16 @@ async function fetch_carparks_within_radius(user_destination, radius) {
 
 // main();
 
-<<<<<<< Updated upstream
-module.exports = { fetch_available_lots, fetch_capacity, fetch_suggestions, fetch_reviews, fetch_carparks_within_radius };
-=======
 // async function write_review(carpark_id, user_email) {
 //     CarparkWrite.write_reviews(carpark_id)
 // }
 
-async function update_reviews(carpark_id, user_email, review){
+async function add_review(carpark_id, user_email, review){
     const reviews = await CarparkRead.read_reviews(carpark_id);
-    reviews.push(review)
-    CarparkWrite.write_reviews(carpark_id, new_reviews);
-}
+    reviews.push(review);
+    const new_reviews = await CarparkWrite.write_reviews(carpark_id, reviews);
+    return new_reviews;
+};
 
-module.exports = { write_carpark_id, write_location, write_hourly_rate, write_reviews, add_carpark };
-
-module.exports = { fetch_reviews, fetch_carpark_rates, fetch_carpark_type, fetch_free_parking, fetch_location, fetch_parking_available_time, fetch_parking_system_type, fetch_carparks_within_radius };
->>>>>>> Stashed changes
+module.exports = { fetch_reviews, fetch_carpark_rates, fetch_carpark_type, fetch_free_parking, fetch_location, fetch_parking_available_time, fetch_parking_system_type, fetch_carparks_within_radius, add_review };
 
