@@ -9,7 +9,8 @@ import PolylineComponent from '@/components/Polyline';
 import carparkData from '../../CarparkInformation.json'; 
 import computeLatLon from '../../scripts/computeLatLon';
 
-export default function Homepage({ navigation }) {
+export default function Homepage({ route }) {
+  const { username } = route.params || { username: "Jackson Lim" };
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCarpark, setSelectedCarpark] = useState(null);
   const [capacity, setCapacity] = useState(60);// placeholder for actual capacity
@@ -45,7 +46,7 @@ export default function Homepage({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <LocationSearchInterface style={styles.search} onClickBookmark={handleBookmarkPress} />
+      <LocationSearchInterface style={styles.search} onClickBookmark={handleBookmarkPress} username={username} />
 
       <MapView
         style={styles.map}
