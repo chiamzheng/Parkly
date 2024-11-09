@@ -116,7 +116,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
 
                       
                       <View style={{flexDirection:'row', marginRight: 10}}>
-                        <NotificationScreen/>
+                        <NotificationScreen carparkID={carparkData.car_park_no}/>
                       
                         <TouchableOpacity onPress={() => setBookmarkIsOn(!bookmarkIsOn)}>
                           <Image
