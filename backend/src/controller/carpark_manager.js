@@ -99,6 +99,37 @@ async function fetch_reviews(carpark_id) {
     return reviews;
 }
 
+<<<<<<< Updated upstream
+=======
+async function fetch_location(carpark_id) {
+    const carpark_location = await CarparkRead.read_location(carpark_id);
+    return carpark_location;
+}
+
+async function fetch_carpark_type(carpark_id) {
+    const carpark_type = await CarparkRead.read_carpark_type(carpark_id);
+    return carpark_type;
+}
+
+async function fetch_parking_system_type(carpark_id) {
+    const carpark_system_type = await CarparkRead.read_parking_system_type(carpark_id);
+    return carpark_system_type;
+}
+
+async function fetch_parking_available_time(carpark_id) {
+    const available_time = await CarparkRead.read_parking_available_time(carpark_id);
+    return available_time;
+}
+async function fetch_free_parking(carpark_id) {
+    const free_parking = await CarparkRead.read_free_parking(carpark_id);
+    return free_parking;
+}
+async function fetch_carpark_rates(carpark_id) {
+    const carpark_location = await CarparkRead.read_carpark_rate(carpark_id);
+    return carpark_location;
+}
+
+>>>>>>> Stashed changes
 /**
  * Utility function to calculate the Euclidean distance between two points.
  * 
@@ -186,5 +217,21 @@ async function fetch_carparks_within_radius(user_destination, radius) {
 
 // main();
 
+<<<<<<< Updated upstream
 module.exports = { fetch_available_lots, fetch_capacity, fetch_suggestions, fetch_reviews, fetch_carparks_within_radius };
+=======
+// async function write_review(carpark_id, user_email) {
+//     CarparkWrite.write_reviews(carpark_id)
+// }
+
+async function update_reviews(carpark_id, user_email, review){
+    const reviews = await CarparkRead.read_reviews(carpark_id);
+    reviews.push(review)
+    CarparkWrite.write_reviews(carpark_id, new_reviews);
+}
+
+module.exports = { write_carpark_id, write_location, write_hourly_rate, write_reviews, add_carpark };
+
+module.exports = { fetch_reviews, fetch_carpark_rates, fetch_carpark_type, fetch_free_parking, fetch_location, fetch_parking_available_time, fetch_parking_system_type, fetch_carparks_within_radius };
+>>>>>>> Stashed changes
 
