@@ -116,7 +116,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
 
                       
                       <View style={{flexDirection:'row', marginRight: 10}}>
-                        <NotificationScreen/>
+                        <NotificationScreen carparkID={carparkData?.car_park_no}/>
                       
                         <TouchableOpacity onPress={() => setBookmarkIsOn(!bookmarkIsOn)}>
                           <Image
@@ -138,15 +138,16 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               <View style={styles.reviewBox}>
                 <Text style={{ fontSize: 15, marginTop: 3, marginBottom: 7 }}>Reviews:</Text>
                 <CarparkReviews/>
-                <Pressable 
-                  style={styles.selectButton} 
+              </View>
+
+              <Pressable 
+                  style={[styles.selectButton, {alignSelf:'center', marginBottom: 10, marginRight: 10}]} 
                   onPress={() => {setReviewModalVisible(true); 
                   setBigModalVisible(false);
                   }}
-                >
+              >
                   <Text style={styles.buttonText}>Leave Review</Text>
-                </Pressable>
-              </View>
+              </Pressable>
 
               <Text style={styles.rate}>
                 Address: {'\n'}
@@ -314,7 +315,7 @@ const styles = StyleSheet.create({
     borderColor: "black",
     borderWidth: 2,
     alignSelf: 'center',
-    marginBottom: 20,
+    marginBottom: 5,
     marginTop: 5,
   },
   reviewPopup: {
