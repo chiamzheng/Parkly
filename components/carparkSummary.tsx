@@ -141,7 +141,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               </View>
 
               <Pressable 
-                  style={[styles.selectButton, {alignSelf:'center', marginBottom: 10, marginRight: 10}]} 
+                  style={[styles.selectButton, {alignSelf:'flex-end', marginBottom: 10, marginRight: 10}]} 
                   onPress={() => {setReviewModalVisible(true); 
                   setBigModalVisible(false);
                   }}
