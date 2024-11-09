@@ -1,4 +1,4 @@
-const BASE_URL = 'http://10.0.2.2:8083/api'; // where my API server is hosted on
+const BASE_URL = 'http://192.168.0.218:8083/api/external'; // where my API server is hosted on
 
 /**
  * Fetches the available parking lots for a specific carpark from backend localserver.
