@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from "react-native";
 import { MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import { Dimensions } from "react-native";
+import axios from 'axios';
 
-const ReviewScreen = (style:any) => {
+const ReviewScreen = (style:any, navigation:any) => {
     const [rating, setRating] = useState(5);
     const [review, setReview] = useState("");
     const [isBookmarked, setIsBookmarked] = useState(false);
@@ -14,6 +15,26 @@ const ReviewScreen = (style:any) => {
 
     const toggleBookmark = () => {
         setIsBookmarked(!isBookmarked);
+    };
+
+    const handleReviewSubmit = async () => {
+        console.log("Review button pressed");
+        try {
+            // const user = await axios.get('http://192.168.1.143:8083/api/user_account/current');
+            // const email = user.data.email;
+
+            await axios.put('http://192.168.0.8:8083/api/user_account/review', {
+            email: "some_email@gmail.com",
+            review: {
+                rating,
+                comment: review,
+            },
+            });
+            console.log('Review just submitted successfully');
+            navigation.navigate('HomepageUI/homepage');
+        } catch (error) {
+            console.error('Error updating data:', error);
+        }
     };
 
     return (
@@ -75,7 +96,7 @@ const ReviewScreen = (style:any) => {
                 multiline
             />
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={handleReviewSubmit}>
                 <Text style={styles.buttonText}>Publish Review</Text>
             </TouchableOpacity>
         </View>

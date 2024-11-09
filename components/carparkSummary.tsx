@@ -6,6 +6,7 @@ import NotificationScreen from './Notifications'
 import { getAvailableCarparkLot, getCarparkCapacity } from './Service/carparkService';
 import CarparkReviews from './CarparkReviews';
 import { Linking } from 'react-native';
+import ReviewScreen from '../app/review_popup';
 
 /*
 import * as carpark_read from '../backend/src/repository/database_access/read database/carpark_read'
@@ -26,6 +27,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [capacity, setCapacity] = useState(null);
   const [notifIsOn, setNotifIsOn] = useState(false);
   const [bigModalVisible, setBigModalVisible] = useState(false);
+  const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const exitIcon = require("../assets/images/exit.png");
 
   //status for notification and bookmark icons
@@ -36,10 +38,10 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
     if (!carparkData) return;
   
     const fetchData = async () => {
-      const lots = await getAvailableCarparkLot(carparkData.title);
+      const lots = await getAvailableCarparkLot(carparkData.car_park_no);
       setAvailableLots(lots?.availableLots || 0);
 
-      const cap = await getCarparkCapacity(carparkData.title);
+      const cap = await getCarparkCapacity(carparkData.car_park_no);
       setCapacity(cap?.capacity || 0);
     };
 
@@ -61,7 +63,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
             <View style={[styles.nameContainer, { marginTop: 5 }]}> 
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image style={[styles.exit, { width: 30, height: 30, tintColor: 'green' }]} source={require("../assets/images/location_icon.png")}/>
-                <Text style={[styles.name]}>{carparkData?.car_park_no || 'Carpark'}</Text>
+                <Text style={[styles.name]}>{carparkData?.car_park_no || 'Carpark' }</Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={[styles.name, { marginBottom: 0, marginRight: 4 }]}> Capacity: <Text style={{ color: 'green' }}>{capacity || 0} %</Text> </Text>
@@ -114,7 +116,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
 
                       
                       <View style={{flexDirection:'row', marginRight: 10}}>
-                        <NotificationScreen/>
+                        <NotificationScreen carparkID={carparkData?.car_park_no}/>
                       
                         <TouchableOpacity onPress={() => setBookmarkIsOn(!bookmarkIsOn)}>
                           <Image
@@ -137,6 +139,15 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                 <Text style={{ fontSize: 15, marginTop: 3, marginBottom: 7 }}>Reviews:</Text>
                 <CarparkReviews/>
               </View>
+
+              <Pressable 
+                  style={[styles.selectButton, {alignSelf:'flex-end', marginBottom: 10, marginRight: 10}]} 
+                  onPress={() => {setReviewModalVisible(true); 
+                  setBigModalVisible(false);
+                  }}
+              >
+                  <Text style={styles.buttonText}>Leave Review</Text>
+              </Pressable>
 
               <Text style={styles.rate}>
                 Address: {'\n'}
@@ -199,6 +210,18 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               </View>
             </ScrollView>
           </View>
+        </View>
+      </Modal>
+
+      {/* Review Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={reviewModalVisible}
+        onRequestClose={() => setReviewModalVisible(false)}
+      >
+        <View style={styles.boxLayout}>
+          <ReviewScreen style={styles.reviewPopup} />
         </View>
       </Modal>
     </>
@@ -292,7 +315,19 @@ const styles = StyleSheet.create({
     borderColor: "black",
     borderWidth: 2,
     alignSelf: 'center',
-    marginBottom: 20,
+    marginBottom: 5,
     marginTop: 5,
+  },
+  reviewPopup: {
+    width: '90%',
+    height: '90%',
+    backgroundColor: '#FFF',
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });

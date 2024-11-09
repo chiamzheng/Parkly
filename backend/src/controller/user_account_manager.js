@@ -53,9 +53,9 @@ async function login ( input_email, input_password ){
 
     // if email does not exist
 
-    const email_exist = email_exists(input_email);
+    const email_exist_value = await email_exists(input_email);
 
-    if (!email_exist) {
+    if (email_exist_value == 0) {
 
         console.log("Email has not been registered!");
         return -1;
@@ -64,10 +64,10 @@ async function login ( input_email, input_password ){
     // email exists
     // check if input password matches the password in database
 
-    const password_match = password_matches(input_email, input_password);
+    const password_match = await password_matches(input_email, input_password);
 
     if (!password_match){
-        console.log("Log in unsuccessful, passwords do not match!");
+        console.log("Log in unsuccessful, wrong password!");
         return 0;
     }
 
@@ -193,6 +193,7 @@ async function update_bookmark( user_email, carpark_id ) {
         bookmark_list.splice(index); 
 
     } else { // bookmark does not exist
+        console.log()
         
         // add carpark to the bookmark list
         bookmark_list.push(carpark_id);
