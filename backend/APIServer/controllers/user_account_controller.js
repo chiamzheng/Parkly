@@ -16,8 +16,8 @@ const login_api = async (req, res) => {
     try{
         const input_email = req.params.input_email;
         const input_password = req.params.input_password;
-        await login(input_email, input_password);
-        res.status(200).json(`Welcome ${input_email}!`);
+        const value = await login(input_email, input_password);
+        res.status(200).json(value);
     } catch (error) {
         res.status(500).json({message: error.message});
     }

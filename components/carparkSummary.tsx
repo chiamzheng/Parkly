@@ -36,10 +36,10 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
     if (!carparkData) return;
   
     const fetchData = async () => {
-      const lots = await getAvailableCarparkLot(carparkData.title);
+      const lots = await getAvailableCarparkLot(carparkData.car_park_no);
       setAvailableLots(lots?.availableLots || 0);
 
-      const cap = await getCarparkCapacity(carparkData.title);
+      const cap = await getCarparkCapacity(carparkData.car_park_no);
       setCapacity(cap?.capacity || 0);
     };
 

@@ -16,6 +16,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import validator from 'validator';
 import React from "react";
+import axios from "axios";
 export default function Signin({ navigation }: { navigation: any }) {
   const [username, onChangeUser] = React.useState("");
   const [password, onChangePass] = React.useState("");
@@ -42,6 +43,17 @@ const handleEmail = () => {
 };
 const handleSignin = () => {
   if(!(validator.isEmpty(password)) && (validator.isEmail(username))){
+    const value =
+    axios.get(
+      `http://192.168.1.143:8083/api/user_account/login/${username}/${password}`
+    )
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error);
+    });
+    console.log(value);
     navigation.navigate("HomepageUI/homepage");
   }
 };
