@@ -18,4 +18,4 @@ external_api_route.get('/location/route-polyline', fetch_route_polyline);
 external_api_route.get('/carpark/available-lot', fetch_available_lot);
 external_api_route.get('/carpark/capacity', fetch_capacity);
 
-module.exports = external_api_route;
+module.exports = { external_api_route };
