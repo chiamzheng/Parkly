@@ -7,7 +7,7 @@ import { Modal } from 'react-native';
 import LocationScreen from './Geolocation';
 import { getLocationSuggestions } from './Service/locationService';
 
-const LocationSearchInterface = ({ style, onClickBookmark }) =>{
+const LocationSearchInterface = ({ style, onClickBookmark,username }) =>{
   const navigation = useNavigation();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -59,11 +59,11 @@ const LocationSearchInterface = ({ style, onClickBookmark }) =>{
             }}>
       {/* User Profile Section */}
       <View style={styles.header}>
-        <Image
+        {/*<Image
           source={{ uri: 'https://via.placeholder.com/50' }}
           style={styles.profileImage}
-        />
-        <Text style={styles.userName}>Jackson Lim</Text>
+        />*/}
+        <Text style={styles.userName} adjustsFontSizeToFit minimumFontScale={0.3} numberOfLines={1}>{username}</Text>
         {/* Icon Buttons */}
         <TouchableOpacity onPress={toggleBookmarks} style={styles.iconButton}>
           <Icon name="bookmark-outline" size={24} style={styles.icon} />
@@ -130,9 +130,10 @@ const styles = StyleSheet.create({
   },
   userName: {
     flex: 1,
-    fontSize: 16,
+    //fontSize: 16,
     fontWeight: 'bold',
     marginLeft: 10,
+    
   },
   iconButton: {
     padding: 5,
