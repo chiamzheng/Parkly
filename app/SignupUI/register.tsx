@@ -16,6 +16,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import validator from "validator";
 import React from "react";
 import axios from "axios";
+import { SERVER_IP, PORT } from "../../backend/APIServer/server";
 // import { register } from "@/components/Service/dbUserAccount"; for the function
 
 export default function Register({ navigation }) {
@@ -160,7 +161,7 @@ export default function Register({ navigation }) {
                 // reference of how to call an API
                 axios
                   .get(
-                    `http://192.168.0.218:8083/api/user_account/register/${username}/${password}`
+                    `http://${SERVER_IP}:${PORT}/api/user_account/register/${username}/${password}`
                   )
                   .then((response) => {
                     const result = response.data;
