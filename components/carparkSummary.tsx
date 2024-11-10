@@ -8,7 +8,7 @@ import { register } from './Service/dbUserAccount';
 import CarparkReviews from './CarparkReviews';
 import { Linking } from 'react-native';
 import ReviewScreen from '../app/review_popup';
-import { fetchCarparkAddress } from './Service/apiService';
+import { fetchCarparkAddress, fetchCarparkFeatures } from './Service/apiService';
 
 /*
 import * as carpark_read from '../backend/src/repository/database_access/read database/carpark_read'
@@ -34,17 +34,32 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const exitIcon = require("../assets/images/exit.png");
   const [address,setAddress] = useState(null)
-
+  interface CarparkFeatures {
+    carpark_type: any;
+    carpark_system: any; 
+    carpark_night: any;
+    carpark_basement: any;
+    carpark_gantry: any;
+    carpark_free: any;
+  }
+  const [features, setFeatures] = useState<CarparkFeatures | null>(null);
+  
   //status for notification and bookmark icons
   const [bookmarkIsOn, setBookmarkIsOn] = useState(false);
 
   const handlePress = async () => {
     try {
       const crpk_address = await fetchCarparkAddress(carparkData?.car_park_no);
-      console.log(crpk_address);
       setAddress(crpk_address);
     } catch (error) {
       console.error('Failed to fetch address', error);
+    }
+
+    try {
+      const crpk_features = await fetchCarparkFeatures(carparkData?.car_park_no);
+      setFeatures(crpk_features);
+    } catch (error) {
+      console.error('Failed to fetch features', error);
     }
   };
 
@@ -178,7 +193,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               </Pressable>
 
               <Text style={styles.rate}>
-                Address: {address}
+                Address: {address}{"\n"}
                 Lots available: {availableLots}{'\n'}
                 Parking fees: {'\n'}
               </Text>
@@ -186,13 +201,13 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <CarparkIcons column={true} tooltipEnabled={false} />
                 <View style={{ marginLeft: 10 }}>
-                  <CarparkInfo text="Carpark Type:" />
-                  <CarparkInfo text="Payment System:" />
-                  <CarparkInfo text="Night Parking:" />
-                  <CarparkInfo text="Basement Parking:" />
-                  <CarparkInfo text="Gantry Height:" />
+                <CarparkInfo text={`Carpark Type: ${features?.carpark_type}`} />
+                  <CarparkInfo text={`Payment System: ${features?.carpark_system}`} />
+                  <CarparkInfo text={`Night Parking: ${features?.carpark_night}`} />
+                  <CarparkInfo text={`Basement Parking: ${features?.carpark_basement}`} />
+                  <CarparkInfo text={`Gantry Height: ${features?.carpark_gantry} metres`} />
                   <CarparkInfo text="Short Term Parking:" />
-                  <CarparkInfo text="Free Parking:" />
+                  <CarparkInfo text={`Free Parking: ${features?.carpark_free}`} />
                 </View>
               </View>
 
