@@ -38,6 +38,11 @@ async function fetch_parking_system_type(carpark_id) {
     return carpark_system_type;
 }
 
+async function fetch_short_term_parking(carpark_id) {
+    const carpark_system_type = await CarparkRead.read_short_term_parking(carpark_id);
+    return carpark_system_type;
+}
+
 async function fetch_parking_available_time(carpark_id) {
     const available_time = await CarparkRead.read_parking_available_time(carpark_id);
     return available_time;
@@ -162,5 +167,5 @@ async function add_review(carpark_id, user_email, review){
 
 
 
-module.exports = { fetch_address, fetch_reviews, fetch_carpark_rates, fetch_carpark_type, fetch_free_parking, fetch_location, fetch_parking_available_time, fetch_parking_system_type, fetch_night_parking, fetch_carpark_basement, fetch_gantry_height, fetch_carparks_within_radius, add_review };
+module.exports = { fetch_address, fetch_reviews, fetch_carpark_rates, fetch_carpark_type, fetch_short_term_parking, fetch_free_parking, fetch_location, fetch_parking_available_time, fetch_parking_system_type, fetch_night_parking, fetch_carpark_basement, fetch_gantry_height, fetch_carparks_within_radius, add_review };
 
