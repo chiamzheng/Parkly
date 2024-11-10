@@ -38,6 +38,17 @@ export const fetchCarparkFeatures = async (carparkID) => {
     }
 };
 
+export const fetchNearbyCarparks = async (destination, radius) => {
+    try {
+        const response = await axios.get(`${URL}/api/carpark/fetch_carparks_within_radius/${destination.latitude},${destination.longitude}/${radius}`);
+        console.log('Nearby Carparks:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching nearby carparks:', error);
+        throw error;
+    }
+}; //should give array of nearby carparkIDs and ONLY the id, no coordinates
+
 export const fetchAvailableLots = async (carparkID) => {
     try {
         const response = await axios.get(`${URL}/api/external/carpark/available-lot?carpark_id=${carparkID}`);
