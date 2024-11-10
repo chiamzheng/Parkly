@@ -34,14 +34,3 @@ const fetchDatas = async (carparkID) => {
 
 fetchDatas('JM23');
 */
-
-import Constants from 'expo-constants';
-
-// Access the SERVER_IP variable
-const serverIp = Constants.extra.SERVER_IP;
-console.log(serverIp); // Outputs the value of SERVER_IP from .env or fallback
-
-// Example usage
-fetch(`${serverIp}/api/data`)
-  .then(response => response.json())
-  .then(data => console.log(data));
