@@ -97,7 +97,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                 <Text style={[styles.name]}>{carparkData?.car_park_no || 'Carpark' }</Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={[styles.name, { marginBottom: 0, marginRight: 4 }]}> Capacity: <Text style={{ color: 'green' }}>{capacity} %</Text> </Text>
+                <Text style={[styles.name, { marginBottom: 0, marginRight: 4 }]}> Capacity: <Text style={{ color: capacity >= 75 ? 'green' : capacity >= '50' ? 'orange' : 'red', }}>{capacity} %</Text> </Text>
                 <Pressable onPress={onClose}>
                   <Image source={exitIcon} style={styles.exit}/>
                 </Pressable>
