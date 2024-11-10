@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { View, TextInput, TouchableOpacity, Text, Modal, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, Modal, StyleSheet,FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BookmarkList from './Bookmark';
 import LocationScreen from './Geolocation';
@@ -80,6 +80,7 @@ const LocationSearchInterface = ({ style, onClickBookmark, username }) => {
 
   const onOpenSuggestionsList = useCallback(isOpened => {}, [])
 
+ 
   return (
     <View style={{ ...style, ...styles.container }}>
       {/* User Profile Section */}
@@ -99,70 +100,20 @@ const LocationSearchInterface = ({ style, onClickBookmark, username }) => {
       </View>
 
       {/* Start Point Input */}
+      <LocationScreen onSearchQueryChange={handleSearchQueryChange} />
       <AutocompleteDropdownContextProvider>
-        <View style={styles.inputContainer}>
-          <Icon name="location-outline" size={24} color="#0066FF" style={styles.inputIcon} />
-          <AutocompleteDropdown
-            ref={searchRef}
-            controller={controller => {
-              dropdownController.current = controller
-            }}
-            dataSet={suggestionsList}
-            onChangeText={getSuggestions}
-            onSelectItem={item => {
-              item && setStartPoint(item.title)
-            }}
-            debounce={600}
-            suggestionsListMaxHeight={Dimensions.get('window').height * 0.4}
-            onClear={onClearPress}
-            onOpenSuggestionsList={onOpenSuggestionsList}
-            loading={loading}
-            useFilter={false}
-            textInputProps={{
-              placeholder: 'Start Point',
-              autoCorrect: false,
-              autoCapitalize: 'none',
-              style: {
-                borderRadius: 25,
-                backgroundColor: '#F5F5F5',
-                color: '#333',
-                paddingLeft: 18,
-              },
-            }}
-            rightButtonsContainerStyle={{
-              right: 8,
-              height: 30,
-              alignSelf: 'center',
-            }}
-            inputContainerStyle={{
-              backgroundColor: '#F5F5F5',
-              borderRadius: 25,
-              width: '100%',
-            }}
-            suggestionsListContainerStyle={{
-              backgroundColor: '#F5F5F5',
-              width: '100%',
-            }}
-            renderItem={(item, text) => <Text>{item.title}</Text>}
-            ChevronIconComponent={<Icon name="chevron-down-outline" size={20} color="#888" />}
-            ClearIconComponent={<Icon name="close-outline" size={20} color="#888" />}
-            inputHeight={50}
-            showChevron={false}
-          />
-        </View>
+        
 
         {/* Destination Input */}
         <View style={styles.inputContainer}>
           <Icon name="location-outline" size={24} color="#FF0000" style={styles.inputIcon} />
           <AutocompleteDropdown
             ref={searchRef}
-            controller={controller => {
-              dropdownController.current = controller
-            }}
-            dataSet={suggestionsList}
+            controller={(controller) => { dropdownController.current = controller; }}
+            dataSet={suggestionsList}  // Same data set for both dropdowns, should be unique
             onChangeText={getSuggestions}
-            onSelectItem={item => {
-              item && setSearchQuery(item.title)
+            onSelectItem={(item) => {
+              item && setSearchQuery(item.title);
             }}
             debounce={600}
             suggestionsListMaxHeight={Dimensions.get('window').height * 0.4}
@@ -175,28 +126,39 @@ const LocationSearchInterface = ({ style, onClickBookmark, username }) => {
               autoCorrect: false,
               autoCapitalize: 'none',
               style: {
-                borderRadius: 25,
-                backgroundColor: '#F5F5F5',
+                borderRadius: 10,
+                width: '90%',
+                backgroundColor: '#FFFFFF',
                 color: '#333',
-                paddingLeft: 18,
+                paddingRight: 25,
+                height:35,
               },
             }}
             rightButtonsContainerStyle={{
-              right: 8,
-              height: 30,
+              position:"absolute",
+              
+              right: 2,
+              //height: 30,
               alignSelf: 'center',
+              justifyContent:"flex-end",
+              alignContent:'flex-end',
             }}
             inputContainerStyle={{
-              backgroundColor: '#F5F5F5',
-              borderRadius: 25,
+              backgroundColor: 'transparent',
+              borderRadius: 10,
               width: '100%',
+              height:35,
             }}
             suggestionsListContainerStyle={{
               backgroundColor: '#F5F5F5',
               width: '100%',
+              maxHeight: Dimensions.get('window').height * 0.3, // adjustable height
+              borderRadius: 10,
+              right:50,
+              bottom:20,
+              //overflow: 'hidden',
             }}
-            renderItem={(item, text) => <Text>{item.title}</Text>}
-            ChevronIconComponent={<Icon name="chevron-down-outline" size={20} color="#888" />}
+
             ClearIconComponent={<Icon name="close-outline" size={20} color="#888" />}
             inputHeight={50}
             showChevron={false}
@@ -259,14 +221,14 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
-    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
     paddingHorizontal: 10,
     paddingVertical: 5,
     marginVertical: 10,
   },
   inputIcon: {
-    marginRight: 10,
+    //marginRight: 10,
   },
   input: {
     flex: 1,
@@ -282,6 +244,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 10,
     alignItems: 'center',
+    zIndex:-1,
+    elevation:-1,
   },
   goText: {
     color: 'white',
@@ -299,6 +263,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
   },
+  suggestionsList: {
+  padding: 10,
+  elevation:10,
+  zIndex:10,
+},
+suggestionItem: {
+  padding: 10,
+  fontSize: 16,
+  borderBottomWidth: 0.5,
+  borderBottomColor: '#ccc',
+},
+suggestionsListContainer: {
+  position: 'absolute',
+  top: 60,
+  width: '100%',
+  maxHeight: Dimensions.get('window').height * 0.3, // adjustable height
+  zIndex: 5,
+  backgroundColor: '#FFF',
+  borderRadius: 8,
+  elevation:5,
+},
 });
 
 export default LocationSearchInterface;

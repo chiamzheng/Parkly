@@ -31,11 +31,11 @@ const LocationScreen = ({ onSearchQueryChange }) => {
         <View style={styles.inputContainer}>
             <View style={styles.inputRow}>
                 <TouchableOpacity onPress={getCurrentLocation}>
-                    <Icon name="location-outline" size={24} color="red" />
+                <Icon name="location-outline" size={24} color="#0066FF"/>
                 </TouchableOpacity>
                 <TextInput 
                     placeholder="Enter Destination" 
-                    placeholderTextColor="gray"
+                    placeholderTextColor='#d1d1d1'
                     style={styles.input} 
                     value={searchQuery}
                     onChangeText={(text) => {
