@@ -153,15 +153,14 @@ async function fetch_carparks_within_radius(user_destination, radius) {
 
 // main();
 
-// async function write_review(carpark_id, user_email) {
-//     CarparkWrite.write_reviews(carpark_id)
-// }
 
 async function add_review(carpark_id, user_email, review){
     const reviews = await CarparkRead.read_reviews(carpark_id);
     reviews.push(`${user_email}: ${review}`);
     const new_reviews = await CarparkWrite.write_reviews(carpark_id, reviews);
 };
+
+
 
 module.exports = { fetch_address, fetch_reviews, fetch_carpark_rates, fetch_carpark_type, fetch_free_parking, fetch_location, fetch_parking_available_time, fetch_parking_system_type, fetch_night_parking, fetch_carpark_basement, fetch_gantry_height, fetch_carparks_within_radius, add_review };
 
