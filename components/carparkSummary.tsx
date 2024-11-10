@@ -20,7 +20,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const exitIcon = require("../assets/images/exit.png");
   const [address,setAddress] = useState(null)
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(false); // Loading state
   interface CarparkFeatures {
     carpark_type: any;
     carpark_system: any; 
