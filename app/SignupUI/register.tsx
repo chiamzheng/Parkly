@@ -18,7 +18,7 @@ import React from "react";
 import axios from "axios";
 // import { SERVER_IP, PORT } from "../../backend/APIServer/server";
 // import { register } from "@/components/Service/dbUserAccount"; for the function
-
+import Constants from 'expo-constants';
 
 export default function Register({ navigation }) {
   const [username, onChangeUser] = React.useState("");
@@ -36,6 +36,9 @@ export default function Register({ navigation }) {
   const [validPassword, setValidPassword] = React.useState(true);
   const [validcfm, setValidcfm] = React.useState(true);
   const [registered, setRegistered] = React.useState(1);
+
+  const URL = Constants.expoConfig?.extra?.SERVER_IP;
+
   // const [registerValue, setRegisterValue] = React.useState(null);
 
   // React.useEffect(() => {
@@ -54,14 +57,6 @@ export default function Register({ navigation }) {
 
   // fetch_carparks();
   // }, []); // Empty array ensures this runs once when the component mounts
-
-  const [serverIp, setServerIp] = React.useState<string | null>(null);
-
-  useEffect(() => {
-    // Accessing SERVER_IP from app.json (extra field)
-    const ip = Constants.manifest?.extra?.SERVER_IP;
-    setServerIp(ip);
-  }, []);
 
   const registerUser = async () => {};
 
@@ -170,7 +165,7 @@ export default function Register({ navigation }) {
                 // reference of how to call an API
                 axios
                   .get(
-                    `http://192.168.0.218:8083/api/user_account/register/${username}/${password}`
+                    `${URL}/api/user_account/register/${username}/${password}`
                   )
                   .then((response) => {
                     const result = response.data;
