@@ -10,20 +10,6 @@ import { Linking } from 'react-native';
 import ReviewScreen from '../app/review_popup';
 import { fetchCarparkAddress, fetchCarparkFeatures } from './Service/apiService';
 
-/*
-import * as carpark_read from '../backend/src/repository/database_access/read database/carpark_read'
-
-const carpark_temp = 'JM23' //Test for now
-
-const carpark = async () => {
-  try {
-      const id = await carpark_read.read_carpark_id(carpark_temp);
-      return 
-  } catch (error) {
-      console.error('Error fetching carpark ID:', error);
-  }
-};
-*/
 export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [availableLots, setAvailableLots] = useState(null);
   const [capacity, setCapacity] = useState(null);
@@ -205,7 +191,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                   <CarparkInfo text={`Payment System: ${features?.carpark_system}`} />
                   <CarparkInfo text={`Night Parking: ${features?.carpark_night}`} />
                   <CarparkInfo text={`Basement Parking: ${features?.carpark_basement}`} />
-                  <CarparkInfo text={`Gantry Height: ${features?.carpark_gantry} metres`} />
+                  <CarparkInfo text={`Gantry Height: ${features?.carpark_gantry} METRES`} />
                   <CarparkInfo text="Short Term Parking:" />
                   <CarparkInfo text={`Free Parking: ${features?.carpark_free}`} />
                 </View>
@@ -272,8 +258,8 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
 }
 
 const CarparkInfo = ({ text = 'Invalid' }) => (
-  <View style={{ height: 60, justifyContent: 'center' }}>
-    <Text style={{ fontSize: 15 }}>{text}</Text>
+  <View style={{ height: 60, justifyContent: 'center', paddingRight: 50 }}>
+    <Text style={{ fontSize: 15, flexWrap: 'wrap'}}>{text}</Text>
   </View>
 );
 
