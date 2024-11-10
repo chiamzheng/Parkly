@@ -28,6 +28,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
     carpark_night: any;
     carpark_basement: any;
     carpark_gantry: any;
+    carpark_short: any;
     carpark_free: any;
   }
   const [features, setFeatures] = useState<CarparkFeatures | null>(null);
@@ -206,7 +207,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                   <CarparkInfo text={`Night Parking: ${features?.carpark_night}`} />
                   <CarparkInfo text={`Basement Parking: ${features?.carpark_basement}`} />
                   <CarparkInfo text={`Gantry Height: ${features?.carpark_gantry} METRES`} />
-                  <CarparkInfo text="Short Term Parking:" />
+                  <CarparkInfo text={`Short Term Parking: ${features?.carpark_short}`} />
                   <CarparkInfo text={`Free Parking: ${features?.carpark_free}`} />
                 </View>
               </View>
