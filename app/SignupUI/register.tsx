@@ -16,8 +16,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import validator from "validator";
 import React from "react";
 import axios from "axios";
-// import { register } from "@/components/Service/dbUserAccount"; for the function 
-
+// import { register } from "@/components/Service/dbUserAccount"; for the function
 
 export default function Register({ navigation }) {
   const [username, onChangeUser] = React.useState("");
@@ -158,32 +157,28 @@ export default function Register({ navigation }) {
                 !validator.isEmpty(password) &&
                 password == cfm
               ) {
-
                 // reference of how to call an API
                 axios
                   .get(
-                    `http://192.168.1.143:8083/api/user_account/register/${username}/${password}`
+                    `http://192.168.0.218:8083/api/user_account/register/${username}/${password}`
                   )
                   .then((response) => {
-                    console.log(response.data);
+                    const result = response.data;
+                    console.log(result);
+
+                    // Handle different cases based on the response
+                    if (result === -1) {
+                      Alert.alert("Error", "Email already exists.");
+                    } else if (result === 0) {
+                      Alert.alert("Error", "Password is too weak.");
+                    } else if (result === 1) {
+                      Alert.alert("Success", "Registration successful.");
+                      navigation.goBack(); // Navigate back to previous screen
+                    }
                   })
                   .catch((error) => {
                     console.error("Error fetching data:", error);
                   });
-
-                /*const result = await register(email, password); 
-                  setRegisterValue(result); // Store the result,, possibility that it might be null, need to check
-                  console.log(result); // to check
-
-                  // Handle different cases based on the response
-                  if (result === -1) {
-                    Alert.alert("Error", "Email already exists.");
-                  } else if (result === 0) {
-                    Alert.alert("Error", "Password is too weak.");
-                  } else if (result === 1) {
-                    Alert.alert("Success", "Registration successful.");
-                    navigation.goBack(); // Navigate back to previous screen
-                  }*/
               }
             }}
           >

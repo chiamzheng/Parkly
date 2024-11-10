@@ -206,6 +206,5 @@ async function update_bookmark( user_email, carpark_id ) {
     return 1; 
 }
 
-update_bookmark("chiamzheng@gmail.com", "ACB")
 
 module.exports = { register, login, change_email, change_password, update_bookmark };
