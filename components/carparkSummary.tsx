@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, StyleSheet, Text, Pressable, View, Image, ScrollView, TouchableOpacity } from 'react-native';
-import axios from 'axios';
+import { Modal, StyleSheet, Text, Pressable, View, Image, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import CarparkIcons from './carparkIcons';
 import NotificationScreen from './Notifications'
 import { getAvailableCarparkLot, getCarparkCapacity } from './Service/carparkService';
@@ -9,21 +8,8 @@ import { register } from './Service/dbUserAccount';
 import CarparkReviews from './CarparkReviews';
 import { Linking } from 'react-native';
 import ReviewScreen from '../app/review_popup';
+import { fetchCarparkAddress, fetchCarparkFeatures, fetchAvailableLots, fetchCapacity} from './Service/apiService';
 
-/*
-import * as carpark_read from '../backend/src/repository/database_access/read database/carpark_read'
-
-const carpark_temp = 'JM23' //Test for now
-
-const carpark = async () => {
-  try {
-      const id = await carpark_read.read_carpark_id(carpark_temp);
-      return 
-  } catch (error) {
-      console.error('Error fetching carpark ID:', error);
-  }
-};
-*/
 export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [availableLots, setAvailableLots] = useState(null);
   const [capacity, setCapacity] = useState(null);
@@ -33,20 +19,54 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [bigModalVisible, setBigModalVisible] = useState(false);
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const exitIcon = require("../assets/images/exit.png");
+  const [address,setAddress] = useState(null)
+  const [loading, setLoading] = useState(true); // Loading state
 
+  interface CarparkFeatures {
+    carpark_type: any;
+    carpark_system: any; 
+    carpark_night: any;
+    carpark_basement: any;
+    carpark_gantry: any;
+    carpark_free: any;
+  }
+  const [features, setFeatures] = useState<CarparkFeatures | null>(null);
+  
   //status for notification and bookmark icons
   const [bookmarkIsOn, setBookmarkIsOn] = useState(false);
+
+  const handlePress = async () => {
+    try {
+      const crpk_address = await fetchCarparkAddress(carparkData?.car_park_no);
+      setAddress(crpk_address);
+    } catch (error) {
+      console.error('Failed to fetch address', error);
+    }
+
+    try {
+      const crpk_features = await fetchCarparkFeatures(carparkData?.car_park_no);
+      setFeatures(crpk_features);
+    } catch (error) {
+      console.error('Failed to fetch features', error);
+    }
+  };
 
 
   useEffect(() => {
     if (!carparkData) return;
   
     const fetchData = async () => {
-      const lots = await getAvailableCarparkLot(carparkData.car_park_no);
-      setAvailableLots(lots?.availableLots || 0);
-
-      const cap = await getCarparkCapacity(carparkData.car_park_no);
-      setCapacity(cap?.capacity || 0);
+      try {
+        setLoading(true);
+        const lots = await fetchAvailableLots(carparkData?.car_park_no);
+        setAvailableLots(lots?.availableLots || 0);
+        const cap = await fetchCapacity(carparkData?.car_park_no);
+        setCapacity(cap?.capacity || 0);
+      } catch (error) {
+        console.error('Failed to fetch lots', error);
+      } finally {
+        setLoading(false);
+      }
 
       /*test calling nearby Carparks*/
       const destination = { latitude: 1.321572, longitude: 103.884496 };
@@ -75,39 +95,46 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
         onRequestClose={onClose}
       >
         <View style={styles.boxLayout}>
-          <View style={styles.box}>
-            <View style={[styles.nameContainer, { marginTop: 5 }]}> 
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image style={[styles.exit, { width: 30, height: 30, tintColor: 'green' }]} source={require("../assets/images/location_icon.png")}/>
-                <Text style={[styles.name]}>{carparkData?.car_park_no || 'Carpark' }</Text>
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#645689" />
+            </View>
+          ) : (
+            <View style={styles.box}>
+              <View style={[styles.nameContainer, { marginTop: 5 }]}> 
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Image style={{ width: 30, height: 30, marginRight: 5}} source={require("../assets/images/location_icon.png")}/>
+                  <Text style={[styles.name]}>{carparkData?.car_park_no || 'Carpark' }</Text>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={[styles.name, { marginBottom: 0, marginRight: 4 }]}> Capacity: <Text style={{ color: capacity >= 75 ? 'green' : capacity >= '50' ? 'orange' : 'red', }}>{capacity} %</Text> </Text>
+                  <Pressable onPress={onClose}>
+                    <Image source={exitIcon} style={styles.exit}/>
+                  </Pressable>
+                </View>
               </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={[styles.name, { marginBottom: 0, marginRight: 4 }]}> Capacity: <Text style={{ color: 'green' }}>{capacity || 0} %</Text> </Text>
-                <Pressable onPress={onClose}>
-                  <Image source={exitIcon} style={styles.exit}/>
+              
+              <Text style={styles.lot}>Lots Available: {availableLots}</Text>
+              <Text style={styles.rate}>Rate: ${carparkData?.morningtoevening_0700to1700_motorcars_rate||0}/hour</Text>
+              <CarparkIcons />
+
+              <View style={[styles.nameContainer, { marginTop: 3 }]}>
+                <Pressable style={styles.selectButton}>
+                  <Text style={styles.buttonText}>Select carpark</Text>
+                </Pressable>
+                <Pressable
+                  style={styles.selectButton}
+                  onPress={() => {
+                    setBigModalVisible(true);
+                    onClose();  // Close main modal
+                    handlePress(); // Call all functions for info in big modal
+                  }}
+                >
+                  <Text style={styles.buttonText}>See More Details</Text>
                 </Pressable>
               </View>
             </View>
-            
-            <Text style={styles.lot}>Lots Available: {availableLots||0}</Text>
-            <Text style={styles.rate}>Rate: ${carparkData?.morningtoevening_0700to1700_motorcars_rate||0}/hour</Text>
-            <CarparkIcons />
-
-            <View style={[styles.nameContainer, { marginTop: 3 }]}>
-              <Pressable style={styles.selectButton}>
-                <Text style={styles.buttonText}>Select carpark</Text>
-              </Pressable>
-              <Pressable
-                style={styles.selectButton}
-                onPress={() => {
-                  setBigModalVisible(true);
-                  onClose();  // Close main modal
-                }}
-              >
-                <Text style={styles.buttonText}>See More Details</Text>
-              </Pressable>
-            </View>
-          </View>
+          )}
         </View>
       </Modal>
 
@@ -166,7 +193,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               </Pressable>
 
               <Text style={styles.rate}>
-                Address: {'\n'}
+                Address: {address}{"\n"}
                 Lots available: {availableLots}{'\n'}
                 Parking fees: {'\n'}
               </Text>
@@ -174,13 +201,13 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <CarparkIcons column={true} tooltipEnabled={false} />
                 <View style={{ marginLeft: 10 }}>
-                  <CarparkInfo text="Carpark Type:" />
-                  <CarparkInfo text="Payment System:" />
-                  <CarparkInfo text="Night Parking:" />
-                  <CarparkInfo text="Basement Parking:" />
-                  <CarparkInfo text="Gantry Height:" />
+                <CarparkInfo text={`Carpark Type: ${features?.carpark_type}`} />
+                  <CarparkInfo text={`Payment System: ${features?.carpark_system}`} />
+                  <CarparkInfo text={`Night Parking: ${features?.carpark_night}`} />
+                  <CarparkInfo text={`Basement Parking: ${features?.carpark_basement}`} />
+                  <CarparkInfo text={`Gantry Height: ${features?.carpark_gantry} METRES`} />
                   <CarparkInfo text="Short Term Parking:" />
-                  <CarparkInfo text="Free Parking:" />
+                  <CarparkInfo text={`Free Parking: ${features?.carpark_free}`} />
                 </View>
               </View>
 
@@ -245,8 +272,8 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
 }
 
 const CarparkInfo = ({ text = 'Invalid' }) => (
-  <View style={{ height: 60, justifyContent: 'center' }}>
-    <Text style={{ fontSize: 15 }}>{text}</Text>
+  <View style={{ height: 60, justifyContent: 'center', paddingRight: 50 }}>
+    <Text style={{ fontSize: 15, flexWrap: 'wrap'}}>{text}</Text>
   </View>
 );
 
@@ -345,5 +372,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+  loadingContainer: {
+    backgroundColor: 'white', 
+    padding: 20, 
+    borderRadius: 10,
+    marginBottom: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
