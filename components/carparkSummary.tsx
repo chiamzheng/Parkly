@@ -8,7 +8,7 @@ import { register } from './Service/dbUserAccount';
 import CarparkReviews from './CarparkReviews';
 import { Linking } from 'react-native';
 import ReviewScreen from '../app/review_popup';
-import { fetchCarparkAddress, fetchCarparkFeatures } from './Service/apiService';
+import { fetchCarparkAddress, fetchCarparkFeatures, fetchAvailableLots, fetchCapacity} from './Service/apiService';
 
 export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [availableLots, setAvailableLots] = useState(null);
@@ -54,11 +54,14 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
     if (!carparkData) return;
   
     const fetchData = async () => {
-      const lots = await getAvailableCarparkLot(carparkData.car_park_no);
-      setAvailableLots(lots?.availableLots || 0);
-
-      const cap = await getCarparkCapacity(carparkData.car_park_no);
-      setCapacity(cap?.capacity || 0);
+      try {
+        const lots = await fetchAvailableLots(carparkData?.car_park_no);
+        setAvailableLots(lots?.availableLots || 0);
+        const cap = await fetchCapacity(carparkData?.car_park_no);
+        setCapacity(cap?.capacity || 0);
+      } catch (error) {
+        console.error('Failed to fetch lots', error);
+      }
 
       /*test calling nearby Carparks*/
       const destination = { latitude: 1.321572, longitude: 103.884496 };
@@ -90,18 +93,18 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
           <View style={styles.box}>
             <View style={[styles.nameContainer, { marginTop: 5 }]}> 
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image style={[styles.exit, { width: 30, height: 30, tintColor: 'green' }]} source={require("../assets/images/location_icon.png")}/>
+                <Image style={{ width: 30, height: 30, marginRight: 5}} source={require("../assets/images/location_icon.png")}/>
                 <Text style={[styles.name]}>{carparkData?.car_park_no || 'Carpark' }</Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={[styles.name, { marginBottom: 0, marginRight: 4 }]}> Capacity: <Text style={{ color: 'green' }}>{capacity || 0} %</Text> </Text>
+                <Text style={[styles.name, { marginBottom: 0, marginRight: 4 }]}> Capacity: <Text style={{ color: 'green' }}>{capacity} %</Text> </Text>
                 <Pressable onPress={onClose}>
                   <Image source={exitIcon} style={styles.exit}/>
                 </Pressable>
               </View>
             </View>
             
-            <Text style={styles.lot}>Lots Available: {availableLots||0}</Text>
+            <Text style={styles.lot}>Lots Available: {availableLots}</Text>
             <Text style={styles.rate}>Rate: ${carparkData?.morningtoevening_0700to1700_motorcars_rate||0}/hour</Text>
             <CarparkIcons />
 

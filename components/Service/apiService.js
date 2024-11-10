@@ -37,3 +37,23 @@ export const fetchCarparkFeatures = async (carparkID) => {
         throw error;
     }
 };
+
+export const fetchAvailableLots = async (carparkID) => {
+    try {
+        const response = await axios.get(`${URL}/api/external/carpark/available-lot?carpark_id=${carparkID}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching carpark lots:', error);
+        throw error;
+    }
+};
+
+export const fetchCapacity = async (carparkID) => {
+    try {
+        const response = await axios.get(`${URL}/api/external/carpark/capacity?carpark_id=${carparkID}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching carpark lots:', error);
+        throw error;
+    }
+};
