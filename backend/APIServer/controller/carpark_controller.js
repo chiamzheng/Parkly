@@ -43,8 +43,8 @@ const fetch_carpark_type_api = async (req, res) => {
 const fetch_short_term_parking_api = async (req, res) => {
     try{
         const carpark_id = req.params.carpark_id;
-        const reviews = await fetch_carpark_type(carpark_id);
-        res.status(200).json(reviews);
+        const short_term_parking = await fetch_short_term_parking(carpark_id);
+        res.status(200).json(short_term_parking);
     } catch (error) {
         res.status(500).json({message: error.message});
     }
