@@ -1,4 +1,5 @@
-const BASE_URL = 'http://10.0.2.2:8083/api/carpark'; // where your API server is hosted
+// const BASE_URL = 'http://10.0.2.2:8083/api/carpark'; // where your API server is hosted
+const BASE_URL = 'http://localhost:8083/api/carpark';
 
 interface Coordinate {
     latitude: number;
