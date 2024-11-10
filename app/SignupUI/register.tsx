@@ -19,6 +19,7 @@ import axios from "axios";
 // import { SERVER_IP, PORT } from "../../backend/APIServer/server";
 // import { register } from "@/components/Service/dbUserAccount"; for the function
 
+
 export default function Register({ navigation }) {
   const [username, onChangeUser] = React.useState("");
   const [password, onChangePass] = React.useState("");
@@ -53,6 +54,14 @@ export default function Register({ navigation }) {
 
   // fetch_carparks();
   // }, []); // Empty array ensures this runs once when the component mounts
+
+  const [serverIp, setServerIp] = React.useState<string | null>(null);
+
+  useEffect(() => {
+    // Accessing SERVER_IP from app.json (extra field)
+    const ip = Constants.manifest?.extra?.SERVER_IP;
+    setServerIp(ip);
+  }, []);
 
   const registerUser = async () => {};
 
