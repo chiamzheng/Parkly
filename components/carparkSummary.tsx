@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Modal, StyleSheet, Text, Pressable, View, Image, ScrollView, TouchableOpacity } from 'react-native';
-import axios from 'axios';
 import CarparkIcons from './carparkIcons';
 import NotificationScreen from './Notifications'
 import { getAvailableCarparkLot, getCarparkCapacity } from './Service/carparkService';
@@ -9,6 +8,7 @@ import { register } from './Service/dbUserAccount';
 import CarparkReviews from './CarparkReviews';
 import { Linking } from 'react-native';
 import ReviewScreen from '../app/review_popup';
+import { fetchCarparkAddress } from './Service/apiService';
 
 /*
 import * as carpark_read from '../backend/src/repository/database_access/read database/carpark_read'
@@ -33,9 +33,20 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [bigModalVisible, setBigModalVisible] = useState(false);
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const exitIcon = require("../assets/images/exit.png");
+  const [address,setAddress] = useState(null)
 
   //status for notification and bookmark icons
   const [bookmarkIsOn, setBookmarkIsOn] = useState(false);
+
+  const handlePress = async () => {
+    try {
+      const crpk_address = await fetchCarparkAddress(carparkData?.car_park_no);
+      console.log(crpk_address);
+      setAddress(crpk_address);
+    } catch (error) {
+      console.error('Failed to fetch address', error);
+    }
+  };
 
 
   useEffect(() => {
@@ -102,6 +113,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                 onPress={() => {
                   setBigModalVisible(true);
                   onClose();  // Close main modal
+                  handlePress(); // Call all functions for info in big modal
                 }}
               >
                 <Text style={styles.buttonText}>See More Details</Text>
@@ -166,7 +178,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               </Pressable>
 
               <Text style={styles.rate}>
-                Address: {'\n'}
+                Address: {address}
                 Lots available: {availableLots}{'\n'}
                 Parking fees: {'\n'}
               </Text>
