@@ -1,4 +1,4 @@
-const { fetch_reviews, fetch_address, fetch_carpark_rates, fetch_carpark_type, fetch_free_parking, fetch_location, fetch_parking_available_time, fetch_parking_system_type, fetch_night_parking, fetch_gantry_height, fetch_carpark_basement, fetch_carparks_within_radius, add_review } = require("../../src/controller/carpark_manager");
+const { fetch_reviews, fetch_address, fetch_carpark_rates, fetch_carpark_type, fetch_short_term_parking, fetch_free_parking, fetch_location, fetch_parking_available_time, fetch_parking_system_type, fetch_night_parking, fetch_gantry_height, fetch_carpark_basement, fetch_carparks_within_radius, add_review } = require("../../src/controller/carpark_manager");
 
 const fetch_reviews_api = async (req, res) => {
     try{
@@ -35,6 +35,16 @@ const fetch_carpark_type_api = async (req, res) => {
         const carpark_id = req.params.carpark_id;
         const reviews = await fetch_carpark_type(carpark_id);
         res.status(200).json(reviews);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+}
+
+const fetch_short_term_parking_api = async (req, res) => {
+    try{
+        const carpark_id = req.params.carpark_id;
+        const short_term_parking = await fetch_short_term_parking(carpark_id);
+        res.status(200).json(short_term_parking);
     } catch (error) {
         res.status(500).json({message: error.message});
     }
@@ -134,5 +144,5 @@ const add_review_api = async (req, res) => {
         res.status(500).json({message: error.message});
     }
 };
-module.exports = { fetch_address_api, fetch_reviews_api, fetch_carpark_rates_api, fetch_carpark_type_api, fetch_free_parking_api, fetch_location_api, fetch_parking_available_time_api, fetch_parking_system_type_api, fetch_night_parking_api, fetch_gantry_height_api, fetch_carpark_basement_api, fetch_carparks_within_radius_api, add_review_api };
+module.exports = { fetch_address_api, fetch_reviews_api, fetch_carpark_rates_api, fetch_carpark_type_api, fetch_short_term_parking_api, fetch_free_parking_api, fetch_location_api, fetch_parking_available_time_api, fetch_parking_system_type_api, fetch_night_parking_api, fetch_gantry_height_api, fetch_carpark_basement_api, fetch_carparks_within_radius_api, add_review_api };
 

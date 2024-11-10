@@ -103,6 +103,12 @@ async function read_parking_system_type ( carpark_id ) {
     return parking_system_type;
 }
 
+async function read_short_term_parking ( carpark_id ) {
+    const document = await find_document(carpark_id);
+    const parking_system_type = document.short_term_parking;
+    return parking_system_type;
+}
+
 async function read_parking_available_time (carpark_id) {
     const document = await find_document(carpark_id);
     const short_term = document.short_term_parking;
@@ -174,4 +180,4 @@ async function read_reviews ( carpark_id ) {
     return reviews;
 }
 
-module.exports = { read_address, read_carpark_type, read_carpark_id, read_location, read_parking_system_type, read_parking_available_time, read_free_parking, read_carpark_rate, read_reviews, read_night_parking, read_gantry_height, read_carpark_basement };
+module.exports = { read_address, read_carpark_type, read_carpark_id, read_location, read_parking_system_type, read_short_term_parking, read_parking_available_time, read_free_parking, read_carpark_rate, read_reviews, read_night_parking, read_gantry_height, read_carpark_basement };
