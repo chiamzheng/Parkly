@@ -7,7 +7,7 @@ import CarparkSummary from '../../components/carparkSummary';
 import FAB from '../../components/FAB';
 import PolylineComponent from '@/components/Polyline';
 import carparkData from '../../CarparkInformation.json'; 
-import computeLatLon from '../../scripts/computeLatLon';
+import { fetchLocation, fetchNearbyCarparks } from '@/components/Service/apiService';
 
 export default function Homepage({ route }) {
   const { username } = route.params || { username: "Jackson Lim" };
@@ -16,6 +16,7 @@ export default function Homepage({ route }) {
   const [capacity, setCapacity] = useState(60); // placeholder for actual capacity
   // const [showMarkers, setShowMarkers] = useState(false); // track if markers should be visible
   const [destination, setDestination] = useState(null);
+  const [nearbyCarparks, setNearbyCarparks] = useState({});
   
   const getPinColor = (capacity) => {
     if (capacity > 79) return 'red';
@@ -23,9 +24,41 @@ export default function Homepage({ route }) {
     return 'green';
   };
 
+  const radius = 1000; // default 1km - tweak this for filter
+  
   const handleDestinationSelection = async (destination) => {
     setDestination(destination); // just want to have destination marker, settle nearby carparks here ltr
-    console.log(destination);
+    console.log(destination); // check
+    try {
+
+    
+      const carparkIds = await fetchNearbyCarparks(destination, radius); //fetching correctly, need to handly empty array display alert no carpark nearby
+
+      //initialise dict
+      const carparkDictionary = {};
+      // Map each carparkId to detailed carpark data with array of latitude and longitude
+      const arrayLength = carparkIds.length;
+      let i = 0;
+      while (i < arrayLength)
+      {
+        const carparkId = carparkIds[i];
+
+      // Fetch the carpark's location (latitude and longitude) using the carpark ID
+      const carparkLocation = await fetchLocation(carparkId);
+      
+      // Store the carpark location in the dictionary
+      if (carparkLocation) {
+        carparkDictionary[carparkId] = { latitude: carparkLocation.latitude, longitude: carparkLocation.longitude };
+      }
+      i++;
+      }
+      console.log(carparkDictionary);
+
+      setNearbyCarparks(carparkDictionary);
+      // console.log(nearbyCarparks);
+    } catch (error) {
+      console.error("Error fetching nearby carparks:", error);
+    }
   };
 
   const handleMarkerPress = (carpark) => {
@@ -64,9 +97,19 @@ export default function Homepage({ route }) {
           <Marker
             coordinate={destination}
             title="Destination"
-            pinColor="blue"  // Blue marker for the destination
+            pinColor="red"  // Blue marker for the destination
           />
         )}
+
+        {/* Nearby Carparks Markers */}
+        {Object.entries(nearbyCarparks).map(([carparkKey, carpark], index) => (
+          <Marker
+            key={index}
+            coordinate={{ latitude: carpark.latitude, longitude: carpark.longitude }}
+            title={`Carpark ${carparkKey}`}  // key of dict is title
+            pinColor="green"
+          />
+        ))}
         
         <PolylineComponent
           start={{ latitude: 1.304833, longitude: 103.831833 }} 

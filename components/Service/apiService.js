@@ -1,4 +1,5 @@
 import Constants from 'expo-constants';
+import computeLatLon from '../../scripts/computeLatLon';
 import axios from 'axios';
 
 //const URL = Constants.expoConfig?.extra?.SERVER_IP;
@@ -10,6 +11,20 @@ export const fetchCarparkAddress = async (carparkID) => {
         return response.data;
     } catch (error) {
         console.error('Error fetching carpark address:', error);
+        throw error;
+    }
+};
+
+// gets array x and y,, convert to lat n long format for marker
+export const fetchLocation = async (carparkID) => {
+    try {
+        const response = await axios.get(`${URL}/api/carpark/fetch_location/${carparkID}`);
+        const [X, Y] = response.data;
+        const { lat, lon } = computeLatLon(Y, X);
+
+        return { latitude: lat, longitude: lon };
+    } catch (error) {
+        console.error('Error fetching carpark location:', error);
         throw error;
     }
 };
