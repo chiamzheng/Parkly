@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    marginVertical: 10,
+    marginTop: 10,
   },
   inputIcon: {
     //marginRight: 10,
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: '#7E5FCF',
     borderRadius: 20,
-    paddingVertical: 10,
+    paddingVertical: 5,
     alignItems: 'center',
     zIndex:-1,
     elevation:-1,
@@ -279,10 +279,10 @@ suggestionsListContainer: {
   top: 60,
   width: '100%',
   maxHeight: Dimensions.get('window').height * 0.3, // adjustable height
-  zIndex: 5,
+  zIndex: 11,
   backgroundColor: '#FFF',
   borderRadius: 8,
-  elevation:5,
+  elevation:11,
 },
 });
 
