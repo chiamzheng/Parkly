@@ -8,7 +8,7 @@ import React, { memo, useCallback, useRef, useState, useEffect } from 'react'
 import { Button, Dimensions, Platform } from 'react-native'
 import { AutocompleteDropdown, AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown'
 
-const LocationSearchInterface = ({ style, onClickBookmark, username }) => {
+const LocationSearchInterface = ({ style, onClickBookmark, username, setDestination }) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [bookmarksVisible, setBookmarksVisible] = useState(false);
@@ -19,6 +19,13 @@ const LocationSearchInterface = ({ style, onClickBookmark, username }) => {
   const dropdownController = useRef(null)
 
   const searchRef = useRef(null)
+
+  const handleSelectItem = (item) => {
+    if (item) {
+      setSearchQuery(item.title);
+      setDestination({ latitude: item.latitude, longitude: item.longitude });
+    }
+  };
 
   const handleStartPointChange = (query) => {
     setStartPoint(query);
@@ -43,6 +50,8 @@ const LocationSearchInterface = ({ style, onClickBookmark, username }) => {
         .map((item, idx) => ({
           id: idx,
           title: item.Address,
+          latitude: parseFloat(item.latitude),
+          longitude: parseFloat(item.longitude)
         }))
       setLoading(false);
       return suggestions
@@ -103,8 +112,8 @@ const LocationSearchInterface = ({ style, onClickBookmark, username }) => {
       <LocationScreen onSearchQueryChange={handleSearchQueryChange} />
       <AutocompleteDropdownContextProvider>
         
-
-        {/* Destination Input */}
+        
+        {/* Destination Input , using this field for setDestination cause only dropdown is visible here*/}
         <View style={styles.inputContainer}>
           <Icon name="location-outline" size={24} color="#FF0000" style={styles.inputIcon} />
           <AutocompleteDropdown
@@ -112,9 +121,7 @@ const LocationSearchInterface = ({ style, onClickBookmark, username }) => {
             controller={(controller) => { dropdownController.current = controller; }}
             dataSet={suggestionsList}  // Same data set for both dropdowns, should be unique
             onChangeText={getSuggestions}
-            onSelectItem={(item) => {
-              item && setSearchQuery(item.title);
-            }}
+            onSelectItem={(item) => handleSelectItem(item)} // setDestination - give lat and long 
             debounce={600}
             suggestionsListMaxHeight={Dimensions.get('window').height * 0.4}
             onClear={onClearPress}

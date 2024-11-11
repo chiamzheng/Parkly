@@ -42,11 +42,12 @@ class LocationService {
             }
         });
         
-        // return ONLY address
+        // return address, lat and long
         if (response.data.results && response.data.results.length > 0) {
             return response.data.results.slice(0, 5).map(item => ({
                 Address: item.ADDRESS,
-                Postal: item.POSTAL,
+                latitude: item.LATITUDE,
+                longitude: item.LONGITUDE
             }));
 
         } else {

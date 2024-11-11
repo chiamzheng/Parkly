@@ -1,7 +1,8 @@
 import Constants from 'expo-constants';
 import axios from 'axios';
 
-const URL = Constants.expoConfig?.extra?.SERVER_IP;
+//const URL = Constants.expoConfig?.extra?.SERVER_IP;
+const URL = 'http://10.0.2.2:8083';
 
 export const fetchCarparkAddress = async (carparkID) => {
     try {
