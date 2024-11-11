@@ -34,7 +34,7 @@ const LocationScreen = ({ onSearchQueryChange }) => {
                 <Icon name="location-outline" size={24} color="#0066FF"/>
                 </TouchableOpacity>
                 <TextInput 
-                    placeholder="Enter Destination" 
+                    placeholder="Enter Starting Point" 
                     placeholderTextColor='#d1d1d1'
                     style={styles.input} 
                     value={searchQuery}
