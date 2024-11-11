@@ -42,7 +42,7 @@ class LocationService {
             }
         });
         
-        // return address, lat an dlong
+        // return address, lat and long
         if (response.data.results && response.data.results.length > 0) {
             return response.data.results.slice(0, 5).map(item => ({
                 Address: item.ADDRESS,
