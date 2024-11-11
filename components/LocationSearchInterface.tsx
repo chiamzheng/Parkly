@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { View, TextInput, TouchableOpacity, Text, Modal, StyleSheet,FlatList } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, Modal, StyleSheet,FlatList,ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BookmarkList from './Bookmark';
 import LocationScreen from './Geolocation';
@@ -7,28 +7,52 @@ import { getLocationSuggestions } from './Service/locationService';
 import React, { memo, useCallback, useRef, useState, useEffect } from 'react'
 import { Button, Dimensions, Platform } from 'react-native'
 import { AutocompleteDropdown, AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown'
-
-const LocationSearchInterface = ({ style, onClickBookmark, username, setDestination }) => {
+import * as Location from 'expo-location';
+const LocationSearchInterface = ({ style, onClickBookmark, username, setDestination, setStartPoint }) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [bookmarksVisible, setBookmarksVisible] = useState(false);
-  const [startPoint, setStartPoint] = useState('');
+  //const [startPoint, setStartPoint] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery1, setSearchQuery1] = useState('');
   const [suggestionsList, setSuggestionsList] = useState(null)
+  const [suggestionsList1, setSuggestionsList1] = useState(null)
   const [selectedItem, setSelectedItem] = useState(null)
   const dropdownController = useRef(null)
-
   const searchRef = useRef(null)
+  const [isFetchingLocation, setIsFetchingLocation] = useState(false);
+  const getCurrentLocation = async () => {
+      setIsFetchingLocation(true);
+      setSearchQuery("Fetching location...");
 
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === 'granted') {
+          const location = await Location.getCurrentPositionAsync({});
+          console.log("User's current location:", location);
+          setSearchQuery1("Current Location");
+          setStartPoint({ latitude: location.coords.latitude, longitude: location.coords.longitude });
+      } else {
+          console.error('Location permission not granted');
+          setStartPoint('');
+      }
+      
+      setIsFetchingLocation(false);
+  };
   const handleSelectItem = (item) => {
     if (item) {
       setSearchQuery(item.title);
       setDestination({ latitude: item.latitude, longitude: item.longitude });
     }
   };
+  const handleSelectItem1 = (item) => {
+    if (item) {
+      setSearchQuery1(item.title);
+      setStartPoint({ latitude: item.latitude, longitude: item.longitude });
+    }
+  };
 
   const handleStartPointChange = (query) => {
-    setStartPoint(query);
+    setSearchQuery1(query);
   };
   const handleSearchQueryChange = (query) => {
     setSearchQuery(query);
@@ -72,7 +96,17 @@ const LocationSearchInterface = ({ style, onClickBookmark, username, setDestinat
     };
     fetchSuggestions();
   }, [searchQuery]);
-
+  useEffect(() => {
+    const fetchSuggestions1 = async () => {
+      if (searchQuery1) {
+        const suggestions = await fetchData(searchQuery1);
+        setSuggestionsList1(suggestions);
+      } else {
+        setSuggestionsList1(null);
+      }
+    };
+    fetchSuggestions1();
+  }, [searchQuery1]);
   const getSuggestions = useCallback(async q => {
     if (typeof q !== 'string' || q.length < 3) {
       setSuggestionsList(null)
@@ -82,13 +116,27 @@ const LocationSearchInterface = ({ style, onClickBookmark, username, setDestinat
     const suggestions = await fetchData(q)
     setSuggestionsList(suggestions)
   }, [])
-
+  const getSuggestions1 = useCallback(async q => {
+    if (typeof q !== 'string' || q.length < 3) {
+      setSuggestionsList1(null)
+      return
+    }
+    setSearchQuery1(q)
+    const suggestions = await fetchData(q)
+    setSuggestionsList1(suggestions)
+  }, [])
   const onClearPress = useCallback(() => {
     setSuggestionsList(null)
   }, [])
+  const onClearPress1 = useCallback(() => {
+    setSuggestionsList1(null)
+  }, [])
+
+
+
 
   const onOpenSuggestionsList = useCallback(isOpened => {}, [])
-
+  const onOpenSuggestionsList1 = useCallback(isOpened => {}, [])
  
   return (
     <View style={{ ...style, ...styles.container }}>
@@ -109,9 +157,67 @@ const LocationSearchInterface = ({ style, onClickBookmark, username, setDestinat
       </View>
 
       {/* Start Point Input */}
-      <LocationScreen onSearchQueryChange={handleSearchQueryChange} />
       <AutocompleteDropdownContextProvider>
-        
+      <View style={styles.inputContainer}>
+          <TouchableOpacity onPress={getCurrentLocation}>
+            <Icon name="location-outline" size={24} color="#0066FF"/>
+          </TouchableOpacity>
+          <AutocompleteDropdown
+            ref={searchRef}
+            controller={(controller) => { dropdownController.current = controller; }}
+            dataSet={suggestionsList1}  // Same data set for both dropdowns, should be unique
+            onChangeText={getSuggestions1}
+            onSelectItem={(item) => handleSelectItem1(item)} // setDestination - give lat and long 
+            debounce={600}
+            suggestionsListMaxHeight={Dimensions.get('window').height * 0.4}
+            onClear={onClearPress1}
+            onOpenSuggestionsList={onOpenSuggestionsList1}
+            loading={loading}
+            useFilter={false}
+            textInputProps={{
+              placeholder: 'Start Point',
+              autoCorrect: false,
+              autoCapitalize: 'none',
+              style: {
+                borderRadius: 10,
+                width: '90%',
+                backgroundColor: '#FFFFFF',
+                color: '#333',
+                paddingRight: 25,
+                height:35,
+              },
+            }}
+            rightButtonsContainerStyle={{
+              position:"absolute",
+              
+              right: 2,
+              //height: 30,
+              alignSelf: 'center',
+              justifyContent:"flex-end",
+              alignContent:'flex-end',
+            }}
+            inputContainerStyle={{
+              backgroundColor: 'transparent',
+              borderRadius: 10,
+              width: '100%',
+              height:35,
+            }}
+            suggestionsListContainerStyle={{
+              backgroundColor: '#F5F5F5',
+              width: '100%',
+              maxHeight: Dimensions.get('window').height * 0.3, // adjustable height
+              borderRadius: 10,
+              right:50,
+              bottom:20,
+              //overflow: 'hidden',
+            }}
+
+            ClearIconComponent={<Icon name="close-outline" size={20} color="#888" />}
+            inputHeight={50}
+            showChevron={false}
+          />
+          
+        </View>
         
         {/* Destination Input , using this field for setDestination cause only dropdown is visible here*/}
         <View style={styles.inputContainer}>
@@ -211,7 +317,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 5,
   },
   userName: {
     flex: 1,
@@ -232,7 +338,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    marginVertical: 10,
+    marginTop: 10,
   },
   inputIcon: {
     //marginRight: 10,
@@ -249,7 +355,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: '#7E5FCF',
     borderRadius: 20,
-    paddingVertical: 10,
+    paddingVertical: 5,
     alignItems: 'center',
     zIndex:-1,
     elevation:-1,
@@ -286,10 +392,10 @@ suggestionsListContainer: {
   top: 60,
   width: '100%',
   maxHeight: Dimensions.get('window').height * 0.3, // adjustable height
-  zIndex: 5,
+  zIndex: 11,
   backgroundColor: '#FFF',
   borderRadius: 8,
-  elevation:5,
+  elevation:11,
 },
 });
 

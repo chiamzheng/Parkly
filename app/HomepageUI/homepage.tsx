@@ -14,10 +14,11 @@ export default function Homepage({ route }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCarpark, setSelectedCarpark] = useState(null);
   const [capacity, setCapacity] = useState(60); // placeholder for actual capacity
-  // const [showMarkers, setShowMarkers] = useState(false); // track if markers should be visible
+  const [showMarkers, setShowMarkers] = useState(false); // track if markers should be visible
   const [destination, setDestination] = useState(null);
   const [nearbyCarparks, setNearbyCarparks] = useState({});
   
+  const [startpoint, setStartPoint] = useState(null);
   const getPinColor = (capacity) => {
     if (capacity > 79) return 'red';
     if (capacity > 49) return 'orange';
@@ -26,6 +27,10 @@ export default function Homepage({ route }) {
 
   const radius = 1000; // default 1km - tweak this for filter
   
+  const handleStartPointSelection = async (startpoint) => {
+    setStartPoint(startpoint); // just want to have destination marker, settle nearby carparks here ltr
+    console.log(startpoint);
+  };
   const handleDestinationSelection = async (destination) => {
     setDestination(destination); // just want to have destination marker, settle nearby carparks here ltr
     console.log(destination); // check
@@ -60,7 +65,6 @@ export default function Homepage({ route }) {
       console.error("Error fetching nearby carparks:", error);
     }
   };
-
   const handleMarkerPress = (carpark) => {
     setSelectedCarpark(carpark); // Pass carpark data to CarparkSummary
     setModalVisible(true); // Open modal
@@ -72,14 +76,14 @@ export default function Homepage({ route }) {
   };
 
   // Update marker visibility based on zoom level
-  /*const handleRegionChangeComplete = (region) => {
+  const handleRegionChangeComplete = (region) => {
     const zoomThreshold = 0.08; // Set this based on when you want markers to show
     setShowMarkers(region.latitudeDelta < zoomThreshold);
-  };*/
+  };
 
   return (
     <View style={styles.container}>
-      <LocationSearchInterface style={styles.search} onClickBookmark={handleBookmarkPress} username={username} setDestination={handleDestinationSelection} />
+      <LocationSearchInterface style={styles.search} onClickBookmark={handleBookmarkPress} username={username} setDestination={handleDestinationSelection} setStartPoint={handleStartPointSelection}/>
 
       <MapView
         style={styles.map}
@@ -89,9 +93,8 @@ export default function Homepage({ route }) {
           latitudeDelta: 0.1,
           longitudeDelta: 0.1,
         }}
-        //onRegionChangeComplete={handleRegionChangeComplete} // track zoom level
+        onRegionChangeComplete={handleRegionChangeComplete} // track zoom level
       >
-        
         {/* Destination Marker */}
         {destination && (
           <Marker
@@ -111,6 +114,32 @@ export default function Homepage({ route }) {
           />
         ))}
         
+        {/* Start point marker */}
+        {startpoint && (
+          <Marker
+            coordinate={startpoint}
+            title="Start Point"
+            pinColor="blue"  // Blue marker for the destination
+          />
+        )}
+        
+        {showMarkers && carparkData.map((location) => {
+          const { lat, lon } = computeLatLon(location.y_coord, location.x_coord);
+          return (
+            <Marker
+            key={location.FIELD1}
+            coordinate={{ latitude: lat, longitude: lon }}
+            title={location.car_park_no}
+            onPress={() => handleMarkerPress(location)}
+            pinColor={getPinColor(capacity)} // Set pinColor based on capacity
+          >
+            {/* Optional: Use custom images instead of colors */}
+            {/* <Image style={styles.marker} source={require('...path to marker image...')} /> */}
+          </Marker>
+        );
+      })}
+
+
         <PolylineComponent
           start={{ latitude: 1.304833, longitude: 103.831833 }} 
           end={{ latitude: 1.36310057764065, longitude: 103.962012302637 }}
