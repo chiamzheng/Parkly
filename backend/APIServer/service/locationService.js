@@ -46,8 +46,8 @@ class LocationService {
         if (response.data.results && response.data.results.length > 0) {
             return response.data.results.slice(0, 5).map(item => ({
                 Address: item.ADDRESS,
-                latitude: result.Y,
-                longitude: result.X
+                latitude: item.LATITUDE,
+                longitude: item.LONGITUDE
             }));
 
         } else {

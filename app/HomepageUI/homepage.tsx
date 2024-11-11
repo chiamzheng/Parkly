@@ -14,12 +14,18 @@ export default function Homepage({ route }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCarpark, setSelectedCarpark] = useState(null);
   const [capacity, setCapacity] = useState(60); // placeholder for actual capacity
-  const [showMarkers, setShowMarkers] = useState(false); // track if markers should be visible
+  // const [showMarkers, setShowMarkers] = useState(false); // track if markers should be visible
+  const [destination, setDestination] = useState(null);
   
   const getPinColor = (capacity) => {
     if (capacity > 79) return 'red';
     if (capacity > 49) return 'orange';
     return 'green';
+  };
+
+  const handleDestinationSelection = async (destination) => {
+    setDestination(destination); // just want to have destination marker, settle nearby carparks here ltr
+    console.log(destination);
   };
 
   const handleMarkerPress = (carpark) => {
@@ -33,14 +39,14 @@ export default function Homepage({ route }) {
   };
 
   // Update marker visibility based on zoom level
-  const handleRegionChangeComplete = (region) => {
+  /*const handleRegionChangeComplete = (region) => {
     const zoomThreshold = 0.08; // Set this based on when you want markers to show
     setShowMarkers(region.latitudeDelta < zoomThreshold);
-  };
+  };*/
 
   return (
     <View style={styles.container}>
-      <LocationSearchInterface style={styles.search} onClickBookmark={handleBookmarkPress} username={username} />
+      <LocationSearchInterface style={styles.search} onClickBookmark={handleBookmarkPress} username={username} setDestination={handleDestinationSelection} />
 
       <MapView
         style={styles.map}
@@ -50,23 +56,17 @@ export default function Homepage({ route }) {
           latitudeDelta: 0.1,
           longitudeDelta: 0.1,
         }}
-        onRegionChangeComplete={handleRegionChangeComplete} // track zoom level
+        //onRegionChangeComplete={handleRegionChangeComplete} // track zoom level
       >
-        {showMarkers && carparkData.map((location) => {
-          const { lat, lon } = computeLatLon(location.y_coord, location.x_coord);
-          return (
-            <Marker
-              key={location.FIELD1}
-              coordinate={{ latitude: lat, longitude: lon }}
-              title={location.car_park_no}
-              onPress={() => handleMarkerPress(location)}
-              pinColor={getPinColor(capacity)} // Set pinColor based on capacity
-            >
-              {/* Optional: Use custom images instead of colors */}
-              {/* <Image style={styles.marker} source={require('...path to marker image...')} /> */}
-            </Marker>
-          );
-        })}
+        
+        {/* Destination Marker */}
+        {destination && (
+          <Marker
+            coordinate={destination}
+            title="Destination"
+            pinColor="blue"  // Blue marker for the destination
+          />
+        )}
         
         <PolylineComponent
           start={{ latitude: 1.304833, longitude: 103.831833 }} 
