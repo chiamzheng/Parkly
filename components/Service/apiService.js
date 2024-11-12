@@ -2,8 +2,8 @@ import Constants from 'expo-constants';
 import computeLatLon from '../../scripts/computeLatLon';
 import axios from 'axios';
 
-//const URL = Constants.expoConfig?.extra?.SERVER_IP;
-const URL = 'http://10.0.2.2:8083';
+const URL = Constants.expoConfig?.extra?.SERVER_IP; //use this if you are NOT using emulator
+//const URL = 'http://10.0.2.2:8083';
 
 export const fetchCarparkAddress = async (carparkID) => {
     try {
