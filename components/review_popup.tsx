@@ -20,18 +20,8 @@ const ReviewScreen = (style:any, navigation:any) => {
     const handleReviewSubmit = async () => {
         console.log("Review button pressed");
         try {
-            // const user = await axios.get('http://192.168.1.143:8083/api/user_account/current');
-            // const email = user.data.email;
-
-            await axios.put('http://192.168.0.8:8083/api/user_account/review', {
-            email: "some_email@gmail.com",
-            review: {
-                rating,
-                comment: review,
-            },
-            });
+            axios.get("192.168.0.8:8083/api/carpark/add_review/ACB/TestEmail@gmail.com/Something");
             console.log('Review just submitted successfully');
-            navigation.navigate('HomepageUI/homepage');
         } catch (error) {
             console.error('Error updating data:', error);
         }
