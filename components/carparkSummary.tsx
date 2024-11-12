@@ -20,7 +20,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const exitIcon = require("../assets/images/exit.png");
   const [address,setAddress] = useState(null)
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false);
   interface CarparkFeatures {
     carpark_type: any;
     carpark_system: any; 
@@ -41,35 +41,38 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
       const crpk_address = await fetchCarparkAddress(carparkData);
       setAddress(crpk_address);
     } catch (error) {
-      console.error('Failed to fetch address', error);
+      console.error('Failed to fetch carpark address', error);
+    } finally {
+      setLoading(false);
     }
-
-    try {
-      const crpk_features = await fetchCarparkFeatures(carparkData);
-      setFeatures(crpk_features);
-    } catch (error) {
-      console.error('Failed to fetch features', error);
-    }
-    setLoading(false);
   };
 
 
   useEffect(() => {
     if (!carparkData) return;
-  
+
     const fetchData = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        const lots = await fetchAvailableLots(carparkData);
-        setAvailableLots(lots?.availableLots || 0);
-        const cap = await fetchCapacity(carparkData);
-        setCapacity(cap?.capacity || 0);
-      } catch (error) {
-        console.error('Failed to fetch lots', error);
+        try {
+          const lots = await fetchAvailableLots(carparkData);
+          setAvailableLots(lots?.availableLots || 0);
+          const cap = await fetchCapacity(carparkData);
+          setCapacity(cap?.capacity || 0);
+        } catch (error) {
+          console.error('Failed to fetch carpark lots', error);
+        }
+
+        try {
+          const crpk_features = await fetchCarparkFeatures(carparkData);
+          setFeatures(crpk_features);
+        } catch (error) {
+          console.error('Failed to fetch carpark features', error);
+        }
       } finally {
         setLoading(false);
       }
-
+    
       /*test calling nearby Carparks*/
       const destination = { latitude: 1.321572, longitude: 103.884496 };
       const nearbycp = await getNearbyCarparks(destination, 1000);
@@ -118,7 +121,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               
               <Text style={styles.lot}>Lots Available: {availableLots}</Text>
               <Text style={styles.rate}>Rate: ${carparkData?.morningtoevening_0700to1700_motorcars_rate||0}/hour</Text>
-              <CarparkIcons />
+              <CarparkIcons features={features}/>
 
               <View style={[styles.nameContainer, { marginTop: 3 }]}>
                 <Pressable style={styles.selectButton}>
@@ -206,7 +209,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                 </Text>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <CarparkIcons column={true} tooltipEnabled={false} />
+                  <CarparkIcons column={true} tooltipEnabled={false} features={features} />
                   <View style={{ marginLeft: 10 }}>
                   <CarparkInfo text={`Carpark Type: ${features?.carpark_type}`} />
                     <CarparkInfo text={`Payment System: ${features?.carpark_system}`} />
