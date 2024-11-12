@@ -39,7 +39,33 @@ export default function Homepage({ route }) {
     return 'green';
   };
 
-   
+  useEffect(() => {
+    const fetchCarparksByRadius = async () => {
+      if (destination) {
+        try {
+          const carparkIds = await fetchNearbyCarparks(destination, radius);
+          
+          if (carparkIds.length === 0) {
+            Alert.alert("No Carparks Nearby", "No carparks found within the selected radius.");
+            setNearbyCarparks({}); // Clear previous markers when no carparks are found
+          } else {
+            const carparkDictionary = {};
+            for (const carparkId of carparkIds) {
+              const carparkLocation = await fetchLocation(carparkId);
+              if (carparkLocation) {
+                carparkDictionary[carparkId] = { latitude: carparkLocation.latitude, longitude: carparkLocation.longitude };
+              }
+            }
+            setNearbyCarparks(carparkDictionary);
+          }
+        } catch (error) {
+          console.error("Error fetching nearby carparks:", error);
+        }
+      }
+    };
+  
+    fetchCarparksByRadius();
+  }, [radius]);
   
   // this poly line from start to destination, to create another for start to carpark when select carpark in carparkSUmmary is pressed
   const plotPolyline = async () => {
