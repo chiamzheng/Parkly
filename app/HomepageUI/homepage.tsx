@@ -1,13 +1,15 @@
 import LocationSearchInterface from '@/components/LocationSearchInterface';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Image } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Polyline } from 'react-native-maps';
 import React, { useState, useEffect } from "react";
 import CarparkSummary from '../../components/carparkSummary';
 import FAB from '../../components/FAB';
-import PolylineComponent from '@/components/Polyline';
 import carparkData from '../../CarparkInformation.json'; 
 import { fetchLocation, fetchNearbyCarparks } from '@/components/Service/apiService';
+import { Alert } from 'react-native';
+import { getRoutePolyline, getRouteDetails } from '@/components/Service/locationService';
+import { Text } from 'react-native';
 
 export default function Homepage({ route }) {
   const { username } = route.params || { username: "Jackson Lim" };
@@ -17,8 +19,10 @@ export default function Homepage({ route }) {
   const [showMarkers, setShowMarkers] = useState(false); // track if markers should be visible
   const [destination, setDestination] = useState(null);
   const [nearbyCarparks, setNearbyCarparks] = useState({});
-  
+  const [polylineCoords, setPolylineCoords] = useState([]);
   const [startpoint, setStartPoint] = useState(null);
+  const [routeDetails, setRouteDetails] = useState('');
+  
   const getPinColor = (capacity) => {
     if (capacity > 79) return 'red';
     if (capacity > 49) return 'orange';
@@ -27,13 +31,34 @@ export default function Homepage({ route }) {
 
   const radius = 1000; // default 1km - tweak this for filter
   
+  // this poly line from start to destination, to create another for start to carpark when select carpark in carparkSUmmary is pressed
+  const plotPolyline = async () => {
+    if (startpoint && destination) {
+      try {
+        const routeData = await getRouteDetails(startpoint, destination);
+        console.log(routeData.data);
+        if (routeData) {
+          setRouteDetails(`Start to Destination\nDuration: ${routeData.totalTime} secs\nDistance: ${routeData.totalDistance} m`);
+        }
+        const coordinates = await getRoutePolyline(startpoint, destination);
+        setPolylineCoords(coordinates);
+      } catch (error) {
+        console.error('Error plotting polyline:', error);
+      }
+    }
+    else{
+      Alert.alert("Missing Information", "Please ensure both start and destination are filled.");
+    }
+  };
+
   const handleStartPointSelection = async (startpoint) => {
     setStartPoint(startpoint); // just want to have destination marker, settle nearby carparks here ltr
-    console.log(startpoint);
+    console.log('START:', startpoint);
   };
+
   const handleDestinationSelection = async (destination) => {
     setDestination(destination); // just want to have destination marker, settle nearby carparks here ltr
-    console.log(destination); // check
+    console.log('END:', destination); // check
     try {
 
     
@@ -83,7 +108,7 @@ export default function Homepage({ route }) {
 
   return (
     <View style={styles.container}>
-      <LocationSearchInterface style={styles.search} onClickBookmark={handleBookmarkPress} username={username} setDestination={handleDestinationSelection} setStartPoint={handleStartPointSelection}/>
+      <LocationSearchInterface style={styles.search} onClickBookmark={handleBookmarkPress} username={username} setDestination={handleDestinationSelection} setStartPoint={handleStartPointSelection} onPressGo={plotPolyline}/>
 
       <MapView
         style={styles.map}
@@ -95,6 +120,10 @@ export default function Homepage({ route }) {
         }}
         onRegionChangeComplete={handleRegionChangeComplete} // track zoom level
       >
+        {polylineCoords.length > 0 && (
+          <Polyline coordinates={polylineCoords} strokeWidth={3} strokeColor="blue" />
+        )}
+
         {/* Destination Marker */}
         {destination && (
           <Marker
@@ -139,12 +168,14 @@ export default function Homepage({ route }) {
         );
       })}
 
-
-        <PolylineComponent
-          start={{ latitude: 1.304833, longitude: 103.831833 }} 
-          end={{ latitude: 1.36310057764065, longitude: 103.962012302637 }}
-        />
       </MapView>
+
+      {/* Textbox for displaying route details */}
+      <View style={styles.routeDetailsContainer}>
+        <Text style={styles.routeDetailsText}>
+          {routeDetails || 'Select a start point and destination\nto see the route details.'}
+        </Text>
+      </View>
 
       <FAB />
 
@@ -179,5 +210,19 @@ const styles = StyleSheet.create({
   marker:{
     width: 41,
     height: 50,
+  },
+  routeDetailsContainer: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    backgroundColor: '#7E5FCF',
+    padding: 10,
+    borderRadius: 10,
+    zIndex: 10,
+  },
+  routeDetailsText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

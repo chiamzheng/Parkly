@@ -8,7 +8,7 @@ import React, { memo, useCallback, useRef, useState, useEffect } from 'react'
 import { Button, Dimensions, Platform } from 'react-native'
 import { AutocompleteDropdown, AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown'
 import * as Location from 'expo-location';
-const LocationSearchInterface = ({ style, onClickBookmark, username, setDestination, setStartPoint }) => {
+const LocationSearchInterface = ({ style, onClickBookmark, username, setDestination, setStartPoint, onPressGo }) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [bookmarksVisible, setBookmarksVisible] = useState(false);
@@ -21,6 +21,8 @@ const LocationSearchInterface = ({ style, onClickBookmark, username, setDestinat
   const dropdownController = useRef(null)
   const searchRef = useRef(null)
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
+
+
   const getCurrentLocation = async () => {
       setIsFetchingLocation(true);
       setSearchQuery("Fetching location...");
@@ -41,13 +43,13 @@ const LocationSearchInterface = ({ style, onClickBookmark, username, setDestinat
   const handleSelectItem = (item) => {
     if (item) {
       setSearchQuery(item.title);
-      setDestination({ latitude: item.latitude, longitude: item.longitude });
+      setDestination({ latitude: item.latitude, longitude: item.longitude }); // END POINT
     }
   };
   const handleSelectItem1 = (item) => {
     if (item) {
       setSearchQuery1(item.title);
-      setStartPoint({ latitude: item.latitude, longitude: item.longitude });
+      setStartPoint({ latitude: item.latitude, longitude: item.longitude }); // START POINT
     }
   };
 
@@ -279,8 +281,7 @@ const LocationSearchInterface = ({ style, onClickBookmark, username, setDestinat
         </View>
       </AutocompleteDropdownContextProvider>
 
-      {/* Go Button */}
-      <TouchableOpacity onPress={fetchData} style={styles.goButton}>
+      <TouchableOpacity onPress={onPressGo} style={styles.goButton}>
         <Text style={styles.goText}>Go</Text>
       </TouchableOpacity>
 
