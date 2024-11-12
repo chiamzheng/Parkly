@@ -12,7 +12,7 @@ import { fetchCarparkAddress, fetchCarparkFeatures, fetchAvailableLots, fetchCap
 
 export default function CarparkSummary({ visible, carparkData, onClose,chooseCarpark }) {
   const [availableLots, setAvailableLots] = useState(null);
-  const [capacity, setCapacity] = useState(null);
+  const [capacity, setCapacity] = useState(0.00);
   const [notifIsOn, setNotifIsOn] = useState(false);
   const [nearbyCarparks, setNearbyCarparks] = useState(null); //test
   const [registerValue, setRegisterValue ] = useState(null); // test
@@ -64,7 +64,7 @@ export default function CarparkSummary({ visible, carparkData, onClose,chooseCar
           const lots = await fetchAvailableLots(carparkData);
           setAvailableLots(lots?.availableLots || 0);
           const cap = await fetchCapacity(carparkData);
-          setCapacity(cap?.capacity || 0);
+          setCapacity(Math.round(cap?.capacity || 0));
         } catch (error) {
           console.error('Failed to fetch carpark lots', error);
         }
@@ -79,7 +79,6 @@ export default function CarparkSummary({ visible, carparkData, onClose,chooseCar
         try {
           const crpk_rates = await fetchRate(carparkData);
           setRate(crpk_rates);
-          console.log(crpk_rates);
         } catch (error) {
           console.error('Failed to fetch carpark rates', error);
         }
@@ -228,13 +227,11 @@ export default function CarparkSummary({ visible, carparkData, onClose,chooseCar
                 </Pressable>
 
                 <Text style={styles.rate}>
-                  Lots available: {availableLots}{'\n'}
-                  {"\n"}
-                  Address: {address}{"\n"}
-                  {"\n"}
-                  Rates: {'\n'}
-                  ${rate.morning_evening_motorcar_rate}/hour from 7 AM to 5 PM {'\n'}
-                  ${rate.evening_morning_motorcar_rate}/hour from 5 PM to 7 AM {'\n'}
+                  <Text style={{fontWeight: 'bold'}}>Lots available:</Text> {availableLots}{'\n'}
+                  <Text style={{fontWeight: 'bold'}}>Address:</Text>{"\n"}{address}{"\n"}
+                  <Text style={{fontWeight: 'bold'}}>Rates:</Text>{'\n'}
+                  ${rate.morning_evening_motorcar_rate} / hour from 7am to 5pm {'\n'}
+                  ${rate.evening_morning_motorcar_rate} / hour from 5pm to 7am {'\n'}
                 </Text>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -250,7 +247,7 @@ export default function CarparkSummary({ visible, carparkData, onClose,chooseCar
                   </View>
                 </View>
 
-                <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 30, marginBottom: 10 }}>
+                <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 10, marginBottom: 10 }}>
                   Guide to my destination:
                 </Text>
 
@@ -276,7 +273,7 @@ export default function CarparkSummary({ visible, carparkData, onClose,chooseCar
                       });
                   }}>
                   <Image style={[styles.exit, { tintColor: 'white', width: 20, height: 20 }]} source={require("../assets/images/public-transport.png")}/>
-                  <Text style={styles.buttonText}>Public Transport</Text>
+                  <Text style={styles.buttonText}>Public Transport </Text>
                 </Pressable>
                 <Pressable 
                   style={[styles.selectButton, { flexDirection: 'row', borderRadius: 15, width: 60 }]}

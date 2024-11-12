@@ -69,7 +69,7 @@ export const fetchCarparkFeatures = async (carparkID) => {
 export const fetchNearbyCarparks = async (destination, radius) => {
     try {
         const response = await axios.get(`${URL}/api/carpark/fetch_carparks_within_radius/${destination.latitude},${destination.longitude}/${radius}`);
-        console.log('Nearby Carparks:', response.data);
+        //console.log('Nearby Carparks:', response.data);
         return response.data;
     } catch (error) {
         console.error('Error fetching nearby carparks:', error);
