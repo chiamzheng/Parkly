@@ -79,7 +79,6 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
         try {
           const crpk_rates = await fetchRate(carparkData);
           setRate(crpk_rates);
-          console.log(crpk_rates);
         } catch (error) {
           console.error('Failed to fetch carpark rates', error);
         }
@@ -224,11 +223,9 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                 </Pressable>
 
                 <Text style={styles.rate}>
-                  Lots available: {availableLots}{'\n'}
-                  {"\n"}
-                  Address: {address}{"\n"}
-                  {"\n"}
-                  Rates: {'\n'}
+                  <Text style={{fontWeight: 'bold'}}>Lots available:</Text> {availableLots}{'\n'}
+                  <Text style={{fontWeight: 'bold'}}>Address:</Text>{"\n"}{address}{"\n"}
+                  <Text style={{fontWeight: 'bold'}}>Rate:</Text>{'\n'}
                   ${rate.morning_evening_motorcar_rate}/hour from 7 AM to 5 PM {'\n'}
                   ${rate.evening_morning_motorcar_rate}/hour from 5 PM to 7 AM {'\n'}
                 </Text>
@@ -272,7 +269,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                       });
                   }}>
                   <Image style={[styles.exit, { tintColor: 'white', width: 20, height: 20 }]} source={require("../assets/images/public-transport.png")}/>
-                  <Text style={styles.buttonText}>Public Transport</Text>
+                  <Text style={styles.buttonText}>Public Transport </Text>
                 </Pressable>
                 <Pressable 
                   style={[styles.selectButton, { flexDirection: 'row', borderRadius: 15, width: 60 }]}
