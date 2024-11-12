@@ -8,7 +8,7 @@ import { register } from './Service/dbUserAccount';
 import CarparkReviews from './CarparkReviews';
 import { Linking } from 'react-native';
 import ReviewScreen from './review_popup';
-import { fetchCarparkAddress, fetchCarparkFeatures, fetchAvailableLots, fetchCapacity} from './Service/apiService';
+import { fetchCarparkAddress, fetchCarparkFeatures, fetchAvailableLots, fetchCapacity, fetchRate} from './Service/apiService';
 
 export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [availableLots, setAvailableLots] = useState(null);
@@ -19,8 +19,14 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [bigModalVisible, setBigModalVisible] = useState(false);
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const exitIcon = require("../assets/images/exit.png");
-  const [address,setAddress] = useState(null)
-  const [loading, setLoading] = useState(false); // Loading state
+  const [address, setAddress] = useState(null)
+  const [loading, setLoading] = useState(false);
+  const [features, setFeatures] = useState<CarparkFeatures | null>(null);
+  const [rate, setRate] = useState({
+    time_0700to1700_motorcars_rate: 0,
+    time_1700to0700_motorcars_rate: 0,
+  });
+
   interface CarparkFeatures {
     carpark_type: any;
     carpark_system: any; 
@@ -30,7 +36,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
     carpark_short: any;
     carpark_free: any;
   }
-  const [features, setFeatures] = useState<CarparkFeatures | null>(null);
+
   
   //status for notification and bookmark icons
   const [bookmarkIsOn, setBookmarkIsOn] = useState(false);
@@ -41,35 +47,46 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
       const crpk_address = await fetchCarparkAddress(carparkData);
       setAddress(crpk_address);
     } catch (error) {
-      console.error('Failed to fetch address', error);
+      console.error('Failed to fetch carpark address', error);
+    } finally {
+      setLoading(false);
     }
-
-    try {
-      const crpk_features = await fetchCarparkFeatures(carparkData);
-      setFeatures(crpk_features);
-    } catch (error) {
-      console.error('Failed to fetch features', error);
-    }
-    setLoading(false);
   };
 
 
   useEffect(() => {
     if (!carparkData) return;
-  
+
     const fetchData = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        const lots = await fetchAvailableLots(carparkData);
-        setAvailableLots(lots?.availableLots || 0);
-        const cap = await fetchCapacity(carparkData);
-        setCapacity(cap?.capacity || 0);
-      } catch (error) {
-        console.error('Failed to fetch lots', error);
+        try {
+          const lots = await fetchAvailableLots(carparkData);
+          setAvailableLots(lots?.availableLots || 0);
+          const cap = await fetchCapacity(carparkData);
+          setCapacity(cap?.capacity || 0);
+        } catch (error) {
+          console.error('Failed to fetch carpark lots', error);
+        }
+
+        try {
+          const crpk_features = await fetchCarparkFeatures(carparkData);
+          setFeatures(crpk_features);
+        } catch (error) {
+          console.error('Failed to fetch carpark features', error);
+        }
+
+        try {
+          const crpk_rates = await fetchRate(carparkData);
+          setRate(crpk_rates);
+        } catch (error) {
+          console.error('Failed to fetch carpark rates', error);
+        }
+
       } finally {
         setLoading(false);
       }
-
+    
       /*test calling nearby Carparks*/
       const destination = { latitude: 1.321572, longitude: 103.884496 };
       const nearbycp = await getNearbyCarparks(destination, 1000);
@@ -117,8 +134,12 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               </View>
               
               <Text style={styles.lot}>Lots Available: {availableLots}</Text>
-              <Text style={styles.rate}>Rate: ${carparkData?.morningtoevening_0700to1700_motorcars_rate||0}/hour</Text>
-              <CarparkIcons />
+              <Text style={styles.rate}>
+                Rate: ${rate?.time_0700to1700_motorcars_rate < rate?.time_1700to0700_motorcars_rate
+                  ? `${rate?.time_0700to1700_motorcars_rate} to ${rate?.time_1700to0700_motorcars_rate}`
+                  : `${rate?.time_1700to0700_motorcars_rate} to ${rate?.time_0700to1700_motorcars_rate}`} /hour
+              </Text>
+              <CarparkIcons features={features}/>
 
               <View style={[styles.nameContainer, { marginTop: 3 }]}>
                 <Pressable style={styles.selectButton}>
@@ -198,15 +219,17 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                 >
                     <Text style={styles.buttonText}>Leave Review</Text>
                 </Pressable>
-
+                
                 <Text style={styles.rate}>
                   Address: {address}{"\n"}
                   Lots available: {availableLots}{'\n'}
-                  Parking fees: {'\n'}
+                  Rates: {'\n'}
+                  ${rate.time_0700to1700_motorcars_rate}/hour from 7AM to 5PM {'\n'}
+                  ${rate.time_1700to0700_motorcars_rate}/hour from 5PM to 7AM {'\n'}
                 </Text>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <CarparkIcons column={true} tooltipEnabled={false} />
+                  <CarparkIcons column={true} tooltipEnabled={false} features={features} />
                   <View style={{ marginLeft: 10 }}>
                   <CarparkInfo text={`Carpark Type: ${features?.carpark_type}`} />
                     <CarparkInfo text={`Payment System: ${features?.carpark_system}`} />

@@ -1,5 +1,9 @@
+import Constants from 'expo-constants';
+const URL = Constants.expoConfig?.extra?.SERVER_IP;
+const BASE_URL = `${URL}/api/external` //use this if you are NOT using emulator
+
 // const BASE_URL = 'http://10.0.2.2:8083/api/external'; // where my API server is hosted on
-const BASE_URL = 'http://localhost:8083/api/external';
+//const BASE_URL = 'http://localhost:8083/api/external';
 
 /**
  * Fetches the available parking lots for a specific carpark from backend localserver.

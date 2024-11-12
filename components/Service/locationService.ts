@@ -1,5 +1,9 @@
-const BASE_URL = 'http://10.0.2.2:8083/api/external'; //if you use emulator
-// const BASE_URL = 'http://localhost:8083/api/external';
+import Constants from 'expo-constants';
+const URL = Constants.expoConfig?.extra?.SERVER_IP;
+const BASE_URL = `${URL}/api/external` //use this if you are NOT using emulator
+
+//const BASE_URL = 'http://10.0.2.2:8083/api/external'; //if you use emulator
+//const BASE_URL = 'http://localhost:8083/api/external';
 
 interface Coordinate {
     latitude: number;
