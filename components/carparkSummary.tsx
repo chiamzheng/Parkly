@@ -12,7 +12,7 @@ import { fetchCarparkAddress, fetchCarparkFeatures, fetchAvailableLots, fetchCap
 
 export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [availableLots, setAvailableLots] = useState(null);
-  const [capacity, setCapacity] = useState(null);
+  const [capacity, setCapacity] = useState(0.00);
   const [notifIsOn, setNotifIsOn] = useState(false);
   const [nearbyCarparks, setNearbyCarparks] = useState(null); //test
   const [registerValue, setRegisterValue ] = useState(null); // test
@@ -64,7 +64,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
           const lots = await fetchAvailableLots(carparkData);
           setAvailableLots(lots?.availableLots || 0);
           const cap = await fetchCapacity(carparkData);
-          setCapacity(cap?.capacity || 0);
+          setCapacity(Math.round(cap?.capacity || 0));
         } catch (error) {
           console.error('Failed to fetch carpark lots', error);
         }
