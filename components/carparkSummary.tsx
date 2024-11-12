@@ -38,14 +38,14 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
   const handlePress = async () => {
     setLoading(true);
     try {
-      const crpk_address = await fetchCarparkAddress(carparkData?.car_park_no);
+      const crpk_address = await fetchCarparkAddress(carparkData);
       setAddress(crpk_address);
     } catch (error) {
       console.error('Failed to fetch address', error);
     }
 
     try {
-      const crpk_features = await fetchCarparkFeatures(carparkData?.car_park_no);
+      const crpk_features = await fetchCarparkFeatures(carparkData);
       setFeatures(crpk_features);
     } catch (error) {
       console.error('Failed to fetch features', error);
@@ -60,9 +60,9 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const lots = await fetchAvailableLots(carparkData?.car_park_no);
+        const lots = await fetchAvailableLots(carparkData);
         setAvailableLots(lots?.availableLots || 0);
-        const cap = await fetchCapacity(carparkData?.car_park_no);
+        const cap = await fetchCapacity(carparkData);
         setCapacity(cap?.capacity || 0);
       } catch (error) {
         console.error('Failed to fetch lots', error);
@@ -106,7 +106,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               <View style={[styles.nameContainer, { marginTop: 5 }]}> 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image style={{ width: 30, height: 30, marginRight: 5}} source={require("../assets/images/location_icon.png")}/>
-                  <Text style={[styles.name]}>{carparkData?.car_park_no || 'Carpark' }</Text>
+                  <Text style={[styles.name]}>{carparkData|| 'Carpark' }</Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Text style={[styles.name, { marginBottom: 0, marginRight: 4 }]}> Capacity: <Text style={{ color: capacity >= 75 ? 'green' : capacity >= 30 ? 'orange' : 'red', }}>{capacity}%</Text> </Text>
@@ -161,12 +161,12 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15, marginTop: 15 }}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Image style={[styles.exit, { width: 30, height: 30 }]} source={require("../assets/images/location_icon.png")}/>
-                    <Text style={styles.name}>{carparkData?.car_park_no || 'Carpark'}</Text>
+                    <Text style={styles.name}>{carparkData || 'Carpark'}</Text>
                   </View>
 
                         
                         <View style={{flexDirection:'row', marginRight: 10}}>
-                          <NotificationScreen carparkID={carparkData?.car_park_no}/>
+                          <NotificationScreen carparkID={carparkData}/>
                         
                           <TouchableOpacity onPress={() => setBookmarkIsOn(!bookmarkIsOn)}>
                             <Image

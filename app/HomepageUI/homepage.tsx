@@ -10,6 +10,7 @@ import { fetchLocation, fetchNearbyCarparks } from '@/components/Service/apiServ
 import { Alert } from 'react-native';
 import { getRoutePolyline, getRouteDetails } from '@/components/Service/locationService';
 import { Text } from 'react-native';
+import computeLatLon from '@/scripts/computeLatLon';
 
 function extractEmailFront(email) {
   if (!email.includes("@")) {
@@ -148,6 +149,7 @@ export default function Homepage({ route }) {
             key={index}
             coordinate={{ latitude: carpark.latitude, longitude: carpark.longitude }}
             title={`Carpark ${carparkKey}`}  // key of dict is title
+            onPress={() => handleMarkerPress(carparkKey)}
             pinColor="green"
           />
         ))}
