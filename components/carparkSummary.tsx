@@ -7,7 +7,7 @@ import { getNearbyCarparks } from './Service/dbCarparkService';
 import { register } from './Service/dbUserAccount';
 import CarparkReviews from './CarparkReviews';
 import { Linking } from 'react-native';
-import ReviewScreen from '../app/review_popup';
+import ReviewScreen from './review_popup';
 import { fetchCarparkAddress, fetchCarparkFeatures, fetchAvailableLots, fetchCapacity} from './Service/apiService';
 
 export default function CarparkSummary({ visible, carparkData, onClose }) {

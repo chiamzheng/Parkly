@@ -24,7 +24,7 @@ function extractEmailFront(email) {
   return email.split("@")[0];
 }
 export default function Signin({ navigation }: { navigation: any }) {
-  const [username, onChangeUser] = React.useState("");
+  const [email, onChangeEmail] = React.useState("");
   const [password, onChangePass] = React.useState("");
   const [check1, setCheck1] = React.useState(false);
   const [validEmail, setValidEmail] = React.useState(true);
@@ -41,17 +41,17 @@ export default function Signin({ navigation }: { navigation: any }) {
     }
   };
   const handleEmail = () => {
-    if (validator.isEmail(username)) {
+    if (validator.isEmail(email)) {
       setValidEmail(true);
     } else {
       setValidEmail(false);
     }
   };
   const handleSignin = () => {
-    if (!validator.isEmpty(password) && validator.isEmail(username)) {
+    if (!validator.isEmpty(password) && validator.isEmail(email)) {
       const value = axios
         .get(
-          `http://192.168.1.143:8083/api/user_account/login/${username}/${password}`
+          `http://192.168.1.143:8083/api/user_account/login/${email}/${password}`
         )
         .then((response) => {
           console.log(response.data);
@@ -61,7 +61,8 @@ export default function Signin({ navigation }: { navigation: any }) {
         });
       console.log(value);
       navigation.navigate("HomepageUI/homepage", {
-        username: extractEmailFront(username),
+        username: extractEmailFront(email),
+        email: email,
       });
     }
   };
@@ -77,8 +78,8 @@ export default function Signin({ navigation }: { navigation: any }) {
         <ThemedView style={styles.stepContainer}>
           <TextInput
             style={validEmail ? styles.input : styles.invalidinput}
-            onChangeText={onChangeUser}
-            value={username}
+            onChangeText={onChangeEmail}
+            value={email}
             placeholder="Email"
             placeholderTextColor="#B9B7B7"
             inputMode="email"
