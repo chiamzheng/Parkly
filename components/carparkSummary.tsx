@@ -222,7 +222,7 @@ export default function CarparkSummary({ visible, carparkData, onClose,chooseCar
                 </View>
 
                 <TouchableOpacity 
-                    style={[styles.selectButton, {alignSelf:'flex-end', marginBottom: 10, marginRight: 10}]} 
+                    style={[styles.selectButton, {alignSelf:'flex-end', marginBottom: 15, marginRight: 10}]} 
                     onPress={() => setReviewBox(true)}
                 >
                     <Text style={styles.buttonText}>Leave Review</Text>
@@ -242,10 +242,10 @@ export default function CarparkSummary({ visible, carparkData, onClose,chooseCar
                   <Text style={{fontWeight: 'bold'}}>Address:</Text>{"\n"}{address}{"\n"}
                   <Text style={{fontWeight: 'bold'}}>Rates:</Text>{'\n'}
                   ${rate.morning_evening_motorcar_rate} / hour from 7am to 5pm {'\n'}
-                  ${rate.evening_morning_motorcar_rate} / hour from 5pm to 7am {'\n'}
+                  ${rate.evening_morning_motorcar_rate} / hour from 5pm to 7am
                 </Text>
 
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
                   <CarparkIcons column={true} tooltipEnabled={false} features={features} />
                   <View style={{ marginLeft: 10 }}>
                   <CarparkInfo text={`Carpark Type: ${features?.carpark_type}`} />
