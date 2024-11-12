@@ -10,7 +10,7 @@ import { Linking } from 'react-native';
 import { fetchCarparkAddress, fetchCarparkFeatures, fetchAvailableLots, fetchCapacity, fetchRate} from './Service/apiService';
 import ReviewBoxComponent from './ReviewBox';
 
-export default function CarparkSummary({ visible, carparkData, onClose }) {
+export default function CarparkSummary({ visible, carparkData, onClose,chooseCarpark }) {
   const [availableLots, setAvailableLots] = useState(null);
   const [capacity, setCapacity] = useState(0.00);
   const [notifIsOn, setNotifIsOn] = useState(false);
@@ -148,7 +148,11 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               <CarparkIcons features={features}/>
 
               <View style={[styles.nameContainer, { marginTop: 3 }]}>
-                <Pressable style={styles.selectButton}>
+                <Pressable style={styles.selectButton} onPress={() => {
+                    chooseCarpark(carparkData);
+                    onClose();  // Close main modal
+                    
+                  }}>
                   <Text style={styles.buttonText}>Select carpark</Text>
                 </Pressable>
                 <Pressable
