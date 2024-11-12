@@ -9,6 +9,7 @@ import { SelectCountry } from 'react-native-element-dropdown';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import React from "react";
 import CarparkIcons from './carparkIcons';
+import ScrollPicker from "react-native-wheel-scrollview-picker";
 const exitIcon = require("../assets/images/exit.png");
 const OFFSET = 60; // Distance to move FABs when expanded
 const radiusDropdown = [
@@ -64,6 +65,8 @@ export default function FAB({returnRadius}) {
   const [time1, setTime1] = React.useState(new Date());
   const [timeVis, setTimeVis] = React.useState(false); 
   const [timeVis1, setTimeVis1] = React.useState(false); 
+  const [dollar, setDollar] = React.useState(2);
+  const [cent, setCent] = React.useState(0);
   const showTime = () => {
     setTimeVis(!timeVis);
   };  
@@ -145,9 +148,44 @@ export default function FAB({returnRadius}) {
                         </View>
                         <Text style={styles.text}>Set Max Average Rate:</Text>
                         <View style={styles.row}>
-                          <Pressable style={styles.time} onPress={showTime}>
-                            <Text>$10</Text>
-                          </Pressable>
+                          <Text style={styles.text}>$ </Text>
+                          <View style={styles.scrollpicker}>
+                            <ScrollPicker
+                                  dataSource={[0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+                                  selectedIndex={0}
+                                  renderItem={(data) => (
+                                      <Text>{data}</Text>
+                                  )}
+                                  onValueChange={(data, selectedIndex) => {
+                                      setDollar(data)
+                                      console.log("Selected Dollar:", dollar);
+                                  }}
+                                  wrapperHeight={40}
+                                  wrapperBackground="#D9D9D9"
+                                  itemHeight={40}
+                                  highlightColor="#d8d8d8"
+                                  highlightBorderWidth={0}
+                              />
+                          </View>
+                          <Text style={styles.textdot}>.</Text>
+                          <View style={styles.scrollpicker}>
+                            <ScrollPicker
+                                  dataSource={[0,10, 20, 30, 40, 50, 60, 70, 80, 90]}
+                                  selectedIndex={0}
+                                  renderItem={(data) => (
+                                      <Text>{data}</Text>
+                                  )}
+                                  onValueChange={(data, selectedIndex) => {
+                                      setCent(data)
+                                      console.log("Selected Cent:", cent);
+                                  }}
+                                  wrapperHeight={40}
+                                  wrapperBackground="#D9D9D9"
+                                  itemHeight={40}
+                                  highlightColor="#d8d8d8"
+                                  highlightBorderWidth={0}
+                              />
+                          </View>
                           <Text style={styles.text}>/hour</Text>
                         </View>
                         <Pressable style={styles.applybutton} onPress={applyDuration}>
@@ -411,6 +449,21 @@ const styles = StyleSheet.create({
       iconStyle: {
         width: 20,
         height: 20,
+      },
+      scrollpicker:{
+        width:40,
+        height:40,
+        borderRadius: 6,
+        borderColor:"black",
+        borderWidth:3,
+      },
+      textdot:{
+        fontWeight:'700',
+        fontSize:16,
+        marginVertical:10,
+        alignSelf:"flex-start",
+        paddingLeft:5,
+        paddingRight:5,
       },
   });
   

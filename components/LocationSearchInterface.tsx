@@ -282,7 +282,7 @@ const LocationSearchInterface = ({ style, onClickBookmark, username, setDestinat
       </AutocompleteDropdownContextProvider>
 
       <TouchableOpacity onPress={onPressGo} style={styles.goButton}>
-        <Text style={styles.goText}>Go</Text>
+        <Text style={styles.goText}>Navigate</Text>
       </TouchableOpacity>
 
       {/* Display Search Results */}
