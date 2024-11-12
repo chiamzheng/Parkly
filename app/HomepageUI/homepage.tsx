@@ -33,12 +33,12 @@ export default function Homepage({ route }) {
   
   // this poly line from start to destination, to create another for start to carpark when select carpark in carparkSUmmary is pressed
   const plotPolyline = async () => {
-    if (startpoint && destination) {
+    if (startpoint && destination) { // realise even if we clear the field for one of them, alert wont come out as theres still coordinates stored in start/destination from prev search TO FIX IF CAN
       try {
         const routeData = await getRouteDetails(startpoint, destination);
         console.log(routeData.data);
         if (routeData) {
-          setRouteDetails(`Start to Destination\nDuration: ${routeData.totalTime} secs\nDistance: ${routeData.totalDistance} m`);
+          setRouteDetails(`Start to Destination\nDuration: ${routeData.totalTime} secs\nDistance: ${routeData.totalDistance} m`); //to convert min and km
         }
         const coordinates = await getRoutePolyline(startpoint, destination);
         setPolylineCoords(coordinates);
