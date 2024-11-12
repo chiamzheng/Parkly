@@ -25,8 +25,8 @@ export default function CarparkIcons({
     column = false,
     features = null,
     }: CarparkIconsProps) {
-
-    // Basement Parking and Gantry Height still static
+    
+    //Carpark type feature is always blue in color
     return (
         <View style={column? styles.column : styles.aligncircle}>
             <TooltipItem column={column} tooltipEnabled={tooltipEnabled} text="Carpark Type" imgSrc={require("../assets/images/car-park-type.png")} buttonMode={buttonmode} />

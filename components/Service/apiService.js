@@ -84,3 +84,14 @@ export const fetchCapacity = async (carparkID) => {
         throw error;
     }
 };
+
+// returns {morning_evening_motorcar_rate, evening_morning_motorcar_rate};
+export const fetchRate = async (carparkID) => {
+    try {
+        const response = await axios.get(`${URL}/api/carpark/fetch_carpark_rates/${carparkID}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching carpark lots:', error);
+        throw error;
+    }
+};
