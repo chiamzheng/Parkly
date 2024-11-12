@@ -25,11 +25,13 @@ export default function Homepage({ route }) {
   const username = extractEmailFront(email);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCarpark, setSelectedCarpark] = useState(null);
+  const [chosenCarpark, setChosenCarpark] = useState(null);
   const [capacity, setCapacity] = useState(60); // placeholder for actual capacity
   const [showMarkers, setShowMarkers] = useState(false); // track if markers should be visible
   const [destination, setDestination] = useState(null);
   const [nearbyCarparks, setNearbyCarparks] = useState({});
   const [polylineCoords, setPolylineCoords] = useState([]);
+  const [polylineCoords1, setPolylineCoords1] = useState([]);
   const [startpoint, setStartPoint] = useState(null);
   const [routeDetails, setRouteDetails] = useState('');
   const [radius, setRadius] = useState(1000); // default 1km - tweak this for filter
@@ -38,7 +40,18 @@ export default function Homepage({ route }) {
     if (capacity > 49) return 'orange';
     return 'green';
   };
-
+  const getCarparkLocation = (chosenCarpark) => {
+    // Find the carpark in carparkData that matches the chosenCarpark car_park_no
+    const carpark = carparkData.find((data) => data.car_park_no === chosenCarpark);
+    
+    // If a match is found, return the latitude and longitude
+    if (carpark) {  
+      const { lat, lon } = computeLatLon(carpark.y_coord, carpark.x_coord);
+      return { latitude: lat, longitude: lon };
+    } else {
+      return null; // If no match is found, return null
+    }
+  };
   useEffect(() => {
     const fetchCarparksByRadius = async () => {
       if (destination) {
@@ -66,17 +79,63 @@ export default function Homepage({ route }) {
   
     fetchCarparksByRadius();
   }, [radius]);
-  
+
+  useEffect(() => {
+    // Check if chosenCarpark has been updated and is not null
+    if (chosenCarpark) {
+      Alert.alert('Carpark Selected', `You have selected carpark: ${chosenCarpark}`);
+      console.log("Chosen Carpark:", chosenCarpark);
+      setNearbyCarparks({});
+    }
+  }, [chosenCarpark]);  // Dependency array with chosenCarpark
+
   // this poly line from start to destination, to create another for start to carpark when select carpark in carparkSUmmary is pressed
   const plotPolyline = async () => {
-    if (startpoint && destination) {
+    const carparkLocation = getCarparkLocation(chosenCarpark)
+    if (startpoint && destination && chosenCarpark) {
+      try {
+        const routeData = await getRouteDetails(startpoint,carparkLocation );
+        const routeData1 = await getRouteDetails(carparkLocation, destination);
+        console.log(routeData.data);
+        console.log(routeData1.data);
+        if (routeData&&routeData1) {
+          setRouteDetails(`Start to Carpark\nDuration: ${routeData.totalTime} secs\nDistance: ${routeData.totalDistance} m\nCarpark to Destination\nDuration: ${routeData1.totalTime} secs\nDistance: ${routeData1.totalDistance} m`);
+          
+        }
+        
+        const coordinates = await getRoutePolyline(startpoint, carparkLocation);
+        const coordinates1 = await getRoutePolyline(carparkLocation, destination);
+        setPolylineCoords(coordinates);
+        setPolylineCoords1(coordinates1);
+      } catch (error) {
+        console.error('Error plotting polyline:', error);
+      }
+    }
+
+    else if (startpoint && destination) {
       try {
         const routeData = await getRouteDetails(startpoint, destination);
         console.log(routeData.data);
         if (routeData) {
           setRouteDetails(`Start to Destination\nDuration: ${routeData.totalTime} secs\nDistance: ${routeData.totalDistance} m`);
         }
+        
         const coordinates = await getRoutePolyline(startpoint, destination);
+        setPolylineCoords(coordinates);
+      } catch (error) {
+        console.error('Error plotting polyline:', error);
+      }
+    }
+
+    else if (startpoint && chosenCarpark) {
+      try {
+        const routeData = await getRouteDetails(startpoint, carparkLocation);
+        console.log(routeData.data);
+        if (routeData) {
+          setRouteDetails(`Start to Carpark\nDuration: ${routeData.totalTime} secs\nDistance: ${routeData.totalDistance} m`);
+        }
+        
+        const coordinates = await getRoutePolyline(startpoint, carparkLocation);
         setPolylineCoords(coordinates);
       } catch (error) {
         console.error('Error plotting polyline:', error);
@@ -142,6 +201,8 @@ export default function Homepage({ route }) {
     setShowMarkers(region.latitudeDelta < zoomThreshold);
   };
 
+  
+
   return (
     <View style={styles.container}>
       <LocationSearchInterface style={styles.search} onClickBookmark={handleBookmarkPress} username={username} setDestination={handleDestinationSelection} setStartPoint={handleStartPointSelection} onPressGo={plotPolyline}/>
@@ -159,6 +220,19 @@ export default function Homepage({ route }) {
         {polylineCoords.length > 0 && (
           <Polyline coordinates={polylineCoords} strokeWidth={3} strokeColor="blue" />
         )}
+        {polylineCoords1.length > 0 && (
+          <Polyline coordinates={polylineCoords1} strokeWidth={3} strokeColor="yellow" />
+        )}
+
+
+        {/* Start point marker */}
+        {startpoint && (
+          <Marker
+            coordinate={startpoint}
+            title="Start Point"
+            pinColor="blue"  // Blue marker for the start
+          />
+        )}
 
         {/* Destination Marker */}
         {destination && (
@@ -166,6 +240,16 @@ export default function Homepage({ route }) {
             coordinate={destination}
             title="Destination"
             pinColor="red"  // Blue marker for the destination
+          />
+        )}
+
+         {/* Chosen Carpark Marker */}
+         {chosenCarpark && (
+          <Marker
+            coordinate={getCarparkLocation(chosenCarpark)}
+            title="Selected Carpark"
+            pinColor="yellow"  // yellow marker for the carpark destination
+            onPress={() => handleMarkerPress(chosenCarpark)}
           />
         )}
 
@@ -180,14 +264,7 @@ export default function Homepage({ route }) {
           />
         ))}
         
-        {/* Start point marker */}
-        {startpoint && (
-          <Marker
-            coordinate={startpoint}
-            title="Start Point"
-            pinColor="blue"  // Blue marker for the destination
-          />
-        )}
+        
         
         {showMarkers && carparkData.map((location) => {
           const { lat, lon } = computeLatLon(location.y_coord, location.x_coord);
@@ -221,6 +298,7 @@ export default function Homepage({ route }) {
         carparkData={selectedCarpark}
         onClose={() => setModalVisible(false)}
         email={email}  
+        chooseCarpark={setChosenCarpark}
       />
 
       <StatusBar style="auto" />
