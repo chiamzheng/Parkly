@@ -225,9 +225,9 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                 <Text style={styles.rate}>
                   <Text style={{fontWeight: 'bold'}}>Lots available:</Text> {availableLots}{'\n'}
                   <Text style={{fontWeight: 'bold'}}>Address:</Text>{"\n"}{address}{"\n"}
-                  <Text style={{fontWeight: 'bold'}}>Rate:</Text>{'\n'}
-                  ${rate.morning_evening_motorcar_rate}/hour from 7 AM to 5 PM {'\n'}
-                  ${rate.evening_morning_motorcar_rate}/hour from 5 PM to 7 AM {'\n'}
+                  <Text style={{fontWeight: 'bold'}}>Rates:</Text>{'\n'}
+                  ${rate.morning_evening_motorcar_rate} / hour from 7am to 5pm {'\n'}
+                  ${rate.evening_morning_motorcar_rate} / hour from 5pm to 7am {'\n'}
                 </Text>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -243,7 +243,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                   </View>
                 </View>
 
-                <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 30, marginBottom: 10 }}>
+                <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 10, marginBottom: 10 }}>
                   Guide to my destination:
                 </Text>
 
