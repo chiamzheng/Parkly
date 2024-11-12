@@ -23,8 +23,8 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [loading, setLoading] = useState(false);
   const [features, setFeatures] = useState<CarparkFeatures | null>(null);
   const [rate, setRate] = useState({
-    time_0700to1700_motorcars_rate: 0,
-    time_1700to0700_motorcars_rate: 0,
+    morning_evening_motorcar_rate: 0,
+    evening_morning_motorcar_rate: 0,
   });
 
   interface CarparkFeatures {
@@ -79,6 +79,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
         try {
           const crpk_rates = await fetchRate(carparkData);
           setRate(crpk_rates);
+          console.log(crpk_rates);
         } catch (error) {
           console.error('Failed to fetch carpark rates', error);
         }
@@ -135,9 +136,11 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               
               <Text style={styles.lot}>Lots Available: {availableLots}</Text>
               <Text style={styles.rate}>
-                Rate: ${rate?.time_0700to1700_motorcars_rate < rate?.time_1700to0700_motorcars_rate
-                  ? `${rate?.time_0700to1700_motorcars_rate} to ${rate?.time_1700to0700_motorcars_rate}`
-                  : `${rate?.time_1700to0700_motorcars_rate} to ${rate?.time_0700to1700_motorcars_rate}`} /hour
+                Rate: ${rate?.morning_evening_motorcar_rate === rate?.evening_morning_motorcar_rate
+                  ? `${rate?.morning_evening_motorcar_rate} / hour`
+                  : rate?.morning_evening_motorcar_rate < rate?.evening_morning_motorcar_rate
+                  ? `${rate?.morning_evening_motorcar_rate} to $${rate?.evening_morning_motorcar_rate} / hour` 
+                  : `${rate?.evening_morning_motorcar_rate} to $${rate?.morning_evening_motorcar_rate} / hour`} 
               </Text>
               <CarparkIcons features={features}/>
 
@@ -219,13 +222,15 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                 >
                     <Text style={styles.buttonText}>Leave Review</Text>
                 </Pressable>
-                
+
                 <Text style={styles.rate}>
-                  Address: {address}{"\n"}
                   Lots available: {availableLots}{'\n'}
+                  {"\n"}
+                  Address: {address}{"\n"}
+                  {"\n"}
                   Rates: {'\n'}
-                  ${rate.time_0700to1700_motorcars_rate}/hour from 7AM to 5PM {'\n'}
-                  ${rate.time_1700to0700_motorcars_rate}/hour from 5PM to 7AM {'\n'}
+                  ${rate.morning_evening_motorcar_rate}/hour from 7 AM to 5 PM {'\n'}
+                  ${rate.evening_morning_motorcar_rate}/hour from 5 PM to 7 AM {'\n'}
                 </Text>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>

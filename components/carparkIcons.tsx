@@ -98,7 +98,7 @@ const NightParking = ({info, tooltipEnabled = true, buttonMode = false, text = '
 };
 
 const BasementParking = ({info, tooltipEnabled = true, buttonMode = false, text = 'Invalid', imgSrc, column = false}) => {
-    const inactive = "N"; 
+    const inactive = "NO"; 
     const shapeStyle = info === inactive ? styles.inactive : styles.active;
 
     return (

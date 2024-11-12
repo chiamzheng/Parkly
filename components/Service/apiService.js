@@ -15,6 +15,17 @@ export const fetchCarparkAddress = async (carparkID) => {
     }
 };
 
+// returns {morning_evening_motorcar_rate, evening_morning_motorcar_rate};
+export const fetchRate = async (carparkID) => {
+    try {
+        const response = await axios.get(`${URL}/api/carpark/fetch_carpark_rates/${carparkID}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching carpark rates:', error);
+        throw error;
+    }
+};
+
 // gets array x and y,, convert to lat n long format for marker
 export const fetchLocation = async (carparkID) => {
     try {
@@ -81,17 +92,6 @@ export const fetchCapacity = async (carparkID) => {
         return response.data;
     } catch (error) {
         console.error('Error fetching carpark capacity:', error);
-        throw error;
-    }
-};
-
-// returns {morning_evening_motorcar_rate, evening_morning_motorcar_rate};
-export const fetchRate = async (carparkID) => {
-    try {
-        const response = await axios.get(`${URL}/api/carpark/fetch_carpark_rates/${carparkID}`);
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching carpark lots:', error);
         throw error;
     }
 };
