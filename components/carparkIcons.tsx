@@ -26,16 +26,15 @@ export default function CarparkIcons({
     features = null,
     }: CarparkIconsProps) {
     
-    //Carpark type feature is always blue in color
     return (
         <View style={column? styles.column : styles.aligncircle}>
-            <TooltipItem column={column} tooltipEnabled={tooltipEnabled} text="Carpark Type" imgSrc={require("../assets/images/car-park-type.png")} buttonMode={buttonmode} />
-            <PaymentSystem info={features?.carpark_system} column={column} tooltipEnabled={tooltipEnabled} text="Payment System" imgSrc={require("../assets/images/parking-system.png")} buttonMode={buttonmode} />
-            <NightParking info={features?.carpark_night} column={column} tooltipEnabled={tooltipEnabled} text="Night Parking" imgSrc={require("../assets/images/night-parking.png")} buttonMode={buttonmode} />
-            <BasementParking info={features?.carpark_basement} column={column} tooltipEnabled={tooltipEnabled} text="Basement Parking" imgSrc={require("../assets/images/basement.png")} buttonMode={buttonmode} />
-            <Gantry info={features?.carpark_gantry} column={column} tooltipEnabled={tooltipEnabled} text="Gantry Height" imgSrc={require("../assets/images/gantry-height.png")} buttonMode={buttonmode} />
-            <ShortTermParking info={features?.carpark_short} column={column} tooltipEnabled={tooltipEnabled} text="Short Term Parking" imgSrc={require("../assets/images/short-term-parking.png")} buttonMode={buttonmode} />
-            <FreeParking info={features?.carpark_free} column={column} tooltipEnabled={tooltipEnabled} text="Free Parking" imgSrc={require("../assets/images/free-parking.png")} buttonMode={buttonmode} />
+            <Type info={features?.carpark_type} column={column} tooltipEnabled={tooltipEnabled} text="Multi-storey Carpark Availability" imgSrc={require("../assets/images/car-park-type.png")} buttonMode={buttonmode} />
+            <PaymentSystem info={features?.carpark_system} column={column} tooltipEnabled={tooltipEnabled} text="E-Payment System Availability" imgSrc={require("../assets/images/parking-system.png")} buttonMode={buttonmode} />
+            <NightParking info={features?.carpark_night} column={column} tooltipEnabled={tooltipEnabled} text="Night Parking Availability" imgSrc={require("../assets/images/night-parking.png")} buttonMode={buttonmode} />
+            <BasementParking info={features?.carpark_basement} column={column} tooltipEnabled={tooltipEnabled} text="Basement Parking Availability" imgSrc={require("../assets/images/basement.png")} buttonMode={buttonmode} />
+            <Gantry info={features?.carpark_gantry} column={column} tooltipEnabled={tooltipEnabled} text="Gantry Height Requirement" imgSrc={require("../assets/images/gantry-height.png")} buttonMode={buttonmode} />
+            <ShortTermParking info={features?.carpark_short} column={column} tooltipEnabled={tooltipEnabled} text="Short Term Parking Availability" imgSrc={require("../assets/images/short-term-parking.png")} buttonMode={buttonmode} />
+            <FreeParking info={features?.carpark_free} column={column} tooltipEnabled={tooltipEnabled} text="Free Parking Availability" imgSrc={require("../assets/images/free-parking.png")} buttonMode={buttonmode} />
         </View>
     )
 }
@@ -71,6 +70,15 @@ const TooltipItem = ({ tooltipEnabled = true, buttonMode = false, text = 'Invali
     );
 };
 
+const Type = ({info, tooltipEnabled = true, buttonMode = false, text = 'Invalid', imgSrc, column = false}) => {
+    const active = "MULTI-STOREY CAR PARK"; 
+    const shapeStyle = info === active ? styles.active : styles.inactive;
+
+    return (
+        <TooltipItem styleActive={shapeStyle} column={column} tooltipEnabled={tooltipEnabled} text={text} imgSrc={imgSrc} buttonMode={buttonMode}/>
+    );
+};
+
 const PaymentSystem = ({info, tooltipEnabled = true, buttonMode = false, text = 'Invalid', imgSrc, column = false}) => {
     const active = "ELECTRONIC PARKING"; 
     const shapeStyle = info === active ? styles.active : styles.inactive;
@@ -90,7 +98,7 @@ const NightParking = ({info, tooltipEnabled = true, buttonMode = false, text = '
 };
 
 const BasementParking = ({info, tooltipEnabled = true, buttonMode = false, text = 'Invalid', imgSrc, column = false}) => {
-    const inactive = "N"; 
+    const inactive = "NO"; 
     const shapeStyle = info === inactive ? styles.inactive : styles.active;
 
     return (
