@@ -7,8 +7,8 @@ import { getNearbyCarparks } from './Service/dbCarparkService';
 import { register } from './Service/dbUserAccount';
 import CarparkReviews from './CarparkReviews';
 import { Linking } from 'react-native';
-import ReviewScreen from './review_popup';
 import { fetchCarparkAddress, fetchCarparkFeatures, fetchAvailableLots, fetchCapacity, fetchRate} from './Service/apiService';
+import ReviewBoxComponent from './ReviewBox';
 
 export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [availableLots, setAvailableLots] = useState(null);
@@ -22,6 +22,7 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
   const [address, setAddress] = useState(null)
   const [loading, setLoading] = useState(false);
   const [features, setFeatures] = useState<CarparkFeatures | null>(null);
+  const [reviewBox, setReviewBox] = useState(false);
   const [rate, setRate] = useState({
     morning_evening_motorcar_rate: 0,
     evening_morning_motorcar_rate: 0,
@@ -53,7 +54,10 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
     }
   };
 
-
+  const ReviewPopup = () => {
+    return <ReviewBoxComponent/>
+  }
+  
   useEffect(() => {
     if (!carparkData) return;
 
@@ -213,14 +217,21 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                   <CarparkReviews/>
                 </View>
 
-                <Pressable 
+                <TouchableOpacity 
                     style={[styles.selectButton, {alignSelf:'flex-end', marginBottom: 10, marginRight: 10}]} 
-                    onPress={() => {setReviewModalVisible(true); 
-                    setBigModalVisible(false);
-                    }}
+                    onPress={() => setReviewBox(true)}
                 >
                     <Text style={styles.buttonText}>Leave Review</Text>
-                </Pressable>
+                </TouchableOpacity>
+
+                {reviewBox && (
+                  <View style={[styles.container, {marginBottom: 10}]}>
+                    <Pressable onPress={() => setReviewBox(false)}>
+                      <Image source={exitIcon} style={[styles.exit, {alignSelf:'flex-end', marginRight: 10}]}></Image>
+                    </Pressable>
+                    <ReviewBoxComponent carparkID={carparkData} setReviewBox={setReviewBox}/>
+                  </View>
+                )}
 
                 <Text style={styles.rate}>
                   <Text style={{fontWeight: 'bold'}}>Lots available:</Text> {availableLots}{'\n'}
@@ -288,18 +299,6 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
           )}
         </View>
       </Modal>
-
-      {/* Review Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={reviewModalVisible}
-        onRequestClose={() => setReviewModalVisible(false)}
-      >
-        <View style={styles.boxLayout}>
-          <ReviewScreen style={styles.reviewPopup} />
-        </View>
-      </Modal>
     </>
   );
 }
@@ -311,6 +310,9 @@ const CarparkInfo = ({ text = 'Invalid' }) => (
 );
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   buttonText: {
     color: 'white',
     fontSize: 12,
