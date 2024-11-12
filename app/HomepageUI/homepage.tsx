@@ -11,8 +11,17 @@ import { Alert } from 'react-native';
 import { getRoutePolyline, getRouteDetails } from '@/components/Service/locationService';
 import { Text } from 'react-native';
 
+function extractEmailFront(email) {
+  if (!email.includes("@")) {
+    throw new Error("Invalid email format");
+  }
+  return email.split("@")[0];
+}
 export default function Homepage({ route }) {
-  const { username } = route.params || { username: "Jackson Lim" };
+  // The `route` prop is provided by the React Navigation library.
+  // It contains parameters passed to this screen, such as `username` and `email`.
+  const { email } = route.params || { email: "user1@gmail.com" };
+  const username = extractEmailFront(email);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCarpark, setSelectedCarpark] = useState(null);
   const [capacity, setCapacity] = useState(60); // placeholder for actual capacity
@@ -33,12 +42,12 @@ export default function Homepage({ route }) {
   
   // this poly line from start to destination, to create another for start to carpark when select carpark in carparkSUmmary is pressed
   const plotPolyline = async () => {
-    if (startpoint && destination) { // realise even if we clear the field for one of them, alert wont come out as theres still coordinates stored in start/destination from prev search TO FIX IF CAN
+    if (startpoint && destination) {
       try {
         const routeData = await getRouteDetails(startpoint, destination);
         console.log(routeData.data);
         if (routeData) {
-          setRouteDetails(`Start to Destination\nDuration: ${routeData.totalTime} secs\nDistance: ${routeData.totalDistance} m`); //to convert min and km
+          setRouteDetails(`Start to Destination\nDuration: ${routeData.totalTime} secs\nDistance: ${routeData.totalDistance} m`);
         }
         const coordinates = await getRoutePolyline(startpoint, destination);
         setPolylineCoords(coordinates);
@@ -183,6 +192,7 @@ export default function Homepage({ route }) {
         visible={modalVisible}
         carparkData={selectedCarpark}
         onClose={() => setModalVisible(false)}
+        email={email}  
       />
 
       <StatusBar style="auto" />

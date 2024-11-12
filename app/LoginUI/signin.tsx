@@ -17,12 +17,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import validator from "validator";
 import React from "react";
 import axios from "axios";
-function extractEmailFront(email) {
-  if (!email.includes("@")) {
-    throw new Error("Invalid email format");
-  }
-  return email.split("@")[0];
-}
+
 export default function Signin({ navigation }: { navigation: any }) {
   const [email, onChangeEmail] = React.useState("");
   const [password, onChangePass] = React.useState("");
@@ -61,7 +56,6 @@ export default function Signin({ navigation }: { navigation: any }) {
         });
       console.log(value);
       navigation.navigate("HomepageUI/homepage", {
-        username: extractEmailFront(email),
         email: email,
       });
     }
