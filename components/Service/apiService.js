@@ -6,6 +6,11 @@ const URL = Constants.expoConfig?.extra?.SERVER_IP; //use this if you are NOT us
 //const URL = 'http://10.0.2.2:8083';
 //const URL = 'http://192.168.1.143:8083'; //chiam
 
+export const addReview = async (carparkID, email, review) => {
+        const publish = await axios.get(`${URL}/api/carpark/add_review/${carparkID}/${email}/${review}`);
+        console.log("Review successfully added to database.");
+}
+
 export const fetchCarparkAddress = async (carparkID) => {
     try {
         const response = await axios.get(`${URL}/api/carpark/fetch_address/${carparkID}`);
