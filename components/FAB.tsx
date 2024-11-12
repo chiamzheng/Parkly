@@ -37,6 +37,7 @@ const radiusDropdown = [
     label: '5 Km',
   },
 ];
+
 const FloatingActionButton = ({ isExpanded, index, imgsrc,setModalVisible,modalVisible }) => {
     const animatedStyles = useAnimatedStyle(() => {
     const translateY = isExpanded.value ? -OFFSET * index : 0; // Move FAB up when expanded
@@ -57,8 +58,8 @@ const FloatingActionButton = ({ isExpanded, index, imgsrc,setModalVisible,modalV
     );
 };
   
-export default function FAB() {
-  const [radius, setRadius] = React.useState('1000');
+export default function FAB({returnRadius}) {
+  const [radius, setRadius] = React.useState(1000);
   const [time, setTime] = React.useState(new Date());
   const [time1, setTime1] = React.useState(new Date());
   const [timeVis, setTimeVis] = React.useState(false); 
@@ -84,7 +85,8 @@ export default function FAB() {
     setFeatureVisible(!featureVisible)
   };
   const applyRadius=() => {
-    setRadiusVisible(!radiusVisible)
+    setRadiusVisible(!radiusVisible);
+    returnRadius(radius);
   };
   const isExpanded = useSharedValue(false); // State to track if FAB is expanded
   const containerHeight = useSharedValue(60); // Initial height of the FAB container
@@ -182,7 +184,7 @@ export default function FAB() {
           transparent={true}
           visible={radiusVisible}
           onRequestClose={() => {
-            setDurationVisible(!radiusVisible);
+            setRadiusVisible(!radiusVisible);
           }}>
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>

@@ -21,7 +21,7 @@ function extractEmailFront(email) {
 export default function Homepage({ route }) {
   // The `route` prop is provided by the React Navigation library.
   // It contains parameters passed to this screen, such as `username` and `email`.
-  const { email } = route.params || { email: "user1@gmail.com" };
+  const { email } = route.params || { email: "Guest@gmail.com" };
   const username = extractEmailFront(email);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCarpark, setSelectedCarpark] = useState(null);
@@ -32,14 +32,14 @@ export default function Homepage({ route }) {
   const [polylineCoords, setPolylineCoords] = useState([]);
   const [startpoint, setStartPoint] = useState(null);
   const [routeDetails, setRouteDetails] = useState('');
-  
+  const [radius, setRadius] = useState(1000); // default 1km - tweak this for filter
   const getPinColor = (capacity) => {
     if (capacity > 79) return 'red';
     if (capacity > 49) return 'orange';
     return 'green';
   };
 
-  const radius = 1000; // default 1km - tweak this for filter
+   
   
   // this poly line from start to destination, to create another for start to carpark when select carpark in carparkSUmmary is pressed
   const plotPolyline = async () => {
@@ -170,7 +170,7 @@ export default function Homepage({ route }) {
             key={location.FIELD1}
             coordinate={{ latitude: lat, longitude: lon }}
             title={location.car_park_no}
-            onPress={() => handleMarkerPress(location)}
+            onPress={() => handleMarkerPress(location.car_park_no)}
             pinColor={getPinColor(capacity)} // Set pinColor based on capacity
           >
             {/* Optional: Use custom images instead of colors */}
@@ -188,7 +188,7 @@ export default function Homepage({ route }) {
         </Text>
       </View>
 
-      <FAB />
+      <FAB returnRadius={setRadius}/>
 
       <CarparkSummary
         visible={modalVisible}
