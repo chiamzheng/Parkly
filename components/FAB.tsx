@@ -59,7 +59,7 @@ const FloatingActionButton = ({ isExpanded, index, imgsrc,setModalVisible,modalV
     );
 };
   
-export default function FAB({returnRadius}) {
+export default function FAB({returnRadius,returnDuration,returnRate}) {
   const [radius, setRadius] = React.useState(1000);
   const [time, setTime] = React.useState(new Date());
   const [time1, setTime1] = React.useState(new Date());
@@ -82,7 +82,9 @@ export default function FAB({returnRadius}) {
     showTime1();
   };
   const applyDuration=() => {
-    setDurationVisible(!durationVisible)
+    setDurationVisible(!durationVisible);
+    returnDuration([time,time1]);
+    returnRate(dollar+(0.1*cent));
   };
   const applyFeature=() => {
     setFeatureVisible(!featureVisible)
@@ -173,8 +175,8 @@ export default function FAB({returnRadius}) {
                                   dataSource={[0,10, 20, 30, 40, 50, 60, 70, 80, 90]}
                                   selectedIndex={0}
                                   renderItem={(data) => (
-                                      <Text>{data}</Text>
-                                  )}
+                                    <Text>{data === 0 ? "0" : ''}{data}</Text>
+                                )}
                                   onValueChange={(data, selectedIndex) => {
                                       setCent(data)
                                       console.log("Selected Cent:", cent);

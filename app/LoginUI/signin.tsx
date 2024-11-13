@@ -44,22 +44,27 @@ export default function Signin({ navigation }: { navigation: any }) {
   };
   const handleSignin = () => {
     if (!validator.isEmpty(password) && validator.isEmail(email)) {
-      const value = axios
-        .get(
-          `http://192.168.1.143:8083/api/user_account/login/${email}/${password}`
-        )
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
-      console.log(value);
-      navigation.navigate("HomepageUI/homepage", {
-        email: email,
-      });
+        axios
+            .get(`http://192.168.1.143:8083/api/user_account/login/${email}/${password}`)
+            .then((response) => {
+                const value = response.data;
+                console.log("Response Data:", value); // Check if value is actually 1
+
+                if (value === 1) {
+                    navigation.navigate("HomepageUI/homepage", {
+                        email: email,
+                    });
+                } else {
+                    setValidPassword(false);
+                    onChangePass("");
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+            });
     }
-  };
+};
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.background}>
