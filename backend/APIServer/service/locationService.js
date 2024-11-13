@@ -128,8 +128,8 @@ class LocationService {
 
         return {
             routeGeometry: route_geometry,
-            totalDistance: route_summary.total_distance,
-            totalTime: route_summary.total_time
+            totalDistance: (route_summary.total_distance/1000).toFixed(2),
+            totalTime: (route_summary.total_time / 60).toFixed(2)
         };
     }
 

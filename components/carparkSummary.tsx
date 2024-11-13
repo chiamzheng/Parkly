@@ -12,8 +12,7 @@ import { ReviewBoxComponent, DisplayReviews } from './CarparkReview';
 export default function CarparkSummary({ visible, carparkData, onClose, chooseCarpark, email }) {
   const [availableLots, setAvailableLots] = useState(null);
   const [capacity, setCapacity] = useState(0.00);
-  const [nearbyCarparks, setNearbyCarparks] = useState(null); //test
-  const [registerValue, setRegisterValue ] = useState(null); // test
+  const [notifIsOn, setNotifIsOn] = useState(false);
   const [bigModalVisible, setBigModalVisible] = useState(false);
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const exitIcon = require("../assets/images/exit.png");
@@ -84,18 +83,6 @@ export default function CarparkSummary({ visible, carparkData, onClose, chooseCa
       } finally {
         setLoading(false);
       }
-    
-      /*test calling nearby Carparks*/
-      const destination = { latitude: 1.321572, longitude: 103.884496 };
-      const nearbycp = await getNearbyCarparks(destination, 1000);
-      setNearbyCarparks(nearbycp); // data from function is correct and is being fetched properly, need to handle storage of returned data 
-      // i think its not being set properly and you get null instead because it takes time for response to be returned
-
-      /*test register*/ 
-      const regist = await register('jamir.tanpw@gmail.com','123456TESTING*');
-      setRegisterValue(regist);
-      console.log(registerValue) //same issue
-
     };
 
     fetchData();
@@ -124,7 +111,7 @@ export default function CarparkSummary({ visible, carparkData, onClose, chooseCa
                   <Text style={[styles.name]}>{carparkData|| 'Carpark' }</Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={[styles.name, { marginBottom: 0, marginRight: 4 }]}> Capacity: <Text style={{ color: capacity >= 75 ? 'green' : capacity >= 30 ? 'orange' : 'red', }}>{capacity}%</Text> </Text>
+                  <Text style={[styles.name, { marginBottom: 0, marginRight: 4 }]}> Capacity: <Text style={{ color: capacity >= 80 ? 'green' : capacity >= 50 ? 'orange' : 'red', }}>{capacity}%</Text> </Text>
                   <Pressable onPress={onClose}>
                     <Image source={exitIcon} style={styles.exit}/>
                   </Pressable>
