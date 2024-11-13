@@ -59,7 +59,7 @@ const FloatingActionButton = ({ isExpanded, index, imgsrc,setModalVisible,modalV
     );
 };
   
-export default function FAB({returnRadius,returnDuration,returnRate}) {
+export default function FAB({returnRadius,returnDuration,returnRate,returnFeature}) {
   const [radius, setRadius] = React.useState(1000);
   const [time, setTime] = React.useState(new Date());
   const [time1, setTime1] = React.useState(new Date());
@@ -67,6 +67,16 @@ export default function FAB({returnRadius,returnDuration,returnRate}) {
   const [timeVis1, setTimeVis1] = React.useState(false); 
   const [dollar, setDollar] = React.useState(2);
   const [cent, setCent] = React.useState(0);
+  const [selectedFeatures, setSelectedFeatures] = React.useState({
+    carpark_type: false,
+    carpark_system: false,
+    carpark_night: false,
+    carpark_basement: false,
+    carpark_gantry: false,
+    carpark_short: false,
+    carpark_free: false,
+
+});
   const showTime = () => {
     setTimeVis(!timeVis);
   };  
@@ -87,7 +97,8 @@ export default function FAB({returnRadius,returnDuration,returnRate}) {
     returnRate(dollar+(0.1*cent));
   };
   const applyFeature=() => {
-    setFeatureVisible(!featureVisible)
+    setFeatureVisible(!featureVisible);
+    returnFeature(selectedFeatures);
   };
   const applyRadius=() => {
     setRadiusVisible(!radiusVisible);
@@ -212,7 +223,7 @@ export default function FAB({returnRadius,returnDuration,returnRate}) {
                             <Image source={exitIcon} style={styles.exit}/>
                         </Pressable>
                     </View>
-                    <CarparkIcons buttonmode={true}/>
+                    <CarparkIcons buttonmode={true} onStatusChange={setSelectedFeatures}/>
                     <Pressable style={styles.applybutton} onPress={applyFeature}>
                       <Text style={styles.apply}>Apply</Text>
                     </Pressable>
