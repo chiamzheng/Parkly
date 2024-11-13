@@ -158,7 +158,7 @@ const LocationSearchInterface = ({ style, onClickBookmark, username, setDestinat
         <TouchableOpacity onPress={() => navigation.navigate("SettingsUI/settingspage")} style={styles.iconButton}>
           <Icon name="settings-outline" size={24} style={styles.icon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleLogout} style={styles.iconButton}>
+        <TouchableOpacity onPress={() => navigation.navigate('WelcomeUI/welcomepage')} style={styles.iconButton}>
           <Icon name="log-out-outline" size={24} style={styles.icon} />
         </TouchableOpacity>
       </View>

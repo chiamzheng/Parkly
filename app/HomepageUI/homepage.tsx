@@ -126,6 +126,7 @@ export default function Homepage({ route }) {
         
         const coordinates = await getRoutePolyline(startpoint, destination);
         setPolylineCoords(coordinates);
+        setPolylineCoords1([]);
       } catch (error) {
         console.error('Error plotting polyline:', error);
       }
@@ -141,6 +142,7 @@ export default function Homepage({ route }) {
         
         const coordinates = await getRoutePolyline(startpoint, carparkLocation);
         setPolylineCoords(coordinates);
+        setPolylineCoords1([]);
       } catch (error) {
         console.error('Error plotting polyline:', error);
       }
@@ -157,7 +159,13 @@ export default function Homepage({ route }) {
 
   const handleDestinationSelection = async (destination) => {
     setDestination(destination); // just want to have destination marker, settle nearby carparks here ltr
-    destination?setZoomThreshold(0):setZoomThreshold(0.06)
+    if(destination){
+      setZoomThreshold(0);
+    }else{
+      setZoomThreshold(0.06);
+      setNearbyCarparks({});
+    }
+    
     console.log('END:', destination); // check
     try {
 
