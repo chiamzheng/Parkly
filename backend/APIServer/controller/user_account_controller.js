@@ -76,4 +76,4 @@ const verifyEmail_api = async (req, res) =>{
     }
 }
 
-module.exports = { register_api, login_api, change_email_api, change_password_api, update_bookmark_api, verifyEmail_api};
+module.exports = { register_api, login_api, fetch_bookmark_api, change_email_api, change_password_api, update_bookmark_api, verifyEmail_api};

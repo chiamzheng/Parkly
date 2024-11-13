@@ -3,6 +3,11 @@ const UserAccountRead = require("../repository/database_access/read database/use
 const { sendVerificationEmail } = require('../../src/controller/email_service.js');
 const { password_matches, email_exists, strong_password, email_verified } = require("./user_account_manager_tools");
 const URL = config.SERVER_IP;
+
+// async function encrypt_password ( password ) {
+//     const password 
+// }
+
 /**
  * Registers a new user by adding an account to the database if the email is not already taken and the password is strong.
  * 
@@ -220,7 +225,7 @@ async function update_bookmark( user_email, carpark_id ) {
     return 1; 
 }
 async function verify_email(email){
-    UserAccountWrite.verify_account(email);
+    await UserAccountWrite.verify_account(email);
 }
 
-module.exports = { register, login, fetch_bookmark, change_email, change_password, update_bookmark, verify_email};
+module.exports = { register, login, fetch_bookmark, change_email, change_password, update_bookmark, verify_email };
