@@ -58,10 +58,11 @@ export const DisplayReviews = ({carparkID, newReviewAlert, setNewReviewAlert}) =
             {reviews.length > 0 ? (
                 reviews.map((review, index) => {
                     const [email, text] = review.split(/:(.*)/);
+                    const displayName = email.split('@')[0];
 
                     return (
                         <View key={index} style={styles.box}>
-                            <Text style={styles.name}>{email.trim()}</Text>
+                            <Text style={styles.name}>{displayName.trim()}</Text>
                             <Text style={styles.reviewText}>{text.trim()}</Text>
                         </View>
                     );
