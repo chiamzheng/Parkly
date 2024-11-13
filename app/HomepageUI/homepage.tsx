@@ -1,39 +1,229 @@
 import LocationSearchInterface from '@/components/LocationSearchInterface';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Image } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import React, { useState, useMemo } from "react";
+import MapView, { Marker, Polyline } from 'react-native-maps';
+import React, { useState, useEffect } from "react";
 import CarparkSummary from '../../components/carparkSummary';
 import FAB from '../../components/FAB';
-import PolylineComponent from '@/components/Polyline';
 import carparkData from '../../CarparkInformation.json'; 
-import computeLatLon from '../../scripts/computeLatLon';
+import { fetchLocation, fetchNearbyCarparks, fetchCapacity } from '@/components/Service/apiService';
+import { Alert } from 'react-native';
+import { getRoutePolyline, getRouteDetails } from '@/components/Service/locationService';
+import { Text } from 'react-native';
+import computeLatLon from '@/scripts/computeLatLon';
 
+function extractEmailFront(email) {
+  if (!email.includes("@")) {
+    throw new Error("Invalid email format");
+  }
+  return email.split("@")[0];
+}
 export default function Homepage({ route }) {
-  const { username } = route.params || { username: "Jackson Lim" };
+  // The `route` prop is provided by the React Navigation library.
+  // It contains parameters passed to this screen, such as `username` and `email`.
+  const { email } = route.params || { email: "Guest@gmail.com" };
+  const username = extractEmailFront(email);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCarpark, setSelectedCarpark] = useState(null);
-  const [capacity, setCapacity] = useState(60);// placeholder for actual capacity
-  const carparkLocations = [
-    { id: 1, title: 'JM23',latitude: 1.3521, longitude: 103.8100, rate:1.22,capacity:80,type:'ELECTRONIC PARKING' },
-    { id: 2, title: 'Y24',latitude: 1.3531, longitude: 103.8200, rate:1.23,capacity:50, type:'COUPON PARKING'},
-    { id: 3, title: 'SK71',latitude: 1.3541, longitude: 103.8300, rate:1.24,capacity:20,type:'ELECTRONIC PARKING' },
-  ];
-  //use below if want to use marker icons seen in figma 
-  /*
-  const getMarkerImage = (capacity) => {
-    return capacity > 79
-      ? require("../../assets/images/redcapacity.png")
-      : capacity > 49
-      ? require("../../assets/images/orangecapacity.png")
-      : require("../../assets/images/greencapacity.png");
-  };
-  */
+  const [chosenCarpark, setChosenCarpark] = useState(null);
+  const [capacity, setCapacity] = useState(60); // placeholder for actual capacity
+  const [showMarkers, setShowMarkers] = useState(false); // track if markers should be visible
+  const [destination, setDestination] = useState(null);
+  const [nearbyCarparks, setNearbyCarparks] = useState({});
+  const [polylineCoords, setPolylineCoords] = useState([]);
+  const [polylineCoords1, setPolylineCoords1] = useState([]);
+  const [startpoint, setStartPoint] = useState(null);
+  const [routeDetails, setRouteDetails] = useState('');
+  const [selectedDuration, setSelectedDuration] = useState([]);
+  const [selectedRate, setSelectedRate] = useState(2);
+  const [zoomThreshold, setZoomThreshold] = useState(0.06);
+  const [radius, setRadius] = useState(1000); // default 1km - tweak this for filter
   const getPinColor = (capacity) => {
-    if (capacity > 79) return 'red';
+    if (capacity > 79) return 'green';
     if (capacity > 49) return 'orange';
-    return 'green';
+    return 'red';
   };
+  const getCarparkLocation = (chosenCarpark) => {
+    // Find the carpark in carparkData that matches the chosenCarpark car_park_no
+    const carpark = carparkData.find((data) => data.car_park_no === chosenCarpark);
+    
+    // If a match is found, return the latitude and longitude
+    if (carpark) {  
+      const { lat, lon } = computeLatLon(carpark.y_coord, carpark.x_coord);
+      return { latitude: lat, longitude: lon };
+    } else {
+      return null; // If no match is found, return null
+    }
+  };
+  /*
+  useEffect(() => {
+    const fetchCarparksByRadius = async () => {
+      if (destination) {
+        try {
+          const carparkIds = await fetchNearbyCarparks(destination, radius);
+          
+          if (carparkIds.length === 0) {
+            Alert.alert("No Carparks Nearby", "No carparks found within the selected radius.");
+            setNearbyCarparks({}); // Clear previous markers when no carparks are found
+          } else {
+            const carparkDictionary = {};
+            for (const carparkId of carparkIds) {
+              const carparkLocation = await fetchLocation(carparkId);
+              if (carparkLocation) {
+                carparkDictionary[carparkId] = { latitude: carparkLocation.latitude, longitude: carparkLocation.longitude };
+              }
+            }
+            setNearbyCarparks(carparkDictionary);
+            
+          }
+        } catch (error) {
+          console.error("Error fetching nearby carparks:", error);
+        }
+      }
+    };
+  
+    fetchCarparksByRadius();
+  }, [radius]); */ //double setNearbyCarpark
+
+  useEffect(() => {
+    // Check if chosenCarpark has been updated and is not null
+    if (chosenCarpark) {
+      Alert.alert('Carpark Selected', `You have selected carpark: ${chosenCarpark}`);
+      console.log("Chosen Carpark:", chosenCarpark);
+      setNearbyCarparks({});
+    }
+  }, [chosenCarpark]);  // Dependency array with chosenCarpark
+
+  // this poly line from start to destination, to create another for start to carpark when select carpark in carparkSUmmary is pressed
+  const plotPolyline = async () => {
+    const carparkLocation = getCarparkLocation(chosenCarpark)
+    if (startpoint && destination && chosenCarpark) {
+      try {
+        const routeData = await getRouteDetails(startpoint,carparkLocation );
+        const routeData1 = await getRouteDetails(carparkLocation, destination);
+        console.log(routeData.data);
+        console.log(routeData1.data);
+        if (routeData&&routeData1) {
+          setRouteDetails(`Start to Carpark\nDuration: ${routeData.totalTime} mins\nDistance: ${routeData.totalDistance} km\nCarpark to Destination\nDuration: ${routeData1.totalTime} mins\nDistance: ${routeData1.totalDistance} km`);
+          
+        }
+        
+        const coordinates = await getRoutePolyline(startpoint, carparkLocation);
+        const coordinates1 = await getRoutePolyline(carparkLocation, destination);
+        setPolylineCoords(coordinates);
+        setPolylineCoords1(coordinates1);
+      } catch (error) {
+        console.error('Error plotting polyline:', error);
+      }
+    }
+
+    else if (startpoint && destination) {
+      try {
+        const routeData = await getRouteDetails(startpoint, destination);
+        console.log(routeData.data);
+        if (routeData) {
+          setRouteDetails(`Start to Destination\nDuration: ${routeData.totalTime} mins\nDistance: ${routeData.totalDistance} km`);
+        }
+        
+        const coordinates = await getRoutePolyline(startpoint, destination);
+        setPolylineCoords(coordinates);
+        setPolylineCoords1([]);
+      } catch (error) {
+        console.error('Error plotting polyline:', error);
+      }
+    }
+
+    else if (startpoint && chosenCarpark) {
+      try {
+        const routeData = await getRouteDetails(startpoint, carparkLocation);
+        console.log(routeData.data);
+        if (routeData) {
+          setRouteDetails(`Start to Carpark\nDuration: ${routeData.totalTime} mins\nDistance: ${routeData.totalDistance} km`);
+        }
+        
+        const coordinates = await getRoutePolyline(startpoint, carparkLocation);
+        setPolylineCoords(coordinates);
+        setPolylineCoords1([]);
+      } catch (error) {
+        console.error('Error plotting polyline:', error);
+      }
+    }
+    else{
+      Alert.alert("Missing Information", "Please ensure both start and destination are filled.");
+    }
+  };
+
+  const handleStartPointSelection = async (startpoint) => {
+    setStartPoint(startpoint); // just want to have destination marker, settle nearby carparks here ltr
+    console.log('START:', startpoint);
+  };
+
+  const handleDestinationSelection = async (destination) => {
+    setDestination(destination); // just want to have destination marker, settle nearby carparks here ltr
+    if(destination){
+      setZoomThreshold(0);
+    }else{
+      setZoomThreshold(0.06);
+      setNearbyCarparks({});
+    }
+    
+    console.log('END:', destination); // check
+    
+    try {
+        // Fetch nearby carparks based on the destination and radius
+        const carparkIds = await fetchNearbyCarparks(destination, radius);
+
+        //console.log(carparkIds);
+
+        // Check if carparkIds is an empty array
+        if (carparkIds.length === 0) {
+            Alert.alert('No carparks nearby.');
+            return; // Exit early if no nearby carparks are found
+        }
+
+        // Initialize the dictionary for storing carpark data
+        const carparkDictionary = {};
+
+        // Loop through the carparkIds and fetch details for each
+        for (let i = 0; i < carparkIds.length; i++) {
+            const carparkId = carparkIds[i];
+
+            console.log(carparkId);
+
+            // Fetch the carpark's location (latitude and longitude) using the carpark ID
+            const carparkLocation = await fetchLocation(carparkId);
+            if (!carparkLocation) {
+                //console.warn(`No location data for carparkId: ${carparkId}`);
+                continue; // Skip this carpark if location data is missing
+            }
+
+            // Fetch the carpark capacity
+            const carparkCapacity = await fetchCapacity(carparkId);
+            if (!carparkCapacity) { // some of the capacity cannot be found in API 
+                //console.warn(`No capacity data for carparkId: ${carparkId}`);
+                continue; // Skip this carpark if capacity data is missing
+            }
+            console.log(carparkCapacity);
+
+            // Store the carpark location and capacity in the dictionary
+            carparkDictionary[carparkId] = {
+              latitude: carparkLocation.latitude,
+              longitude: carparkLocation.longitude,
+              capacity: carparkCapacity.capacity,
+          };
+        }
+
+        console.log(carparkDictionary);
+
+        // Update the state with the nearby carparks
+        setNearbyCarparks(carparkDictionary);
+
+    } catch (error) {
+        //console.error("Error fetching nearby carparks:", error);
+        console.log(`Capacity not available for carpark`);
+    }
+  };
+
   const handleMarkerPress = (carpark) => {
     setSelectedCarpark(carpark); // Pass carpark data to CarparkSummary
     setModalVisible(true); // Open modal
@@ -42,11 +232,18 @@ export default function Homepage({ route }) {
   const handleBookmarkPress = (markerCode) => {
     const idx = carparkData.findIndex((carparkData) => carparkData.car_park_no === markerCode);
     handleMarkerPress(carparkData[idx]);
-  }
+  };
+
+  // Update marker visibility based on zoom level
+  const handleRegionChangeComplete = (region) => {
+    setShowMarkers(region.latitudeDelta < zoomThreshold);// Set this based on when you want markers to show(higher number means can see from further away)
+  };
+
+  
 
   return (
     <View style={styles.container}>
-      <LocationSearchInterface style={styles.search} onClickBookmark={handleBookmarkPress} username={username} />
+      <LocationSearchInterface style={styles.search} onClickBookmark={handleBookmarkPress} username={username} setDestination={handleDestinationSelection} setStartPoint={handleStartPointSelection} onPressGo={plotPolyline}/>
 
       <MapView
         style={styles.map}
@@ -56,50 +253,90 @@ export default function Homepage({ route }) {
           latitudeDelta: 0.1,
           longitudeDelta: 0.1,
         }}
+        onRegionChangeComplete={handleRegionChangeComplete} // track zoom level
       >
-        {carparkData.map((location) => {
-            //const imageSource = useMemo(() => getMarkerImage(location.capacity), [location.capacity]);
-            const { lat, lon } = computeLatLon(location.y_coord, location.x_coord)
-          return(
+        {polylineCoords.length > 0 && (
+          <Polyline coordinates={polylineCoords} strokeWidth={3} strokeColor="blue" />
+        )}
+        {polylineCoords1.length > 0 && (
+          <Polyline coordinates={polylineCoords1} strokeWidth={3} strokeColor="yellow" />
+        )}
+
+
+        {/* Start point marker */}
+        {startpoint && (
           <Marker
+            coordinate={startpoint}
+            title="Start Point"
+            pinColor="blue"  // Blue marker for the start
+          />
+        )}
+
+        {/* Destination Marker */}
+        {destination && (
+          <Marker
+            coordinate={destination}
+            title="Destination"
+            pinColor="#7E5FCF"  // Blue marker for the destination
+          />
+        )}
+
+         {/* Chosen Carpark Marker */}
+         {chosenCarpark && (
+          <Marker
+            coordinate={getCarparkLocation(chosenCarpark)}
+            title="Selected Carpark"
+            pinColor="yellow"  // yellow marker for the carpark destination
+            onPress={() => handleMarkerPress(chosenCarpark)}
+          />
+        )}
+
+        {/* Nearby Carparks Markers */}
+        {Object.entries(nearbyCarparks).map(([carparkKey, carpark], index) => (
+          <Marker
+            key={index}
+            coordinate={{ latitude: carpark.latitude, longitude: carpark.longitude }}
+            title={`Carpark ${carparkKey}`}  // key of dict is title
+            onPress={() => handleMarkerPress(carparkKey)}
+            pinColor={getPinColor(carpark.capacity || 0)}
+          />
+        ))}
+        
+        
+        
+        {showMarkers && carparkData.map((location) => {
+          const { lat, lon } = computeLatLon(location.y_coord, location.x_coord);
+          return (
+            <Marker
             key={location.FIELD1}
-            coordinate={{ latitude:lat , longitude:lon }}
+            coordinate={{ latitude: lat, longitude: lon }}
             title={location.car_park_no}
-            onPress={() => handleMarkerPress(location)}
-            pinColor={getPinColor(capacity)}  // Set pinColor based on capacity
+            onPress={() => handleMarkerPress(location.car_park_no)}
+            pinColor={getPinColor(capacity)} // Set pinColor based on capacity
           >
-            {/*use below if want to use marker icons seen in figma*/}
-            {/*
-            <Image
-              style={styles.marker}
-              source={
-                location.capacity > 80
-                  ? require("../../assets/images/redcapacity.png")
-                  : location.capacity > 49
-                  ? require("../../assets/images/orangecapacity.png")
-                  : require("../../assets/images/greencapacity.png")
-              }
-            />
-        */}
+            {/* Optional: Use custom images instead of colors */}
+            {/* <Image style={styles.marker} source={require('...path to marker image...')} /> */}
           </Marker>
-          );
-        })}
-        {/*testing polyline*/}
-        {/*to get lat and long of starting position from GPS/manual input TYPE: number*/}
-        {/*to convert the x and y coordinates of carparks to lat and long TYPE: number*/}
-        <PolylineComponent
-          start={{ latitude: 1.304833, longitude: 103.831833 }} 
-          end={{ latitude: 1.36310057764065, longitude: 103.962012302637 }}
-        />
+        );
+      })}
+
       </MapView>
 
-      <FAB />
+      {/* Textbox for displaying route details */}
+      <View style={styles.routeDetailsContainer}>
+        <Text style={styles.routeDetailsText}>
+          {routeDetails || 'Select a start point and destination\nto see the route details.'}
+        </Text>
+      </View>
 
-      {/* Pass modalVisible, selectedCarpark, and setModalVisible as props to CarparkSummary */}
+      <FAB returnRadius={setRadius} returnDuration={setSelectedDuration} returnRate={setSelectedRate}/>
+
       <CarparkSummary
         visible={modalVisible}
         carparkData={selectedCarpark}
         onClose={() => setModalVisible(false)}
+        email={email}  
+        chooseCarpark={setChosenCarpark}
       />
 
       <StatusBar style="auto" />
@@ -125,7 +362,21 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   marker:{
-    width:41,
-    height:50,
+    width: 41,
+    height: 50,
+  },
+  routeDetailsContainer: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    backgroundColor: '#7E5FCF',
+    padding: 10,
+    borderRadius: 10,
+    zIndex: 10,
+  },
+  routeDetailsText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

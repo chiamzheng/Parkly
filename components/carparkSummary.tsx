@@ -5,22 +5,26 @@ import NotificationScreen from './Notifications'
 import { getAvailableCarparkLot, getCarparkCapacity } from './Service/carparkService';
 import { getNearbyCarparks } from './Service/dbCarparkService';
 import { register } from './Service/dbUserAccount';
-import CarparkReviews from './CarparkReviews';
 import { Linking } from 'react-native';
-import ReviewScreen from '../app/review_popup';
-import { fetchCarparkAddress, fetchCarparkFeatures, fetchAvailableLots, fetchCapacity} from './Service/apiService';
+import { fetchCarparkAddress, fetchCarparkFeatures, fetchAvailableLots, fetchCapacity, fetchRate } from './Service/apiService';
+import { ReviewBoxComponent, DisplayReviews } from './CarparkReview';
 
-export default function CarparkSummary({ visible, carparkData, onClose }) {
+export default function CarparkSummary({ visible, carparkData, onClose, chooseCarpark, email }) {
   const [availableLots, setAvailableLots] = useState(null);
-  const [capacity, setCapacity] = useState(null);
+  const [capacity, setCapacity] = useState(0.00);
   const [notifIsOn, setNotifIsOn] = useState(false);
-  const [nearbyCarparks, setNearbyCarparks] = useState(null); //test
-  const [registerValue, setRegisterValue ] = useState(null); // test
   const [bigModalVisible, setBigModalVisible] = useState(false);
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const exitIcon = require("../assets/images/exit.png");
-  const [address,setAddress] = useState(null)
-  const [loading, setLoading] = useState(true); // Loading state
+  const [address, setAddress] = useState(null)
+  const [loading, setLoading] = useState(false);
+  const [features, setFeatures] = useState<CarparkFeatures | null>(null);
+  const [reviewBox, setReviewBox] = useState(false);
+  const [newReviewAlert, setNewReviewAlert] = useState(false); // Observer Pattern
+  const [rate, setRate] = useState({
+    morning_evening_motorcar_rate: 0,
+    evening_morning_motorcar_rate: 0,
+  });
 
   interface CarparkFeatures {
     carpark_type: any;
@@ -31,64 +35,68 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
     carpark_short: any;
     carpark_free: any;
   }
-  const [features, setFeatures] = useState<CarparkFeatures | null>(null);
+
   
   //status for notification and bookmark icons
   const [bookmarkIsOn, setBookmarkIsOn] = useState(false);
 
   const handlePress = async () => {
+    setLoading(true);
     try {
-      const crpk_address = await fetchCarparkAddress(carparkData?.car_park_no);
+      const crpk_address = await fetchCarparkAddress(carparkData);
       setAddress(crpk_address);
     } catch (error) {
-      console.error('Failed to fetch address', error);
-    }
-
-    try {
-      const crpk_features = await fetchCarparkFeatures(carparkData?.car_park_no);
-      setFeatures(crpk_features);
-    } catch (error) {
-      console.error('Failed to fetch features', error);
+      console.error('Failed to fetch carpark address', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-
   useEffect(() => {
     if (!carparkData) return;
-  
+
     const fetchData = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        const lots = await fetchAvailableLots(carparkData?.car_park_no);
-        setAvailableLots(lots?.availableLots || 0);
-        const cap = await fetchCapacity(carparkData?.car_park_no);
-        setCapacity(cap?.capacity || 0);
-      } catch (error) {
-        console.error('Failed to fetch lots', error);
+        try {
+          const lots = await fetchAvailableLots(carparkData);
+          setAvailableLots(lots?.availableLots || 0);
+          const cap = await fetchCapacity(carparkData);
+          setCapacity(Math.round(cap?.capacity || 0));
+        } catch (error) {
+          console.error('Failed to fetch carpark lots', error);
+        }
+
+        try {
+          const crpk_features = await fetchCarparkFeatures(carparkData);
+          setFeatures(crpk_features);
+        } catch (error) {
+          console.error('Failed to fetch carpark features', error);
+        }
+
+        try {
+          const crpk_rates = await fetchRate(carparkData);
+          setRate(crpk_rates);
+        } catch (error) {
+          console.error('Failed to fetch carpark rates', error);
+        }
+
       } finally {
         setLoading(false);
       }
-
-      /*test calling nearby Carparks*/
-      const destination = { latitude: 1.321572, longitude: 103.884496 };
-      const nearbycp = await getNearbyCarparks(destination, 1000);
-      setNearbyCarparks(nearbycp); // data from function is correct and is being fetched properly, need to handle storage of returned data 
-      // i think its not being set properly and you get null instead because it takes time for response to be returned
-
-      /*test register*/ 
-      const regist = await register('jamir.tanpw@gmail.com','123456TESTING*');
-      setRegisterValue(regist);
-      console.log(registerValue) //same issue
-
     };
 
     fetchData();
-}, [carparkData]);
+  }, [carparkData]);
 
 
   return (
     <>
-      {/* Main Carpark Summary Modal */}
+    {loading ? (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#645689"/>
+      </View>
+    ) : (
       <Modal
         animationType="slide"
         transparent={true}
@@ -96,19 +104,15 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
         onRequestClose={onClose}
       >
         <View style={styles.boxLayout}>
-          {loading ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#645689" />
-            </View>
-          ) : (
+      
             <View style={styles.box}>
               <View style={[styles.nameContainer, { marginTop: 5 }]}> 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image style={{ width: 30, height: 30, marginRight: 5}} source={require("../assets/images/location_icon.png")}/>
-                  <Text style={[styles.name]}>{carparkData?.car_park_no || 'Carpark' }</Text>
+                  <Text style={[styles.name]}>{carparkData|| 'Carpark' }</Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={[styles.name, { marginBottom: 0, marginRight: 4 }]}> Capacity: <Text style={{ color: capacity >= 75 ? 'green' : capacity >= '50' ? 'orange' : 'red', }}>{capacity} %</Text> </Text>
+                  <Text style={[styles.name, { marginBottom: 0, marginRight: 4 }]}> Capacity: <Text style={{ color: capacity >= 80 ? 'green' : capacity >= 50 ? 'orange' : 'red', }}>{capacity}%</Text> </Text>
                   <Pressable onPress={onClose}>
                     <Image source={exitIcon} style={styles.exit}/>
                   </Pressable>
@@ -116,11 +120,21 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
               </View>
               
               <Text style={styles.lot}>Lots Available: {availableLots}</Text>
-              <Text style={styles.rate}>Rate: ${carparkData?.morningtoevening_0700to1700_motorcars_rate||0}/hour</Text>
-              <CarparkIcons />
+              <Text style={styles.rate}>
+                Rate: ${rate?.morning_evening_motorcar_rate === rate?.evening_morning_motorcar_rate
+                  ? `${rate?.morning_evening_motorcar_rate} / hour`
+                  : rate?.morning_evening_motorcar_rate < rate?.evening_morning_motorcar_rate
+                  ? `${rate?.morning_evening_motorcar_rate} to $${rate?.evening_morning_motorcar_rate} / hour` 
+                  : `${rate?.evening_morning_motorcar_rate} to $${rate?.morning_evening_motorcar_rate} / hour`} 
+              </Text>
+              <CarparkIcons features={features}/>
 
               <View style={[styles.nameContainer, { marginTop: 3 }]}>
-                <Pressable style={styles.selectButton}>
+                <Pressable style={styles.selectButton} onPress={() => {
+                    chooseCarpark(carparkData);
+                    onClose();  // Close main modal
+                    
+                  }}>
                   <Text style={styles.buttonText}>Select carpark</Text>
                 </Pressable>
                 <Pressable
@@ -135,9 +149,9 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
                 </Pressable>
               </View>
             </View>
-          )}
         </View>
       </Modal>
+    )}
 
       {/* Big Modal for More Details */}
       <Modal
@@ -150,122 +164,138 @@ export default function CarparkSummary({ visible, carparkData, onClose }) {
         }}
       >
         <View style={styles.boxLayout}>
-          <View style={styles.bigbox}>
-            <ScrollView>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15, marginTop: 15 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Image style={[styles.exit, { width: 30, height: 30 }]} source={require("../assets/images/location_icon.png")}/>
-                  <Text style={styles.name}>{carparkData?.car_park_no || 'Carpark'}</Text>
-                </View>
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#645689"/>
+            </View>
+          ) : (
+            <View style={styles.bigbox}>
+              <ScrollView>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15, marginTop: 15 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Image style={[styles.exit, { width: 30, height: 30 }]} source={require("../assets/images/location_icon.png")}/>
+                    <Text style={styles.name}>{carparkData || 'Carpark'}</Text>
+                  </View>
 
-                      
-                      <View style={{flexDirection:'row', marginRight: 10}}>
-                        <NotificationScreen carparkID={carparkData?.car_park_no}/>
-                      
-                        <TouchableOpacity onPress={() => setBookmarkIsOn(!bookmarkIsOn)}>
-                          <Image
-                            source={
-                              bookmarkIsOn
-                                ? require('../assets/images/bookmark_on.png') 
-                                : require('../assets/images/bookmark_off.png') 
-                            }
-                            style={{ width: 30, height: 30, marginRight: 10}}
-                          />
-                        </TouchableOpacity>
-                      
-                        <Pressable onPress={() => {setBigModalVisible(!bigModalVisible) }}>
-                          <Image source={require("../assets/images/return.png")} style={[styles.exit, {width: 30,height: 30}]}/>
-                        </Pressable>
+                        
+                        <View style={{flexDirection:'row', marginRight: 10}}>
+                          <NotificationScreen carparkID={carparkData}/>
+                        
+                          <TouchableOpacity onPress={() => setBookmarkIsOn(!bookmarkIsOn)}>
+                            <Image
+                              source={
+                                bookmarkIsOn
+                                  ? require('../assets/images/bookmark_on.png') 
+                                  : require('../assets/images/bookmark_off.png') 
+                              }
+                              style={{ width: 30, height: 30, marginRight: 10}}
+                            />
+                          </TouchableOpacity>
+                        
+                          <Pressable onPress={() => {setBigModalVisible(!bigModalVisible) }}>
+                            <Image source={require("../assets/images/return.png")} style={[styles.exit, {width: 30,height: 30}]}/>
+                          </Pressable>
+                        </View>
                       </View>
-                    </View>
 
-              <View style={styles.reviewBox}>
-                <Text style={{ fontSize: 15, marginTop: 3, marginBottom: 7 }}>Reviews:</Text>
-                <CarparkReviews/>
-              </View>
 
-              <Pressable 
-                  style={[styles.selectButton, {alignSelf:'flex-end', marginBottom: 10, marginRight: 10}]} 
-                  onPress={() => {setReviewModalVisible(true); 
-                  setBigModalVisible(false);
-                  }}
-              >
-                  <Text style={styles.buttonText}>Leave Review</Text>
-              </Pressable>
 
-              <Text style={styles.rate}>
-                Address: {address}{"\n"}
-                Lots available: {availableLots}{'\n'}
-                Parking fees: {'\n'}
-              </Text>
-
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <CarparkIcons column={true} tooltipEnabled={false} />
-                <View style={{ marginLeft: 10 }}>
-                <CarparkInfo text={`Carpark Type: ${features?.carpark_type}`} />
-                  <CarparkInfo text={`Payment System: ${features?.carpark_system}`} />
-                  <CarparkInfo text={`Night Parking: ${features?.carpark_night}`} />
-                  <CarparkInfo text={`Basement Parking: ${features?.carpark_basement}`} />
-                  <CarparkInfo text={`Gantry Height: ${features?.carpark_gantry} METRES`} />
-                  <CarparkInfo text={`Short Term Parking: ${features?.carpark_short}`} />
-                  <CarparkInfo text={`Free Parking: ${features?.carpark_free}`} />
+                <View style={styles.reviewBox}>
+                  <Text style={{ fontSize: 15, marginTop: 3, marginBottom: 7 }}>Reviews:</Text>
+                  <DisplayReviews 
+                    carparkID={carparkData} 
+                    newReviewAlert={newReviewAlert}
+                    setNewReviewAlert={setNewReviewAlert}
+                    />
                 </View>
-              </View>
 
-              <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 30, marginBottom: 10 }}>
-                Guide to my destination:
-              </Text>
+                <TouchableOpacity 
+                    style={[styles.selectButton, {alignSelf:'flex-end', marginBottom: 15, marginRight: 10}]} 
+                    onPress={() => setReviewBox(true)}
+                >
+                    <Text style={styles.buttonText}>Leave Review</Text>
+                </TouchableOpacity>
 
-              <View style={[styles.nameContainer, { marginRight: 10 }]}>
-              <Pressable 
-                style={[styles.selectButton, { flexDirection: 'row', borderRadius: 15, width: 60 }]}
-                onPress={() => {
-                  Linking.openURL('grab://')
-                    .catch(() => {
-                      // Open the Grab website if the app isn't available
-                      Linking.openURL('https://play.google.com/store/apps/details?id=com.grabtaxi.passenger');
-                    });
-                }}>
-                <Image style={[styles.exit, { marginRight: 2, tintColor: 'white', width: 20, height: 20 }]} source={require("../assets/images/taxi.png")}/>
-                <Text style={styles.buttonText}>Taxi</Text>
-              </Pressable>
-              <Pressable 
-                style={[styles.selectButton, { padding: 13, flexDirection: 'row', borderRadius: 15, width: 150, justifyContent: "space-between" }]}
-                onPress={() => {
-                  Linking.openURL('citymapper://')
-                    .catch(() => {
-                      Linking.openURL('https://play.google.com/store/apps/details?id=com.citymapper.app.release');
-                    });
-                }}>
-                <Image style={[styles.exit, { tintColor: 'white', width: 20, height: 20 }]} source={require("../assets/images/public-transport.png")}/>
-                <Text style={styles.buttonText}>Public Transport</Text>
-              </Pressable>
-              <Pressable 
-                style={[styles.selectButton, { flexDirection: 'row', borderRadius: 15, width: 60 }]}
-                onPress={() => {
-                  Linking.openURL('citymapper://')
-                    .catch(() => {
-                      Linking.openURL('https://play.google.com/store/apps/details?id=com.citymapper.app.release');
-                    });
+                {reviewBox && (
+                  <View style={[styles.container, {marginBottom: 10}]}>
+                    <Pressable onPress={() => setReviewBox(false)}>
+                      <Image source={exitIcon} style={[styles.exit, {alignSelf:'flex-end', marginRight: 10}]}></Image>
+                    </Pressable>
+                    <ReviewBoxComponent 
+                      carparkID={carparkData} 
+                      setReviewBox={setReviewBox}  
+                      email={email} 
+                      setNewReviewAlert={setNewReviewAlert}
+                    />
+                  </View>
+                )}
+
+
+
+                <Text style={styles.rate}>
+                  <Text style={{fontWeight: 'bold'}}>Lots available:</Text> {availableLots}{'\n'}
+                  <Text style={{fontWeight: 'bold'}}>Address:</Text>{"\n"}{address}{"\n"}
+                  <Text style={{fontWeight: 'bold'}}>Rates:</Text>{'\n'}
+                  ${rate.morning_evening_motorcar_rate} / hour from 7am to 5pm {'\n'}
+                  ${rate.evening_morning_motorcar_rate} / hour from 5pm to 7am
+                </Text>
+
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
+                  <CarparkIcons column={true} tooltipEnabled={false} features={features} />
+                  <View style={{ marginLeft: 10 }}>
+                  <CarparkInfo text={`Carpark Type: ${features?.carpark_type}`} />
+                    <CarparkInfo text={`Payment System: ${features?.carpark_system}`} />
+                    <CarparkInfo text={`Night Parking: ${features?.carpark_night}`} />
+                    <CarparkInfo text={`Basement Parking: ${features?.carpark_basement}`} />
+                    <CarparkInfo text={`Gantry Height: ${features?.carpark_gantry} METRES`} />
+                    <CarparkInfo text={`Short Term Parking: ${features?.carpark_short}`} />
+                    <CarparkInfo text={`Free Parking: ${features?.carpark_free}`} />
+                  </View>
+                </View>
+
+                <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 10, marginBottom: 10 }}>
+                  Guide to my destination:
+                </Text>
+
+                <View style={[styles.nameContainer, { marginRight: 10 }]}>
+                <Pressable 
+                  style={[styles.selectButton, { flexDirection: 'row', borderRadius: 15, width: 60 }]}
+                  onPress={() => {
+                    Linking.openURL('grab://')
+                      .catch(() => {
+                        // Open the Grab website if the app isn't available
+                        Linking.openURL('https://play.google.com/store/apps/details?id=com.grabtaxi.passenger');
+                      });
                   }}>
-                  <Image style={[styles.exit, { tintColor: 'white', width: 20, height: 20 }]} source={require("../assets/images/walk.png")}/>
-                  <Text style={styles.buttonText}>Walk</Text>
+                  <Image style={[styles.exit, { marginRight: 2, tintColor: 'white', width: 20, height: 20 }]} source={require("../assets/images/taxi.png")}/>
+                  <Text style={styles.buttonText}>Taxi</Text>
                 </Pressable>
-              </View>
-            </ScrollView>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Review Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={reviewModalVisible}
-        onRequestClose={() => setReviewModalVisible(false)}
-      >
-        <View style={styles.boxLayout}>
-          <ReviewScreen style={styles.reviewPopup} />
+                <Pressable 
+                  style={[styles.selectButton, { padding: 13, flexDirection: 'row', borderRadius: 15, width: 150, justifyContent: "space-between" }]}
+                  onPress={() => {
+                    Linking.openURL('citymapper://')
+                      .catch(() => {
+                        Linking.openURL('https://play.google.com/store/apps/details?id=com.citymapper.app.release');
+                      });
+                  }}>
+                  <Image style={[styles.exit, { tintColor: 'white', width: 20, height: 20 }]} source={require("../assets/images/public-transport.png")}/>
+                  <Text style={styles.buttonText}>Public Transport </Text>
+                </Pressable>
+                <Pressable 
+                  style={[styles.selectButton, { flexDirection: 'row', borderRadius: 15, width: 60 }]}
+                  onPress={() => {
+                    Linking.openURL('citymapper://')
+                      .catch(() => {
+                        Linking.openURL('https://play.google.com/store/apps/details?id=com.citymapper.app.release');
+                      });
+                    }}>
+                    <Image style={[styles.exit, { tintColor: 'white', width: 20, height: 20 }]} source={require("../assets/images/walk.png")}/>
+                    <Text style={styles.buttonText}>Walk</Text>
+                  </Pressable>
+                </View>
+              </ScrollView>
+            </View>
+          )}
         </View>
       </Modal>
     </>
@@ -279,6 +309,9 @@ const CarparkInfo = ({ text = 'Invalid' }) => (
 );
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   buttonText: {
     color: 'white',
     fontSize: 12,
@@ -375,10 +408,10 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   loadingContainer: {
+    position: 'absolute',
     backgroundColor: 'white', 
     padding: 20, 
     borderRadius: 10,
-    marginBottom: 100,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -180,4 +180,6 @@ async function read_reviews ( carpark_id ) {
     return reviews;
 }
 
+
+
 module.exports = { read_address, read_carpark_type, read_carpark_id, read_location, read_parking_system_type, read_short_term_parking, read_parking_available_time, read_free_parking, read_carpark_rate, read_reviews, read_night_parking, read_gantry_height, read_carpark_basement };

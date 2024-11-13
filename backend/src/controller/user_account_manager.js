@@ -1,7 +1,8 @@
 const UserAccountWrite = require("../repository/database_access/write database/user_account_write");
 const UserAccountRead = require("../repository/database_access/read database/user_account_read");
-const { password_matches, email_exists, strong_password } = require("./user_account_manager_tools");
-
+const { sendVerificationEmail } = require('../../src/controller/email_service.js');
+const { password_matches, email_exists, strong_password, email_verified } = require("./user_account_manager_tools");
+const URL = config.SERVER_IP;
 /**
  * Registers a new user by adding an account to the database if the email is not already taken and the password is strong.
  * 
@@ -30,9 +31,12 @@ async function register ( input_email, input_password ) {
         console.log("Password too weak. User account not added");
         return 0;
     }
-
+    
     // password is strong enough
     // register account to database
+    const verificationLink = `${URL}/verify?email=${input_email}`;
+    sendVerificationEmail(input_email, verificationLink);
+    console.log("Sent verification email.");
     await UserAccountWrite.add_user_account(input_email, input_password);
     console.log("Successfully Registered!")
     return 1;
@@ -54,13 +58,18 @@ async function login ( input_email, input_password ){
     // if email does not exist
 
     const email_exist_value = await email_exists(input_email);
-
+    // add email verified check
+    
     if (email_exist_value == 0) {
 
         console.log("Email has not been registered!");
         return -1;
     }
-
+    const email_verified_value = await email_verified(input_email);
+    if (email_verified_value == 0){
+        console.log("Email not verified.");
+        return 0;
+    }
     // email exists
     // check if input password matches the password in database
 
@@ -210,6 +219,8 @@ async function update_bookmark( user_email, carpark_id ) {
     await UserAccountWrite.write_bookmark_list(user_email, bookmark_list);
     return 1; 
 }
+async function verify_email(email){
+    UserAccountWrite.verify_account(email);
+}
 
-
-module.exports = { register, login, fetch_bookmark, change_email, change_password, update_bookmark };
+module.exports = { register, login, fetch_bookmark, change_email, change_password, update_bookmark, verify_email};

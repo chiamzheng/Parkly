@@ -87,5 +87,10 @@ async function email_exists(email) {
     // email does not exist
     return 0;
 }
-
-module.exports = { password_matches, email_exists, strong_password };
+async function email_verified(email){
+    const document = await find_document(email);
+    if (document.verified)
+        return 1;
+    return 0;
+}
+module.exports = { password_matches, email_exists, strong_password, email_verified };
