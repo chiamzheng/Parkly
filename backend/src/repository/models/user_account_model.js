@@ -4,7 +4,8 @@ const { mongoose } = require("mongoose");
 const user_account_schema = new mongoose.Schema({
     email: { type: String, required: true },
     password: { type: String, required: true},
-    bookmark_list: [String] // carpark_id
+    bookmark_list: [String], // carpark_id
+    verified: {type: Boolean}
 });
 
 // Model - Allows easy manipulating and fetching of data

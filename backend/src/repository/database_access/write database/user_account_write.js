@@ -58,6 +58,16 @@ async function write_password (user_email, new_password) {
     );
 }
 
+async function verify_account (user_email) {
+
+    const collection = await get_collection(collection_name);
+
+    await collection.updateOne(
+        { email: user_email }, 
+        { $set: { verified: true } }
+    );
+}
+
 /**
  * Updates the bookmark list for a user.
  * @async
@@ -104,7 +114,8 @@ async function add_user_account(user_email, user_password, bookmark_list = []) {
     user_account_document = new UserAccountModel({
         email: user_email,
         password: user_password,
-        bookmark_list: bookmark_list
+        bookmark_list: bookmark_list,
+        verified:false,
     });
 
     // insert document
@@ -113,4 +124,4 @@ async function add_user_account(user_email, user_password, bookmark_list = []) {
 
 }
 
-module.exports = { write_email, write_password, write_bookmark_list, add_user_account }; //, updateUsername, updatePassword, updateBookmarkList, updateReview };
+module.exports = { write_email, write_password, write_bookmark_list, add_user_account, verify_account }; //, updateUsername, updatePassword, updateBookmarkList, updateReview };
