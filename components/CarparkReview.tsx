@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   box:{
     width: 260,
     height: 70,
-    backgroundColor: "yellow",
+    backgroundColor: '#C4BDD8',
     borderRadius: 10,
     alignSelf: 'center',
     marginBottom: 10,
