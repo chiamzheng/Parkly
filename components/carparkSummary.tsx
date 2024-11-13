@@ -12,7 +12,6 @@ import { ReviewBoxComponent, DisplayReviews } from './CarparkReview';
 export default function CarparkSummary({ visible, carparkData, onClose, chooseCarpark, email }) {
   const [availableLots, setAvailableLots] = useState(null);
   const [capacity, setCapacity] = useState(0.00);
-  const [notifIsOn, setNotifIsOn] = useState(false);
   const [nearbyCarparks, setNearbyCarparks] = useState(null); //test
   const [registerValue, setRegisterValue ] = useState(null); // test
   const [bigModalVisible, setBigModalVisible] = useState(false);
@@ -22,7 +21,8 @@ export default function CarparkSummary({ visible, carparkData, onClose, chooseCa
   const [loading, setLoading] = useState(false);
   const [features, setFeatures] = useState<CarparkFeatures | null>(null);
   const [reviewBox, setReviewBox] = useState(false);
-  const [newReviewAlert, setNewReviewAlert] = useState(false); // Observer Pattern
+  const [newReviewAlert, setNewReviewAlert] = useState(false); // Observer Pattern !!
+  const [bookmarkUpdateAlert, setBookmarkUpdateAlert] = useState(false); // Observer Pattern !!
   const [rate, setRate] = useState({
     morning_evening_motorcar_rate: 0,
     evening_morning_motorcar_rate: 0,
@@ -38,8 +38,6 @@ export default function CarparkSummary({ visible, carparkData, onClose, chooseCa
     carpark_free: any;
   }
 
-  
-  //status for notification and bookmark icons
   const [bookmarkIsOn, setBookmarkIsOn] = useState(false);
 
   const handlePress = async () => {
