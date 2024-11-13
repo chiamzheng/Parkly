@@ -14,7 +14,6 @@ app.use("/api/carpark", carpark_route);
 app.use("/api/user_account", user_account_route);
 app.use('/api/external', external_api_route);
 
-
 const getLocalIPv4 = () => {
     const networkInterfaces = os.networkInterfaces();
     for (const interfaceName in networkInterfaces) {
@@ -36,4 +35,3 @@ app.listen(PORT, () => {
 });
 
 module.exports = { SERVER_IP, PORT } ;
-

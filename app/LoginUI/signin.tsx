@@ -15,19 +15,24 @@ import { CheckBox } from "@rneui/themed";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import validator from "validator";
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import Constants from 'expo-constants';
+const URL = Constants.expoConfig?.extra?.SERVER_IP;
 
 export default function Signin({ navigation }: { navigation: any }) {
-  const [email, onChangeEmail] = React.useState("");
-  const [password, onChangePass] = React.useState("");
-  const [check1, setCheck1] = React.useState(false);
-  const [validEmail, setValidEmail] = React.useState(true);
-  const [validPassword, setValidPassword] = React.useState(true);
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [email, onChangeEmail] = useState("");
+  const [password, onChangePass] = useState("");
+  const [check1, setCheck1] = useState(false);
+  const [validEmail, setValidEmail] = useState(true);
+  const [validPassword, setValidPassword] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [emailNotVerified, setEmailNotVerified] = useState(false); // New state for email verification
+
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
   const handlePassword = () => {
     if (validator.isEmpty(password)) {
       setValidPassword(false);
@@ -35,6 +40,7 @@ export default function Signin({ navigation }: { navigation: any }) {
       setValidPassword(true);
     }
   };
+
   const handleEmail = () => {
     if (validator.isEmail(email)) {
       setValidEmail(true);
@@ -42,28 +48,33 @@ export default function Signin({ navigation }: { navigation: any }) {
       setValidEmail(false);
     }
   };
-  const handleSignin = () => {
-    if (!validator.isEmpty(password) && validator.isEmail(email)) {
-        axios
-            .get(`http://192.168.1.143:8083/api/user_account/login/${email}/${password}`)
-            .then((response) => {
-                const value = response.data;
-                console.log("Response Data:", value); // Check if value is actually 1
 
-                if (value === 1) {
-                    navigation.navigate("HomepageUI/homepage", {
-                        email: email,
-                    });
-                } else {
-                    setValidPassword(false);
-                    onChangePass("");
-                }
-            })
-            .catch((error) => {
-                console.error("Error fetching data:", error);
+  const handleSignin = () => {
+    console.log("Try sign in");
+    if (!validator.isEmpty(password) && validator.isEmail(email)) {
+      axios
+        .get(`${URL}/api/user_account/login/${email}/${password}`)
+        .then((response) => {
+          const value = response.data;
+          console.log("Response Data:", value); // Check if value is actually 1
+          if (value === 1) {
+            navigation.navigate("HomepageUI/homepage", {
+              email: email,
             });
+          } else if (value === -2) {
+            setEmailNotVerified(true);
+            setValidPassword(true); // Ensure password error message is not shown
+          } else {
+            setValidPassword(false);
+            onChangePass("");
+            setEmailNotVerified(false); // Ensure email verification error message is not shown
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
     }
-};
+  };
 
   return (
     <SafeAreaProvider>
@@ -119,6 +130,9 @@ export default function Signin({ navigation }: { navigation: any }) {
         <View>
           <Text style={validPassword ? styles.hide : styles.invalidmsg}>
             The username or password you entered is incorrect.
+          </Text>
+          <Text style={emailNotVerified ? styles.invalidmsg : styles.hide}>
+            Your email is not verified.
           </Text>
         </View>
         <View style={styles.buttoncontainer}>

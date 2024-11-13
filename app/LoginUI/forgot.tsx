@@ -14,9 +14,30 @@ import { ThemedView } from "@/components/ThemedView";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import validator from 'validator';
 import React from "react";
+import axios from 'axios';
+import Constants from 'expo-constants';
+const URL = Constants.expoConfig?.extra?.SERVER_IP;
+
 export default function Forgot({ navigation }) {
-  const [username, onChangeUser] = React.useState("");
+  const [email, onChangeEmail] = React.useState("");
   const [validEmail, setValidEmail] = React.useState(true);
+
+  const handlePasswordReset = async () => {
+    if (validator.isEmail(email)) {
+      setValidEmail(true);
+      
+      try {
+        await axios.get(`${URL}/api/user_account/send_password/${email}`);
+        navigation.navigate('LoginUI/emailsent', { email: email });
+        console.log('An email with your new password has been sent.');
+      } catch (error) {
+        Alert.alert('Error', 'Failed to send password reset email.');
+      }
+    } else {
+      setValidEmail(false);
+    }
+  };
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.background}>
@@ -32,8 +53,8 @@ export default function Forgot({ navigation }) {
         <ThemedView style={styles.stepContainer}>
           <TextInput
             style={validEmail?styles.input:styles.invalidinput}
-            onChangeText={onChangeUser}
-            value={username}
+            onChangeText={onChangeEmail}
+            value={email}
             placeholder="Email"
             placeholderTextColor="#B9B7B7"
             inputMode='email'
@@ -54,14 +75,7 @@ export default function Forgot({ navigation }) {
           </Pressable>
           <Pressable
             style={styles.button}
-            onPress={() => {
-              if(validator.isEmail(username)){
-                setValidEmail(true);
-                navigation.navigate('LoginUI/emailsent', { email: username });
-              }else{
-                  setValidEmail(false);
-                }
-            }}
+            onPress={handlePasswordReset}
           >
             <Text style={styles.buttonText}>Let's Go!</Text>
           </Pressable>
