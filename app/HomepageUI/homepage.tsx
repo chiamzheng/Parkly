@@ -30,6 +30,7 @@ export default function Homepage({ route }) {
   const [showMarkers, setShowMarkers] = useState(false); // track if markers should be visible
   const [destination, setDestination] = useState(null);
   const [nearbyCarparks, setNearbyCarparks] = useState({});
+  const [nearbyCarparksFiltered, setNearbyCarparksFiltered] = useState({});
   const [polylineCoords, setPolylineCoords] = useState([]);
   const [polylineCoords1, setPolylineCoords1] = useState([]);
   const [startpoint, setStartPoint] = useState(null);
@@ -39,6 +40,26 @@ export default function Homepage({ route }) {
   const [zoomThreshold, setZoomThreshold] = useState(0.06);
   const [radius, setRadius] = useState(1000); // default 1km - tweak this for filter
   const [bookmarkUpdateAlert, setBookmarkUpdateAlert] = useState(false); // Observer Pattern !!
+  const [selectedFeatures, setSelectedFeatures] = useState({
+        carpark_type: false,
+        carpark_system: false,
+        carpark_night: false,
+        carpark_basement: false,
+        carpark_gantry: false,
+        carpark_short: false,
+        carpark_free: false,
+
+  });
+  const [selectedFilters, setSelectedFilters] = useState({
+    car_park_type: null,
+    type_of_parking_system: null,
+    whole_day_parking: null,
+    free_parking: null,
+    night_parking: null,
+    morningtoevening_0700to1700_motorcars_rate: null,
+    eveningtomorning_1700to0700_motorcars_rate: null,
+  });
+
   const getPinColor = (capacity) => {
     if (capacity > 79) return 'green';
     if (capacity > 49) return 'orange';
@@ -56,7 +77,7 @@ export default function Homepage({ route }) {
       return null; // If no match is found, return null
     }
   };
-  /*
+  
   useEffect(() => {
     const fetchCarparksByRadius = async () => {
       if (destination) {
@@ -84,7 +105,7 @@ export default function Homepage({ route }) {
     };
   
     fetchCarparksByRadius();
-  }, [radius]); */ //double setNearbyCarpark
+  }, [radius]); //double setNearbyCarpark (required to update AFTER choosing location)
 
   useEffect(() => {
     // Check if chosenCarpark has been updated and is not null
@@ -105,7 +126,7 @@ export default function Homepage({ route }) {
         console.log(routeData.data);
         console.log(routeData1.data);
         if (routeData&&routeData1) {
-          setRouteDetails(`Start to Carpark\nDuration: ${routeData.totalTime} mins\nDistance: ${routeData.totalDistance} km\nCarpark to Destination\nDuration: ${routeData1.totalTime} mins\nDistance: ${routeData1.totalDistance} km`);
+          setRouteDetails(`Start to Carpark\nDuration: ${routeData.totalTime} secs\nDistance: ${routeData.totalDistance} m\nCarpark to Destination\nDuration: ${routeData1.totalTime} secs\nDistance: ${routeData1.totalDistance} m`);
           
         }
         
@@ -123,7 +144,7 @@ export default function Homepage({ route }) {
         const routeData = await getRouteDetails(startpoint, destination);
         console.log(routeData.data);
         if (routeData) {
-          setRouteDetails(`Start to Destination\nDuration: ${routeData.totalTime} mins\nDistance: ${routeData.totalDistance} km`);
+          setRouteDetails(`Start to Destination\nDuration: ${routeData.totalTime} secs\nDistance: ${routeData.totalDistance} m`);
         }
         
         const coordinates = await getRoutePolyline(startpoint, destination);
@@ -139,7 +160,7 @@ export default function Homepage({ route }) {
         const routeData = await getRouteDetails(startpoint, carparkLocation);
         console.log(routeData.data);
         if (routeData) {
-          setRouteDetails(`Start to Carpark\nDuration: ${routeData.totalTime} mins\nDistance: ${routeData.totalDistance} km`);
+          setRouteDetails(`Start to Carpark\nDuration: ${routeData.totalTime} secs\nDistance: ${routeData.totalDistance} m`);
         }
         
         const coordinates = await getRoutePolyline(startpoint, carparkLocation);
@@ -153,6 +174,72 @@ export default function Homepage({ route }) {
       Alert.alert("Missing Information", "Please ensure both start and destination are filled.");
     }
   };
+  // This function filters the carparkDictionary based on the selectedFilters
+  const filterCarparks = (carparkDictionary, selectedFilters) => {
+    const filteredCarparks = {};
+  
+    // Iterate over each carpark in the carparkDictionary
+    for (const [carparkId, carparkInfo] of Object.entries(carparkDictionary)) {
+      let isMatch = true;
+  
+      // Iterate over each filter in selectedFilters
+      for (const [key, filterValue] of Object.entries(selectedFilters)) {
+        // If the filter value is not null (i.e., it is active)
+        if (filterValue !== null) {
+          // Check for numeric fields
+          if (typeof filterValue === 'number') {
+            if (carparkInfo[key] > filterValue) {
+              isMatch = false;
+              break;
+            }
+          } 
+          // Check for string fields
+          else if (carparkInfo[key] !== filterValue) {
+            isMatch = false;
+            break;
+          }
+        }
+      }
+  
+      // If the carpark matches all the selected filters, add it to the filteredCarparks
+      if (isMatch) {
+        filteredCarparks[carparkId] = carparkInfo;
+      }
+    }
+  
+    return filteredCarparks; // Return the filtered carpark dictionary
+  };
+  
+  useEffect(() => {
+    // Update selectedFilters based on selectedFeatures
+    setSelectedFilters(prevState => {
+      return {
+        ...prevState,
+        // Update selectedFilters if the corresponding feature is true
+        car_park_type: selectedFeatures.carpark_type ? "MULTI-STOREY CAR PARK" : prevState.car_park_type,
+        type_of_parking_system: selectedFeatures.carpark_system ? "ELECTRONIC PARKING" : prevState.type_of_parking_system,
+        night_parking: selectedFeatures.carpark_night ? "YES" : prevState.night_parking,
+        whole_day_parking: selectedFeatures.carpark_basement ? "YES" : prevState.whole_day_parking,
+        short_term_parking: selectedFeatures.carpark_short ? "YES" : prevState.short_term_parking,
+        free_parking: selectedFeatures.carpark_free ? "YES" : prevState.free_parking,
+        // Keep rates as before
+        morningtoevening_0700to1700_motorcars_rate: selectedRate,
+        eveningtomorning_1700to0700_motorcars_rate: null, // or some default value
+      };
+    });
+  
+    // Apply the filter to the existing carpark data based on the updated selectedFilters
+    setNearbyCarparksFiltered(filterCarparks(nearbyCarparks, selectedFilters));
+  
+    // Store the filtered carparks in the state
+    setNearbyCarparks(nearbyCarparksFiltered);
+  
+    console.log('Filtered Carparks:', nearbyCarparksFiltered);  // Log the filtered result
+    console.log('Filtered Carparks:', selectedFeatures);
+  }, [selectedRate, selectedDuration, selectedFeatures]);
+  
+  
+  
 
   const handleStartPointSelection = async (startpoint) => {
     setStartPoint(startpoint); // just want to have destination marker, settle nearby carparks here ltr
@@ -206,11 +293,26 @@ export default function Homepage({ route }) {
             }
             console.log(carparkCapacity);
 
+            // fetch features
+            const carparkInfo = carparkData.find(carpark => carpark.car_park_no === carparkId);
+            
             // Store the carpark location and capacity in the dictionary
             carparkDictionary[carparkId] = {
               latitude: carparkLocation.latitude,
               longitude: carparkLocation.longitude,
               capacity: carparkCapacity.capacity,
+              car_park_type: carparkInfo?.car_park_type,
+              type_of_parking_system: carparkInfo?.type_of_parking_system,
+              short_term_parking:  carparkInfo?.short_term_parking,
+              whole_day_parking:  carparkInfo?.whole_day_parking,
+              morningtoevening_0700_1900_parking:  carparkInfo?.['morningtoevening_0700-1900_parking'],
+              morningtonight_0700_2230_parking:  carparkInfo?.['morningtonight_0700-2230_parking'],
+              free_parking:  carparkInfo?.free_parking,
+              night_parking:  carparkInfo?.night_parking,
+              morningtoevening_0700to1700_motorcars_rate:  carparkInfo?.morningtoevening_0700to1700_motorcars_rate, // Use selectedRate if available
+              eveningtomorning_1700to0700_motorcars_rate:  carparkInfo?.eveningtomorning_1700to0700_motorcars_rate,
+              morningtonight_0700to2230_motorcycle_per_lot:  carparkInfo?.morningtonight_0700to2230_motorcycle_per_lot,
+              nighttomorning_2230to0700_motorcycle_per_lot:  carparkInfo?.nighttomorning_2230to0700_motorcycle_per_lot,
           };
         }
 
@@ -224,7 +326,7 @@ export default function Homepage({ route }) {
         console.log(`Capacity not available for carpark`);
     }
   };
-
+  
   const handleMarkerPress = (carpark) => {
     setSelectedCarpark(carpark); // Pass carpark data to CarparkSummary
     setModalVisible(true); // Open modal
@@ -340,7 +442,7 @@ export default function Homepage({ route }) {
         </Text>
       </View>
 
-      <FAB returnRadius={setRadius} returnDuration={setSelectedDuration} returnRate={setSelectedRate}/>
+      <FAB returnRadius={setRadius} returnDuration={setSelectedDuration} returnRate={setSelectedRate} returnFeature={setSelectedFeatures}/>
 
       <CarparkSummary
         visible={modalVisible}

@@ -124,18 +124,6 @@ async function write_reviews ( carpark_id, new_reviews ) {
 
     console.log(`Reviews of carpark ${carpark_id} updated to ${new_reviews}`);
 }
-async function initializeArrayFieldInAllDocuments () {
-    
-    const collection = await get_collection(collection_name);
-    const result = await collection.updateMany(
-        {}, // Empty filter i.e. get all documents
-        { $set: {reviews: []} }, // Initialize reviews to an empty array
-        { upsert: false } // do not create new documents if they don't exist
-    );
-    console.log("All carparks' reviews field initialized to empty array!")
-}
-
-initializeArrayFieldInAllDocuments()
 
 /**
  * Adds a new carpark to the database.
