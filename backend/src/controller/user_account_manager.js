@@ -76,6 +76,11 @@ async function login ( input_email, input_password ){
 
 }
 
+async function fetch_bookmark( user_email ) {
+    const bookmark = await UserAccountRead.read_bookmark_list(user_email);
+    return bookmark;
+}
+
 /**
  * Sends a password reset process (pin validation) for a user who forgot their password.
  * 
@@ -207,4 +212,4 @@ async function update_bookmark( user_email, carpark_id ) {
 }
 
 
-module.exports = { register, login, change_email, change_password, update_bookmark };
+module.exports = { register, login, fetch_bookmark, change_email, change_password, update_bookmark };
