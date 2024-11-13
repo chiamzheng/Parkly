@@ -39,9 +39,9 @@ export default function Homepage({ route }) {
   const [zoomThreshold, setZoomThreshold] = useState(0.06);
   const [radius, setRadius] = useState(1000); // default 1km - tweak this for filter
   const getPinColor = (capacity) => {
-    if (capacity > 79) return 'red';
+    if (capacity > 79) return 'green';
     if (capacity > 49) return 'orange';
-    return 'green';
+    return 'red';
   };
   const getCarparkLocation = (chosenCarpark) => {
     // Find the carpark in carparkData that matches the chosenCarpark car_park_no
