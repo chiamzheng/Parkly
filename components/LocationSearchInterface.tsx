@@ -1,14 +1,15 @@
 import { useNavigation } from '@react-navigation/native';
 import { View, TextInput, TouchableOpacity, Text, Modal, StyleSheet,FlatList,ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import BookmarkList from './Bookmark';
+import { BookmarkList } from './Bookmark';
 import LocationScreen from './Geolocation';
 import { getLocationSuggestions } from './Service/locationService';
 import React, { memo, useCallback, useRef, useState, useEffect } from 'react'
 import { Button, Dimensions, Platform } from 'react-native'
 import { AutocompleteDropdown, AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown'
 import * as Location from 'expo-location';
-const LocationSearchInterface = ({ style, onClickBookmark, username, setDestination, setStartPoint, onPressGo }) => {
+
+const LocationSearchInterface = ({ email, style, onClickBookmark, username, setDestination, setStartPoint, onPressGo, bookmarkUpdateAlert, setBookmarkUpdateAlert }) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [loading1, setLoading1] = useState(false);
@@ -302,7 +303,14 @@ const LocationSearchInterface = ({ style, onClickBookmark, username, setDestinat
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <BookmarkList onPress={toggleBookmarks} onClickBookmark={onClickBookmark} />
+            <BookmarkList 
+              onPress={toggleBookmarks} 
+              onPressGo={onPressGo}
+              onClickBookmark={onClickBookmark} 
+              bookmarkUpdateAlert={bookmarkUpdateAlert}
+              setBookmarkUpdateAlert={setBookmarkUpdateAlert}
+              email={email}
+            />
           </View>
         </View>
       </Modal>

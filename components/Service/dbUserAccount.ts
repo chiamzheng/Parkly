@@ -24,4 +24,12 @@ export const updateBookmark = async (email, carparkID) => {
         console.log("Bookmark successfully updated.")
 };
 
-
+export const fetchBookmark = async (email) => {
+    try {
+        const bookmarks = await axios.get(`${URL}/api/user_account/fetch_bookmark/${email}`)
+        return bookmarks.data;
+    } catch (error) {
+        console.error('Error fetching carpark bookmarks', error);
+        throw error;
+    }
+}

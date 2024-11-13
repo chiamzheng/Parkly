@@ -1,42 +1,57 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { updateBookmark } from './Service/dbUserAccount';
+import { updateBookmark, fetchBookmark } from './Service/dbUserAccount';
+import CarparkIcons from './carparkIcons';
 
 export const BookmarkList = ({
   onPress,
+  onPressGo,
   onClickBookmark,
+  bookmarkUpdateAlert,
+  setBookmarkUpdateAlert,
+  email,
 }) => {
-  const [bookmarks, setBookmarks] = useState([
-    { id: '1', code: 'JM23', name: 'Boon Lay', color: 'green' },
-    { id: '2', code: 'Y24', name: 'Woodlands', color: 'red' },
-    { id: '3', code: 'SK71', name: 'Sengkang', color: 'orange' },
-  ]);
+  const [bookmarks, setBookmarks] = useState<string[]>([]);
+
+  const fetchData = async () => {
+    const data = await fetchBookmark(email);
+    setBookmarks(data || []);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [email]);
+  
+  useEffect(() => {
+    if (bookmarkUpdateAlert) {
+      fetchData();
+      setBookmarkUpdateAlert(false);
+    }
+  }, [bookmarkUpdateAlert]); 
 
   const handleMarkerPress = (markerCode) => {
-    onPress();
+    onPressGo;
     onClickBookmark(markerCode);
   };
 
-  // Remove a bookmark from the list
-  const handleDelete = (id) => {
-    const newBookmarks = bookmarks.filter(item => item.id !== id);
+  const handleDelete = async (carparkID) => {
+    await updateBookmark(email, carparkID);
+    const newBookmarks = bookmarks.filter(item => item !== carparkID);
     setBookmarks(newBookmarks);
   };
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.bookmarkRow} onPress={() => handleMarkerPress(item.code)}>
+  const renderItem = ({ item }: { item: string }) => (
+    <TouchableOpacity style={styles.bookmarkRow} onPress={() => handleMarkerPress(item)}>
       {/* Color marker */}
-      <View style={[styles.colorMarker, { backgroundColor: item.color }]} />
+      <View style={styles.colorMarker} />
 
       {/* Text */}
-      <Text style={styles.bookmarkText}>
-      {item.code} ({item.name})
-      </Text>
+      <Text style={styles.bookmarkText}>{item}</Text>
 
       {/* Delete button */}
-      <TouchableOpacity onPress={() => handleDelete(item.id)}>
-      <Icon name="trash-outline" size={24} color="#000" />
+      <TouchableOpacity onPress={() => handleDelete(item)}>
+        <Icon name="trash-outline" size={24} color="#000" />
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -55,7 +70,7 @@ export const BookmarkList = ({
       {/* Bookmark list */}
       <FlatList
         data={bookmarks}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item}
         renderItem={renderItem}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
@@ -63,15 +78,38 @@ export const BookmarkList = ({
   );
 };
 
-export const BookmarkButton = ({carparkID, email, setNewBookmarkAlert}) => {
-  
+export const BookmarkButton = ({carparkID, email, setBookmarkUpdateAlert}) => {
+  const [bookmarkedIDs, setBookmarkedIDs] = useState<string[]>([]);
+  const [toggleBookmarked, setToggleBookmarked] = useState(false);
+
   const fetchData = async () => {
-    await updateBookmark(email, carparkID);
+    const data = await fetchBookmark(email);
+    setBookmarkedIDs(data || []);
+    setToggleBookmarked(data?.includes(carparkID) || false); // Check if carparkID is in bookmarked list
   };
 
   useEffect(() => {
     fetchData();
   }, [carparkID]);
+
+  const handleBookmarkToggle = async () => {
+    setToggleBookmarked(!toggleBookmarked);
+    setBookmarkUpdateAlert(true);
+    await updateBookmark(email, carparkID);
+  };
+
+  return (
+    <TouchableOpacity onPress={handleBookmarkToggle}>
+      <Image
+        source={
+          toggleBookmarked
+            ? require('../assets/images/bookmark_on.png') 
+            : require('../assets/images/bookmark_off.png') 
+        }
+        style={{ width: 30, height: 30, marginRight: 10}}
+      />
+    </TouchableOpacity>
+  );
 
 }
 
@@ -106,6 +144,7 @@ const styles = StyleSheet.create({
     height: 16,
     borderRadius: 8,
     marginRight: 10,
+    backgroundColor: 'black',
   },
   bookmarkText: {
     flex: 1,

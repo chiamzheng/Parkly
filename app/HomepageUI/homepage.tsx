@@ -38,6 +38,7 @@ export default function Homepage({ route }) {
   const [selectedRate, setSelectedRate] = useState(2);
   const [zoomThreshold, setZoomThreshold] = useState(0.06);
   const [radius, setRadius] = useState(1000); // default 1km - tweak this for filter
+  const [bookmarkUpdateAlert, setBookmarkUpdateAlert] = useState(false); // Observer Pattern !!
   const getPinColor = (capacity) => {
     if (capacity > 79) return 'green';
     if (capacity > 49) return 'orange';
@@ -243,7 +244,17 @@ export default function Homepage({ route }) {
 
   return (
     <View style={styles.container}>
-      <LocationSearchInterface style={styles.search} onClickBookmark={handleBookmarkPress} username={username} setDestination={handleDestinationSelection} setStartPoint={handleStartPointSelection} onPressGo={plotPolyline}/>
+      <LocationSearchInterface 
+        style={styles.search} 
+        onClickBookmark={handleBookmarkPress} 
+        username={username} 
+        setDestination={handleDestinationSelection} 
+        setStartPoint={handleStartPointSelection} 
+        onPressGo={plotPolyline}
+        bookmarkUpdateAlert={bookmarkUpdateAlert}
+        setBookmarkUpdateAlert={setBookmarkUpdateAlert}
+        email={email}
+      />
 
       <MapView
         style={styles.map}
@@ -337,6 +348,7 @@ export default function Homepage({ route }) {
         onClose={() => setModalVisible(false)}
         email={email}  
         chooseCarpark={setChosenCarpark}
+        setBookmarkUpdateAlert={setBookmarkUpdateAlert}
       />
 
       <StatusBar style="auto" />

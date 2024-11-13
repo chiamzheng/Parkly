@@ -8,8 +8,9 @@ import { register } from './Service/dbUserAccount';
 import { Linking } from 'react-native';
 import { fetchCarparkAddress, fetchCarparkFeatures, fetchAvailableLots, fetchCapacity, fetchRate } from './Service/apiService';
 import { ReviewBoxComponent, DisplayReviews } from './CarparkReview';
+import { BookmarkButton } from './Bookmark';
 
-export default function CarparkSummary({ visible, carparkData, onClose, chooseCarpark, email }) {
+export default function CarparkSummary({ visible, carparkData, onClose, chooseCarpark, email, setBookmarkUpdateAlert}) {
   const [availableLots, setAvailableLots] = useState(null);
   const [capacity, setCapacity] = useState(0.00);
   const [notifIsOn, setNotifIsOn] = useState(false);
@@ -21,7 +22,6 @@ export default function CarparkSummary({ visible, carparkData, onClose, chooseCa
   const [features, setFeatures] = useState<CarparkFeatures | null>(null);
   const [reviewBox, setReviewBox] = useState(false);
   const [newReviewAlert, setNewReviewAlert] = useState(false); // Observer Pattern !!
-  const [bookmarkUpdateAlert, setBookmarkUpdateAlert] = useState(false); // Observer Pattern !!
   const [rate, setRate] = useState({
     morning_evening_motorcar_rate: 0,
     evening_morning_motorcar_rate: 0,
@@ -179,18 +179,7 @@ export default function CarparkSummary({ visible, carparkData, onClose, chooseCa
                         
                         <View style={{flexDirection:'row', marginRight: 10}}>
                           <NotificationScreen carparkID={carparkData}/>
-                        
-                          <TouchableOpacity onPress={() => setBookmarkIsOn(!bookmarkIsOn)}>
-                            <Image
-                              source={
-                                bookmarkIsOn
-                                  ? require('../assets/images/bookmark_on.png') 
-                                  : require('../assets/images/bookmark_off.png') 
-                              }
-                              style={{ width: 30, height: 30, marginRight: 10}}
-                            />
-                          </TouchableOpacity>
-                        
+                          <BookmarkButton carparkID={carparkData} email={email} setBookmarkUpdateAlert={setBookmarkUpdateAlert}/>
                           <Pressable onPress={() => {setBigModalVisible(!bigModalVisible) }}>
                             <Image source={require("../assets/images/return.png")} style={[styles.exit, {width: 30,height: 30}]}/>
                           </Pressable>
