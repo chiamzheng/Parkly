@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { updateBookmark } from './Service/dbUserAccount';
 
-const BookmarkList = ({
+export const BookmarkList = ({
   onPress,
   onClickBookmark,
 }) => {
@@ -62,6 +63,18 @@ const BookmarkList = ({
   );
 };
 
+export const BookmarkButton = ({carparkID, email, setNewBookmarkAlert}) => {
+  
+  const fetchData = async () => {
+    await updateBookmark(email, carparkID);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [carparkID]);
+
+}
+
 const styles = StyleSheet.create({
   container: {
     padding: 20,
@@ -105,4 +118,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BookmarkList;
