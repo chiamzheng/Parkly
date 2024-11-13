@@ -1,3 +1,4 @@
+import axios from 'axios';
 import Constants from 'expo-constants';
 const URL = Constants.expoConfig?.extra?.SERVER_IP;
 const BASE_URL = `${URL}/api/user_account` //use this if you are NOT using emulator
@@ -20,3 +21,10 @@ export async function register(email: string, password: string): Promise<any> {
         console.error('Error registering:', error);
     }
 }
+
+export const updateBookmark = async (email, carparkID) => {
+        await axios.get(`${URL}/api/user_account/update_bookmark/${email}/${carparkID}`)
+        console.log("Bookmark successfully updated.")
+};
+
+
