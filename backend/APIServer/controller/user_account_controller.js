@@ -1,4 +1,4 @@
-const { register, login, change_email, change_password, update_bookmark, verify_email } = require("../../src/controller/user_account_manager.js");
+const { register, login, change_email, change_password, update_bookmark, verify_email, fetch_bookmark} = require("../../src/controller/user_account_manager.js");
 
 // Returns -1 if the email already exists, 0 if the password is too weak, 1 if registration is successful.
 const register_api = async (req, res) => {
@@ -40,6 +40,16 @@ const change_password_api = async (req, res) => {
         const new_password = req.params.new_password;
         await change_password(user_email, new_password);
         res.status(200).json(`Password successfully changed to ${new_password}!`);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+}
+
+const fetch_bookmark_api = async (req, res) => {
+    try{
+        const user_email = req.params.user_email;
+        const bookmark = await fetch_bookmark(user_email);
+        res.status(200).json(bookmark);
     } catch (error) {
         res.status(500).json({message: error.message});
     }
