@@ -34,6 +34,9 @@ export default function Homepage({ route }) {
   const [polylineCoords1, setPolylineCoords1] = useState([]);
   const [startpoint, setStartPoint] = useState(null);
   const [routeDetails, setRouteDetails] = useState('');
+  const [selectedDuration, setSelectedDuration] = useState([]);
+  const [selectedRate, setSelectedRate] = useState(2);
+  const [zoomThreshold, setZoomThreshold] = useState(0.06);
   const [radius, setRadius] = useState(1000); // default 1km - tweak this for filter
   const getPinColor = (capacity) => {
     if (capacity > 79) return 'red';
@@ -70,6 +73,7 @@ export default function Homepage({ route }) {
               }
             }
             setNearbyCarparks(carparkDictionary);
+            
           }
         } catch (error) {
           console.error("Error fetching nearby carparks:", error);
@@ -153,6 +157,7 @@ export default function Homepage({ route }) {
 
   const handleDestinationSelection = async (destination) => {
     setDestination(destination); // just want to have destination marker, settle nearby carparks here ltr
+    destination?setZoomThreshold(0):setZoomThreshold(0.06)
     console.log('END:', destination); // check
     try {
 
@@ -197,8 +202,7 @@ export default function Homepage({ route }) {
 
   // Update marker visibility based on zoom level
   const handleRegionChangeComplete = (region) => {
-    const zoomThreshold = 0.08; // Set this based on when you want markers to show
-    setShowMarkers(region.latitudeDelta < zoomThreshold);
+    setShowMarkers(region.latitudeDelta < zoomThreshold);// Set this based on when you want markers to show(higher number means can see from further away)
   };
 
   
@@ -291,7 +295,7 @@ export default function Homepage({ route }) {
         </Text>
       </View>
 
-      <FAB returnRadius={setRadius}/>
+      <FAB returnRadius={setRadius} returnDuration={setSelectedDuration} returnRate={setSelectedRate}/>
 
       <CarparkSummary
         visible={modalVisible}

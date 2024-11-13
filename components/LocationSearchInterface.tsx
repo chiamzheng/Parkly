@@ -11,6 +11,7 @@ import * as Location from 'expo-location';
 const LocationSearchInterface = ({ style, onClickBookmark, username, setDestination, setStartPoint, onPressGo }) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
+  const [loading1, setLoading1] = useState(false);
   const [bookmarksVisible, setBookmarksVisible] = useState(false);
   //const [startPoint, setStartPoint] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -19,6 +20,7 @@ const LocationSearchInterface = ({ style, onClickBookmark, username, setDestinat
   const [suggestionsList1, setSuggestionsList1] = useState(null)
   const [selectedItem, setSelectedItem] = useState(null)
   const dropdownController = useRef(null)
+  const dropdownController1 = useRef(null)
   const searchRef = useRef(null)
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
 
@@ -33,6 +35,7 @@ const LocationSearchInterface = ({ style, onClickBookmark, username, setDestinat
           console.log("User's current location:", location);
           setSearchQuery1("Current Location");
           setStartPoint({ latitude: location.coords.latitude, longitude: location.coords.longitude });
+          dropdownController1.current?.setInputText("Current Location");
       } else {
           console.error('Location permission not granted');
           setStartPoint('');
@@ -68,9 +71,9 @@ const LocationSearchInterface = ({ style, onClickBookmark, username, setDestinat
     alert('Logout button pressed');
   };
 
-  const fetchData = async (query) => {
+  const fetchData = async (query,identify) => {
     try {
-      setLoading(true);
+      identify?setLoading1(true):setLoading(true);
       const items = await getLocationSuggestions(query);
       const suggestions = items
         .map((item, idx) => ({
@@ -79,18 +82,18 @@ const LocationSearchInterface = ({ style, onClickBookmark, username, setDestinat
           latitude: parseFloat(item.latitude),
           longitude: parseFloat(item.longitude)
         }))
-      setLoading(false);
+        identify?setLoading1(false):setLoading(false);
       return suggestions
     } catch (error) {
       console.error('Error fetching data:', error);
-      setLoading(false);
+      identify?setLoading1(false):setLoading(false);
     }
   };
 
   useEffect(() => {
     const fetchSuggestions = async () => {
       if (searchQuery) {
-        const suggestions = await fetchData(searchQuery);
+        const suggestions = await fetchData(searchQuery,0);
         setSuggestionsList(suggestions);
       } else {
         setSuggestionsList(null);
@@ -101,7 +104,7 @@ const LocationSearchInterface = ({ style, onClickBookmark, username, setDestinat
   useEffect(() => {
     const fetchSuggestions1 = async () => {
       if (searchQuery1) {
-        const suggestions = await fetchData(searchQuery1);
+        const suggestions = await fetchData(searchQuery1,1);
         setSuggestionsList1(suggestions);
       } else {
         setSuggestionsList1(null);
@@ -128,10 +131,12 @@ const LocationSearchInterface = ({ style, onClickBookmark, username, setDestinat
     setSuggestionsList1(suggestions)
   }, [])
   const onClearPress = useCallback(() => {
-    setSuggestionsList(null)
+    setDestination(null);
+    setSuggestionsList(null);
   }, [])
   const onClearPress1 = useCallback(() => {
-    setSuggestionsList1(null)
+    setSuggestionsList1(null);
+    setStartPoint(null);
   }, [])
 
 
@@ -166,7 +171,7 @@ const LocationSearchInterface = ({ style, onClickBookmark, username, setDestinat
           </TouchableOpacity>
           <AutocompleteDropdown
             ref={searchRef}
-            controller={(controller) => { dropdownController.current = controller; }}
+            controller={(controller) => { dropdownController1.current = controller; }}
             dataSet={suggestionsList1}  // Same data set for both dropdowns, should be unique
             onChangeText={getSuggestions1}
             onSelectItem={(item) => handleSelectItem1(item)} // setDestination - give lat and long 
@@ -174,7 +179,7 @@ const LocationSearchInterface = ({ style, onClickBookmark, username, setDestinat
             suggestionsListMaxHeight={Dimensions.get('window').height * 0.4}
             onClear={onClearPress1}
             onOpenSuggestionsList={onOpenSuggestionsList1}
-            loading={loading}
+            loading={loading1}
             useFilter={false}
             textInputProps={{
               placeholder: 'Start Point',
