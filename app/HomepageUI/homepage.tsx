@@ -6,7 +6,7 @@ import React, { useState, useEffect } from "react";
 import CarparkSummary from '../../components/carparkSummary';
 import FAB from '../../components/FAB';
 import carparkData from '../../CarparkInformation.json'; 
-import { fetchLocation, fetchNearbyCarparks } from '@/components/Service/apiService';
+import { fetchLocation, fetchNearbyCarparks, fetchCapacity } from '@/components/Service/apiService';
 import { Alert } from 'react-native';
 import { getRoutePolyline, getRouteDetails } from '@/components/Service/locationService';
 import { Text } from 'react-native';
@@ -52,6 +52,7 @@ export default function Homepage({ route }) {
       return null; // If no match is found, return null
     }
   };
+  /*
   useEffect(() => {
     const fetchCarparksByRadius = async () => {
       if (destination) {
@@ -78,7 +79,7 @@ export default function Homepage({ route }) {
     };
   
     fetchCarparksByRadius();
-  }, [radius]);
+  }, [radius]); */ //double setNearbyCarpark
 
   useEffect(() => {
     // Check if chosenCarpark has been updated and is not null
@@ -152,39 +153,64 @@ export default function Homepage({ route }) {
   };
 
   const handleDestinationSelection = async (destination) => {
-    setDestination(destination); // just want to have destination marker, settle nearby carparks here ltr
+    setDestination(destination); // just want to have destination marker, settle nearby carparks here later
     console.log('END:', destination); // check
-    try {
-
     
-      const carparkIds = await fetchNearbyCarparks(destination, radius); //fetching correctly, need to handly empty array display alert no carpark nearby
+    try {
+        // Fetch nearby carparks based on the destination and radius
+        const carparkIds = await fetchNearbyCarparks(destination, radius);
 
-      //initialise dict
-      const carparkDictionary = {};
-      // Map each carparkId to detailed carpark data with array of latitude and longitude
-      const arrayLength = carparkIds.length;
-      let i = 0;
-      while (i < arrayLength)
-      {
-        const carparkId = carparkIds[i];
+        //console.log(carparkIds);
 
-      // Fetch the carpark's location (latitude and longitude) using the carpark ID
-      const carparkLocation = await fetchLocation(carparkId);
-      
-      // Store the carpark location in the dictionary
-      if (carparkLocation) {
-        carparkDictionary[carparkId] = { latitude: carparkLocation.latitude, longitude: carparkLocation.longitude };
-      }
-      i++;
-      }
-      console.log(carparkDictionary);
+        // Check if carparkIds is an empty array
+        if (carparkIds.length === 0) {
+            Alert.alert('No carparks nearby.');
+            return; // Exit early if no nearby carparks are found
+        }
 
-      setNearbyCarparks(carparkDictionary);
-      // console.log(nearbyCarparks);
+        // Initialize the dictionary for storing carpark data
+        const carparkDictionary = {};
+
+        // Loop through the carparkIds and fetch details for each
+        for (let i = 0; i < carparkIds.length; i++) {
+            const carparkId = carparkIds[i];
+
+            console.log(carparkId);
+
+            // Fetch the carpark's location (latitude and longitude) using the carpark ID
+            const carparkLocation = await fetchLocation(carparkId);
+            if (!carparkLocation) {
+                //console.warn(`No location data for carparkId: ${carparkId}`);
+                continue; // Skip this carpark if location data is missing
+            }
+
+            // Fetch the carpark capacity
+            const carparkCapacity = await fetchCapacity(carparkId);
+            if (!carparkCapacity) { // some of the capacity cannot be found in API 
+                //console.warn(`No capacity data for carparkId: ${carparkId}`);
+                continue; // Skip this carpark if capacity data is missing
+            }
+            console.log(carparkCapacity);
+
+            // Store the carpark location and capacity in the dictionary
+            carparkDictionary[carparkId] = {
+              latitude: carparkLocation.latitude,
+              longitude: carparkLocation.longitude,
+              capacity: carparkCapacity.capacity,
+          };
+        }
+
+        console.log(carparkDictionary);
+
+        // Update the state with the nearby carparks
+        setNearbyCarparks(carparkDictionary);
+
     } catch (error) {
-      console.error("Error fetching nearby carparks:", error);
+        //console.error("Error fetching nearby carparks:", error);
+        console.log(`Capacity not available for carpark`);
     }
   };
+
   const handleMarkerPress = (carpark) => {
     setSelectedCarpark(carpark); // Pass carpark data to CarparkSummary
     setModalVisible(true); // Open modal
@@ -239,7 +265,7 @@ export default function Homepage({ route }) {
           <Marker
             coordinate={destination}
             title="Destination"
-            pinColor="red"  // Blue marker for the destination
+            pinColor="#7E5FCF"  // Blue marker for the destination
           />
         )}
 
@@ -260,7 +286,7 @@ export default function Homepage({ route }) {
             coordinate={{ latitude: carpark.latitude, longitude: carpark.longitude }}
             title={`Carpark ${carparkKey}`}  // key of dict is title
             onPress={() => handleMarkerPress(carparkKey)}
-            pinColor="green"
+            pinColor={getPinColor(carpark.capacity || 0)}
           />
         ))}
         
