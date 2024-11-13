@@ -2,7 +2,6 @@ const UserAccountWrite = require("../repository/database_access/write database/u
 const UserAccountRead = require("../repository/database_access/read database/user_account_read");
 const { sendVerificationEmail } = require('../../src/controller/email_service.js');
 const { password_matches, email_exists, strong_password, email_verified } = require("./user_account_manager_tools");
-const URL = config.SERVER_IP;
 
 // async function encrypt_password ( password ) {
 //     const password 
