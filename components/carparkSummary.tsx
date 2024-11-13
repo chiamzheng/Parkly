@@ -22,6 +22,7 @@ export default function CarparkSummary({ visible, carparkData, onClose, chooseCa
   const [loading, setLoading] = useState(false);
   const [features, setFeatures] = useState<CarparkFeatures | null>(null);
   const [reviewBox, setReviewBox] = useState(false);
+  const [newReviewAlert, setNewReviewAlert] = useState(false); // Observer Pattern
   const [rate, setRate] = useState({
     morning_evening_motorcar_rate: 0,
     evening_morning_motorcar_rate: 0,
@@ -211,9 +212,15 @@ export default function CarparkSummary({ visible, carparkData, onClose, chooseCa
                         </View>
                       </View>
 
+
+
                 <View style={styles.reviewBox}>
                   <Text style={{ fontSize: 15, marginTop: 3, marginBottom: 7 }}>Reviews:</Text>
-                  <DisplayReviews carparkID={carparkData}/>
+                  <DisplayReviews 
+                    carparkID={carparkData} 
+                    newReviewAlert={newReviewAlert}
+                    setNewReviewAlert={setNewReviewAlert}
+                    />
                 </View>
 
                 <TouchableOpacity 
@@ -228,9 +235,16 @@ export default function CarparkSummary({ visible, carparkData, onClose, chooseCa
                     <Pressable onPress={() => setReviewBox(false)}>
                       <Image source={exitIcon} style={[styles.exit, {alignSelf:'flex-end', marginRight: 10}]}></Image>
                     </Pressable>
-                    <ReviewBoxComponent carparkID={carparkData} setReviewBox={setReviewBox} email={email}/>
+                    <ReviewBoxComponent 
+                      carparkID={carparkData} 
+                      setReviewBox={setReviewBox}  
+                      email={email} 
+                      setNewReviewAlert={setNewReviewAlert}
+                    />
                   </View>
                 )}
+
+
 
                 <Text style={styles.rate}>
                   <Text style={{fontWeight: 'bold'}}>Lots available:</Text> {availableLots}{'\n'}

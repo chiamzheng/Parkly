@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { View, TextInput, Text, StyleSheet, Pressable, TouchableOpacity, ScrollView } from 'react-native';
 import {addReview, fetchReviews} from './Service/apiService';
 
-export const ReviewBoxComponent = ({carparkID, setReviewBox, email}) => {
+export const ReviewBoxComponent = ({carparkID, setReviewBox, email, setNewReviewAlert}) => {
     const [review, setReview] = useState("");
 
     const handleChangeText = (text: string) => {
@@ -12,6 +12,7 @@ export const ReviewBoxComponent = ({carparkID, setReviewBox, email}) => {
     const handleReviewSubmit = async () => {
         await addReview(carparkID, email, review);
         setReviewBox(false);
+        setNewReviewAlert(true);
     }
     return (
         <View style={styles.reviewTextBox}>
@@ -32,18 +33,25 @@ export const ReviewBoxComponent = ({carparkID, setReviewBox, email}) => {
     );
 };
 
-export const DisplayReviews = ({carparkID}) => {
+export const DisplayReviews = ({carparkID, newReviewAlert, setNewReviewAlert}) => {
     const [reviews, setReviews] = useState<string[]>([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await fetchReviews(carparkID);
-            setReviews(data || []);
-            console.log(data);
-        };
+    const fetchData = async () => {
+        const data = await fetchReviews(carparkID);
+        setReviews(data || []);
+        console.log(data);
+    };
 
+    useEffect(() => {
         fetchData();
     }, [carparkID]);
+
+    useEffect(() => {
+        if (newReviewAlert) {
+          fetchData();
+          setNewReviewAlert(false);
+        }
+      }, [newReviewAlert]); 
     
     return (
         <ScrollView>
