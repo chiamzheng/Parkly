@@ -5,12 +5,11 @@ import NotificationScreen from './Notifications'
 import { getAvailableCarparkLot, getCarparkCapacity } from './Service/carparkService';
 import { getNearbyCarparks } from './Service/dbCarparkService';
 import { register } from './Service/dbUserAccount';
-import CarparkReviews from './CarparkReviews';
 import { Linking } from 'react-native';
-import { fetchCarparkAddress, fetchCarparkFeatures, fetchAvailableLots, fetchCapacity, fetchRate} from './Service/apiService';
-import ReviewBoxComponent from './ReviewBox';
+import { fetchCarparkAddress, fetchCarparkFeatures, fetchAvailableLots, fetchCapacity, fetchRate } from './Service/apiService';
+import { ReviewBoxComponent, DisplayReviews } from './CarparkReview';
 
-export default function CarparkSummary({ visible, carparkData, onClose,chooseCarpark }) {
+export default function CarparkSummary({ visible, carparkData, onClose, chooseCarpark, email }) {
   const [availableLots, setAvailableLots] = useState(null);
   const [capacity, setCapacity] = useState(0.00);
   const [notifIsOn, setNotifIsOn] = useState(false);
@@ -23,6 +22,7 @@ export default function CarparkSummary({ visible, carparkData, onClose,chooseCar
   const [loading, setLoading] = useState(false);
   const [features, setFeatures] = useState<CarparkFeatures | null>(null);
   const [reviewBox, setReviewBox] = useState(false);
+  const [newReviewAlert, setNewReviewAlert] = useState(false); // Observer Pattern
   const [rate, setRate] = useState({
     morning_evening_motorcar_rate: 0,
     evening_morning_motorcar_rate: 0,
@@ -54,10 +54,6 @@ export default function CarparkSummary({ visible, carparkData, onClose,chooseCar
     }
   };
 
-  const ReviewPopup = () => {
-    return <ReviewBoxComponent/>
-  }
-  
   useEffect(() => {
     if (!carparkData) return;
 
@@ -105,7 +101,7 @@ export default function CarparkSummary({ visible, carparkData, onClose,chooseCar
     };
 
     fetchData();
-}, [carparkData]);
+  }, [carparkData]);
 
 
   return (
@@ -130,7 +126,7 @@ export default function CarparkSummary({ visible, carparkData, onClose,chooseCar
                   <Text style={[styles.name]}>{carparkData|| 'Carpark' }</Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={[styles.name, { marginBottom: 0, marginRight: 4 }]}> Capacity: <Text style={{ color: capacity >= 75 ? 'green' : capacity >= 30 ? 'orange' : 'red', }}>{capacity}%</Text> </Text>
+                  <Text style={[styles.name, { marginBottom: 0, marginRight: 4 }]}> Capacity: <Text style={{ color: capacity >= 80 ? 'green' : capacity >= 50 ? 'orange' : 'red', }}>{capacity}%</Text> </Text>
                   <Pressable onPress={onClose}>
                     <Image source={exitIcon} style={styles.exit}/>
                   </Pressable>
@@ -216,9 +212,15 @@ export default function CarparkSummary({ visible, carparkData, onClose,chooseCar
                         </View>
                       </View>
 
+
+
                 <View style={styles.reviewBox}>
                   <Text style={{ fontSize: 15, marginTop: 3, marginBottom: 7 }}>Reviews:</Text>
-                  <CarparkReviews/>
+                  <DisplayReviews 
+                    carparkID={carparkData} 
+                    newReviewAlert={newReviewAlert}
+                    setNewReviewAlert={setNewReviewAlert}
+                    />
                 </View>
 
                 <TouchableOpacity 
@@ -233,9 +235,16 @@ export default function CarparkSummary({ visible, carparkData, onClose,chooseCar
                     <Pressable onPress={() => setReviewBox(false)}>
                       <Image source={exitIcon} style={[styles.exit, {alignSelf:'flex-end', marginRight: 10}]}></Image>
                     </Pressable>
-                    <ReviewBoxComponent carparkID={carparkData} setReviewBox={setReviewBox}/>
+                    <ReviewBoxComponent 
+                      carparkID={carparkData} 
+                      setReviewBox={setReviewBox}  
+                      email={email} 
+                      setNewReviewAlert={setNewReviewAlert}
+                    />
                   </View>
                 )}
+
+
 
                 <Text style={styles.rate}>
                   <Text style={{fontWeight: 'bold'}}>Lots available:</Text> {availableLots}{'\n'}
