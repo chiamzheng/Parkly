@@ -1,4 +1,4 @@
-const { register, login, change_email, change_password, update_bookmark, verify_email, fetch_bookmark} = require("../../src/controller/user_account_manager.js");
+const { register, login, change_email, change_password, update_bookmark, verify_email, fetch_bookmark, send_password_to_email} = require("../../src/controller/user_account_manager.js");
 
 // Returns -1 if the email already exists, 0 if the password is too weak, 1 if registration is successful.
 const register_api = async (req, res) => {
@@ -66,14 +66,34 @@ const update_bookmark_api = async (req, res) => {
     }
 }
 
-const verifyEmail_api = async (req, res) =>{
-    try{
+const verifyEmail_api = async (req, res) => {
+    try {
         const user_email = req.params.user_email;
         await verify_email(user_email);
-        res.status(200).json(`Account verified!`);
+        res.status(200).json({ message: 'Account verified!', email: user_email });
     } catch (error) {
-        res.status(500).json({message: error.message});
+        console.error('Error verifying email:', error);
+        res.status(500).json({ message: 'Verification failed', error: error.message });
     }
-}
+};
 
-module.exports = { register_api, login_api, fetch_bookmark_api, change_email_api, change_password_api, update_bookmark_api, verifyEmail_api};
+const send_password_to_email_api = async (req, res) => {
+    try {
+        const user_email = req.params.user_email;
+        await send_password_to_email(user_email);
+        res.status(200).json(`Password sent to ${user_email}!`);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { 
+    register_api, 
+    login_api, 
+    fetch_bookmark_api, 
+    change_email_api, 
+    change_password_api, 
+    update_bookmark_api, 
+    verifyEmail_api,
+    send_password_to_email_api
+};

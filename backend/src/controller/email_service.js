@@ -19,4 +19,15 @@ const sendVerificationEmail = (email, verificationLink) => {
   return transporter.sendMail(mailOptions);
 };
 
-module.exports = { sendVerificationEmail };
+const sendTemporaryPasswordEmail = (email, temporaryPassword) => {
+  const mailOptions = {
+    from: 'tunglamnu1@gmail.com',
+    to: email,
+    subject: 'Temporary Password',
+    text: `Your temporary password is: ${temporaryPassword}. Please use this password to log in and reset your password.`,
+  };
+
+  return transporter.sendMail(mailOptions);
+};
+
+module.exports = { sendVerificationEmail, sendTemporaryPasswordEmail };

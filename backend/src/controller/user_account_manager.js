@@ -1,6 +1,6 @@
 const UserAccountWrite = require("../repository/database_access/write database/user_account_write");
 const UserAccountRead = require("../repository/database_access/read database/user_account_read");
-const { sendVerificationEmail } = require('../../src/controller/email_service.js');
+const { sendVerificationEmail, sendTemporaryPasswordEmail } = require('../../src/controller/email_service.js');
 const { password_matches, email_exists, strong_password, email_verified } = require("./user_account_manager_tools");
 
 // async function encrypt_password ( password ) {
@@ -19,12 +19,19 @@ const { password_matches, email_exists, strong_password, email_verified } = requ
  */
 
 async function register ( input_email, input_password ) {
-    
+    console.log("Verification function called.");
+    const URL = "http://localhost:8083" // Change to your own URL, or just open email on the computer haha
+    const verificationLink = `${URL}/api/user_account/verify?email=${input_email}` 
+    try {
+        await sendVerificationEmail(input_email, verificationLink);
+        console.log("Sent verification email.");
+    } catch (error) {
+        console.error("Error sending verification email:", error);
+    }
     // check if email already exists
     const email_exist = await email_exists(input_email)
 
     if (email_exist) {
-
         console.log("email already exists! User account not added");
         return -1;
     } 
@@ -35,12 +42,9 @@ async function register ( input_email, input_password ) {
         console.log("Password too weak. User account not added");
         return 0;
     }
-    
     // password is strong enough
     // register account to database
-    const verificationLink = `${URL}/verify?email=${input_email}`;
-    sendVerificationEmail(input_email, verificationLink);
-    console.log("Sent verification email.");
+    
     await UserAccountWrite.add_user_account(input_email, input_password);
     console.log("Successfully Registered!")
     return 1;
@@ -60,7 +64,6 @@ async function register ( input_email, input_password ) {
 async function login ( input_email, input_password ){
 
     // if email does not exist
-
     const email_exist_value = await email_exists(input_email);
     // add email verified check
     
@@ -69,11 +72,7 @@ async function login ( input_email, input_password ){
         console.log("Email has not been registered!");
         return -1;
     }
-    const email_verified_value = await email_verified(input_email);
-    if (email_verified_value == 0){
-        console.log("Email not verified.");
-        return 0;
-    }
+
     // email exists
     // check if input password matches the password in database
 
@@ -83,7 +82,12 @@ async function login ( input_email, input_password ){
         console.log("Log in unsuccessful, wrong password!");
         return 0;
     }
-
+    const email_verified_value = await email_verified(input_email);
+    if (email_verified_value == 0){
+        console.log("Email not verified.");
+        return -2;
+    }
+    console.log("Email is verified");
     console.log("Login successful!");
     return 1;
 
@@ -226,5 +230,29 @@ async function update_bookmark( user_email, carpark_id ) {
 async function verify_email(email){
     await UserAccountWrite.verify_account(email);
 }
+async function send_password_to_email(email) {
+    const generateRandomPassword = () => {
+        const length = 12;
+        const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#";
+        let password = "";
+        for (let i = 0, n = charset.length; i < length; ++i) {
+            password += charset.charAt(Math.floor(Math.random() * n));
+        }
+        return password;
+    };
 
-module.exports = { register, login, fetch_bookmark, change_email, change_password, update_bookmark, verify_email };
+    const password = generateRandomPassword();
+
+    try {
+        await sendTemporaryPasswordEmail(email, password);
+    // update password on the database
+    await UserAccountWrite.write_password(email, password);
+        change_password(email, password);
+    console.log(`Temporary password sent to ${email}`);
+    } catch (error) {
+        console.error(`Error sending temporary password to ${email}:`, error);
+        throw new Error(`Failed to send temporary password to ${email}`);
+    }
+}
+
+module.exports = { register, login, fetch_bookmark, change_email, change_password, update_bookmark, verify_email, send_password_to_email };
