@@ -50,15 +50,27 @@ export default function Homepage({ route }) {
         carpark_free: false,
 
   });
+  const initialSelectedFilters = {
+    car_park_type: null,
+    type_of_parking_system: null,
+    whole_day_parking: null,
+    free_parking: null,
+    night_parking: null,
+    short_term_parking: null,
+    morningtoevening_0700to1700_motorcars_rate: null,
+    eveningtomorning_1700to0700_motorcars_rate: null,
+  };
   const [selectedFilters, setSelectedFilters] = useState({
     car_park_type: null,
     type_of_parking_system: null,
     whole_day_parking: null,
     free_parking: null,
     night_parking: null,
+    short_term_parking:null,
     morningtoevening_0700to1700_motorcars_rate: null,
     eveningtomorning_1700to0700_motorcars_rate: null,
   });
+
 
   const getPinColor = (capacity) => {
     if (capacity > 79) return 'green';
@@ -216,12 +228,12 @@ export default function Homepage({ route }) {
       return {
         ...prevState,
         // Update selectedFilters if the corresponding feature is true
-        car_park_type: selectedFeatures.carpark_type ? "MULTI-STOREY CAR PARK" : prevState.car_park_type,
+        car_park_type: selectedFeatures.carpark_type ? "SURFACE CAR PARK" : "MULTI-STOREY CAR PARK",
         type_of_parking_system: selectedFeatures.carpark_system ? "ELECTRONIC PARKING" : prevState.type_of_parking_system,
-        night_parking: selectedFeatures.carpark_night ? "YES" : prevState.night_parking,
-        whole_day_parking: selectedFeatures.carpark_basement ? "YES" : prevState.whole_day_parking,
-        short_term_parking: selectedFeatures.carpark_short ? "YES" : prevState.short_term_parking,
-        free_parking: selectedFeatures.carpark_free ? "YES" : prevState.free_parking,
+        night_parking: selectedFeatures.carpark_night ? "YES" : "NO",
+        whole_day_parking: selectedFeatures.carpark_basement ? "BASEMENT CAR PARK" : prevState.car_park_type,
+        short_term_parking: selectedFeatures.carpark_short ? "YES" : "NO",
+        free_parking: selectedFeatures.carpark_free ? "YES" : "NO",
         // Keep rates as before
         morningtoevening_0700to1700_motorcars_rate: selectedRate,
         eveningtomorning_1700to0700_motorcars_rate: null, // or some default value
@@ -233,9 +245,10 @@ export default function Homepage({ route }) {
   
     // Store the filtered carparks in the state
     setNearbyCarparks(nearbyCarparksFiltered);
-  
+    
     console.log('Filtered Carparks:', nearbyCarparksFiltered);  // Log the filtered result
     console.log('Filtered Carparks:', selectedFeatures);
+    setSelectedFilters(initialSelectedFilters);
   }, [selectedRate, selectedDuration, selectedFeatures]);
   
   
