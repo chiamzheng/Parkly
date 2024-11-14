@@ -1,6 +1,6 @@
 import Constants from 'expo-constants';
 const URL = Constants.expoConfig?.extra?.SERVER_IP;
-const BASE_URL = `${URL}/api/carpark` //use this if you are NOT using emulator
+const BASE_URL = `${URL}/api/carpark`
 
 interface Coordinate {
     latitude: number;
