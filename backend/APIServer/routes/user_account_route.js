@@ -8,7 +8,7 @@ user_account_route.get("/change_email/:user_email/:new_email", change_email_api)
 user_account_route.get("/change_password/:user_email/:new_password", change_password_api);
 user_account_route.get("/update_bookmark/:user_email/:carpark_id", update_bookmark_api);
 user_account_route.get("/fetch_bookmark/:user_email", fetch_bookmark_api);
-user_account_route.get("/verify", verifyEmail_api);
+user_account_route.get("/verify/:user_email", verifyEmail_api);
 user_account_route.get("/send_password/:user_email", send_password_to_email_api);
 
 module.exports = { user_account_route };

@@ -68,7 +68,7 @@ const update_bookmark_api = async (req, res) => {
 
 const verifyEmail_api = async (req, res) => {
     try {
-        const user_email = req.params.user_email;
+        const user_email = req.params.user_email; 
         await verify_email(user_email);
         res.status(200).json({ message: 'Account verified!', email: user_email });
     } catch (error) {

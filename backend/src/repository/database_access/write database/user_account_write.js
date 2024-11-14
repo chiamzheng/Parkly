@@ -118,6 +118,7 @@ async function add_user_account(user_email, user_password, bookmark_list = []) {
 
 async function verify_account (user_email) {
     console.log("User verified 1");
+    console.log(user_email);
     const collection = await get_collection(collection_name);
 
     await collection.updateOne(
