@@ -332,10 +332,11 @@ export default function Homepage({ route }) {
     setModalVisible(true); // Open modal
   };
 
+  /*
   const handleBookmarkPress = (markerCode) => {
     const idx = carparkData.findIndex((carparkData) => carparkData.car_park_no === markerCode);
     handleMarkerPress(carparkData[idx]);
-  };
+  };*/
 
   // Update marker visibility based on zoom level
   const handleRegionChangeComplete = (region) => {
@@ -348,7 +349,7 @@ export default function Homepage({ route }) {
     <View style={styles.container}>
       <LocationSearchInterface 
         style={styles.search} 
-        onClickBookmark={handleBookmarkPress} 
+        onClickBookmark={setChosenCarpark} 
         username={username} 
         setDestination={handleDestinationSelection} 
         setStartPoint={handleStartPointSelection} 
