@@ -179,7 +179,9 @@ export default function CarparkSummary({ visible, carparkData, onClose, chooseCa
                         
                         <View style={{flexDirection:'row', marginRight: 10}}>
                           <NotificationScreen carparkID={carparkData}/>
-                          <BookmarkButton carparkID={carparkData} email={email} setBookmarkUpdateAlert={setBookmarkUpdateAlert}/>
+                          {email !== "Guest@gmail.com" && ( 
+                            <BookmarkButton carparkID={carparkData} email={email} setBookmarkUpdateAlert={setBookmarkUpdateAlert}/>
+                          )}
                           <Pressable onPress={() => {setBigModalVisible(!bigModalVisible) }}>
                             <Image source={require("../assets/images/return.png")} style={[styles.exit, {width: 30,height: 30}]}/>
                           </Pressable>
@@ -197,13 +199,15 @@ export default function CarparkSummary({ visible, carparkData, onClose, chooseCa
                     />
                 </View>
 
-                <TouchableOpacity 
-                    style={[styles.selectButton, {alignSelf:'flex-end', marginBottom: 15, marginRight: 10}]} 
-                    onPress={() => setReviewBox(true)}
-                >
-                    <Text style={styles.buttonText}>Leave Review</Text>
-                </TouchableOpacity>
-
+                {email !== "Guest@gmail.com" && (
+                  <TouchableOpacity 
+                      style={[styles.selectButton, {alignSelf:'flex-end', marginBottom: 15, marginRight: 10}]} 
+                      onPress={() => setReviewBox(true)}
+                  >
+                      <Text style={styles.buttonText}>Leave Review</Text>
+                  </TouchableOpacity>
+                )}
+                
                 {reviewBox && (
                   <View style={[styles.container, {marginBottom: 10}]}>
                     <Pressable onPress={() => setReviewBox(false)}>
