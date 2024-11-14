@@ -127,6 +127,9 @@ export default function Register({ navigation }) {
             <Text style={!(registered == -2) ? styles.hide : styles.invalidmsg}>
               The password is too weak.
             </Text>
+            <Text style={validEmail ? styles.hide : styles.invalidmsg}>
+              The email is invalid.
+            </Text>
           </View>
         </ThemedView>
         <View style={styles.buttoncontainer}>
@@ -177,7 +180,7 @@ export default function Register({ navigation }) {
                     } else if (result === 0) {
                       Alert.alert("Error", "Password is too weak.");
                     } else if (result === 1) {
-                      Alert.alert("Success", "Registration successful.");
+                      Alert.alert("Registration successful", "Verification email sent to your inbox. Please verify your email");
                       navigation.goBack(); // Navigate back to previous screen
                     }
                   })

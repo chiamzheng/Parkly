@@ -20,7 +20,7 @@ const { password_matches, email_exists, strong_password, email_verified } = requ
 
 async function register ( input_email, input_password ) {
     console.log("Verification function called.");
-    const URL = "http://192.168.0.8:8083" // Change to your own URL
+    const URL = "http://localhost:8083" // Change to your own URL, or just open email on the computer haha
     const verificationLink = `${URL}/api/user_account/verify?email=${input_email}` 
     try {
         await sendVerificationEmail(input_email, verificationLink);

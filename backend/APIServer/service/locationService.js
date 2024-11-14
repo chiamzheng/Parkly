@@ -120,7 +120,7 @@ class LocationService {
                 routeType: 'drive'
             },
             headers: {
-                'Authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTY5YTNhNmM4NjAwZGM0ZDEwNDc1NDliMzk2NmRkOCIsImlzcyI6Imh0dHA6Ly9pbnRlcm5hbC1hbGItb20tcHJkZXppdC1pdC1uZXctMTYzMzc5OTU0Mi5hcC1zb3V0aGVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hcGkvdjIvdXNlci9wYXNzd29yZCIsImlhdCI6MTczMTMyOTE1MSwiZXhwIjoxNzMxNTg4MzUxLCJuYmYiOjE3MzEzMjkxNTEsImp0aSI6ImZ3R3FicHJCS2VlbVhmUWUiLCJ1c2VyX2lkIjo0NDU4LCJmb3JldmVyIjpmYWxzZX0.w6CZTg6q1XNpxM8Osn33cfOGakQZNfhBOBMlj-6lKmA'
+                'Authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vaW50ZXJuYWwtYWxiLW9tLXByZGV6aXQtaXQtbmV3LTE2MzM3OTk1NDIuYXAtc291dGhlYXN0LTEuZWxiLmFtYXpvbmF3cy5jb20vYXBpL3YyL3VzZXIvcGFzc3dvcmQiLCJpYXQiOjE3MzE1NTIzMjMsImV4cCI6MTczMTgxMTUyMywibmJmIjoxNzMxNTUyMzIzLCJqdGkiOiJrY3F1WFB5N3ZsbldNakFnIiwic3ViIjoiMTE2OWEzYTZjODYwMGRjNGQxMDQ3NTQ5YjM5NjZkZDgiLCJ1c2VyX2lkIjo0NDU4LCJmb3JldmVyIjpmYWxzZX0.I5sr_JELhw-MpHp27-gNLXpjVXSW9ONDURtYkQchkDo'
             }
         });
 
