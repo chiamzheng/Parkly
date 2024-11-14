@@ -29,8 +29,8 @@ export default function CarparkIcons({
 }: CarparkIconsProps) {
     // Initialize status based on features passed in
     const [status, setStatus] = useState({
-    carpark_type: buttonmode || features?.carpark_type === "MULTI-STOREY CAR PARK",  // Set to true if buttonMode is enabled
-    carpark_system: buttonmode || features?.carpark_system === "ELECTRONIC PARKING", // Set to true if buttonMode is enabled
+    carpark_type: features?.carpark_type === "MULTI-STOREY CAR PARK",  // Set to true if buttonMode is enabled
+    carpark_system: features?.carpark_system === "ELECTRONIC PARKING", // Set to true if buttonMode is enabled
     carpark_night: features?.carpark_night !== "NO",
     carpark_basement: features?.carpark_basement !== "NO",
     carpark_gantry: features?.carpark_gantry !== 0.00,
