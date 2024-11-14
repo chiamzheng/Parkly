@@ -189,67 +189,104 @@ export default function Homepage({ route }) {
   // This function filters the carparkDictionary based on the selectedFilters
   const filterCarparks = (carparkDictionary, selectedFilters) => {
     const filteredCarparks = {};
-  
-    // Iterate over each carpark in the carparkDictionary
-    for (const [carparkId, carparkInfo] of Object.entries(carparkDictionary)) {
-      let isMatch = true;
-  
-      // Iterate over each filter in selectedFilters
-      for (const [key, filterValue] of Object.entries(selectedFilters)) {
-        // If the filter value is not null (i.e., it is active)
-        if (filterValue !== null) {
-          // Check for numeric fields
-          if (typeof filterValue === 'number') {
-            if (carparkInfo[key] > filterValue) {
-              isMatch = false;
-              break;
-            }
-          } 
-          // Check for string fields
-          else if (carparkInfo[key] !== filterValue) {
-            isMatch = false;
-            break;
-          }
-        }
-      }
-  
-      // If the carpark matches all the selected filters, add it to the filteredCarparks
-      if (isMatch) {
-        filteredCarparks[carparkId] = carparkInfo;
-      }
+
+    // Step 1: Ensure selectedFilters is available
+    if (!selectedFilters) {
+        console.error("Error: selectedFilters is undefined or null.");
+        return {}; // Return empty dictionary if filters are not available
     }
-  
-    return filteredCarparks; // Return the filtered carpark dictionary
-  };
-  
-  useEffect(() => {
-    // Update selectedFilters based on selectedFeatures
-    setSelectedFilters(prevState => {
-      return {
-        ...prevState,
-        // Update selectedFilters if the corresponding feature is true
-        car_park_type: selectedFeatures.carpark_type ? "SURFACE CAR PARK" : "MULTI-STOREY CAR PARK",
-        type_of_parking_system: selectedFeatures.carpark_system ? "ELECTRONIC PARKING" : prevState.type_of_parking_system,
+
+    // Step 2: Loop through each carparkKey in carparkDictionary
+    Object.entries(carparkDictionary).forEach(([carparkKey, carpark]) => {
+        console.log(`Checking carparkKey: ${carparkKey}`); // Log the current carpark being checked
+
+        // Step 3: Find corresponding carpark data by car_park_no
+        const carparkDataItem = carparkData.find(data => data.car_park_no === carparkKey);
+
+        // Log carpark data if found
+        if (!carparkDataItem) {
+            console.log(`No matching carpark data for carparkKey: ${carparkKey}`);
+            return; // Skip to next iteration if no match is found
+        }
+        
+        console.log(`Found carparkData for carparkKey: ${carparkKey}`, carparkDataItem);
+
+        // Step 4: Compare selectedFilters with carparkData fields
+        let matchesFilter = true;
+        console.log(`Checking filters for carpark ${carparkKey}...`);
+
+        for (const key in selectedFilters) {
+            if (selectedFilters.hasOwnProperty(key)) {
+                const filterValue = selectedFilters[key];
+                const carparkFieldValue = carparkDataItem[key];
+
+                // Special handling for free_parking
+                if (key === "free_parking" && filterValue === "YES") {
+                    if (carparkFieldValue === "NO") {
+                        console.log(`Filter mismatch for free_parking: Expected availability, but found NO`);
+                        matchesFilter = false;
+                        break;
+                    }
+                } else {
+                    // Standard comparison for other fields
+                    if (carparkFieldValue !== filterValue) {
+                        console.log(`Filter mismatch for ${key}: ${filterValue} does not match ${carparkFieldValue}`);
+                        matchesFilter = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Step 5: If matches, add the carpark to filteredCarparks
+        if (matchesFilter) {
+            console.log(`Carpark ${carparkKey} matches all filters, adding to result`);
+            filteredCarparks[carparkKey] = {
+                ...carparkDataItem,
+                latitude: carpark.latitude,   // Add latitude from carparkDictionary
+                longitude: carpark.longitude, // Add longitude from carparkDictionary
+            };
+        } else {
+            console.log(`Carpark ${carparkKey} does not match filters, excluding it`);
+        }
+    });
+
+    // Step 6: Return the completed filtered carparks dictionary
+    console.log("Filtered carparks:", filteredCarparks);
+    return filteredCarparks;
+};
+
+
+
+
+// Example usage of the filter function inside a useEffect
+useEffect(() => {
+    // Define updatedFilters based on selectedFeatures
+    const updatedFilters = {
+      car_park_type: selectedFeatures.carpark_basement
+      ? "BASEMENT CAR PARK"
+      : selectedFeatures.carpark_type
+      ? "MULTI-STOREY CAR PARK"
+      : "SURFACE CAR PARK",
+        type_of_parking_system: selectedFeatures.carpark_system ? "ELECTRONIC PARKING" : "COUPON PARKING",
         night_parking: selectedFeatures.carpark_night ? "YES" : "NO",
-        whole_day_parking: selectedFeatures.carpark_basement ? "BASEMENT CAR PARK" : prevState.car_park_type,
         short_term_parking: selectedFeatures.carpark_short ? "YES" : "NO",
         free_parking: selectedFeatures.carpark_free ? "YES" : "NO",
-        // Keep rates as before
-        morningtoevening_0700to1700_motorcars_rate: selectedRate,
-        eveningtomorning_1700to0700_motorcars_rate: null, // or some default value
-      };
-    });
+    };
+
+    // Log the updatedFilters object to check what values are assigned
+    console.log('Updated Filters:', updatedFilters);
+
+    // Apply the filter directly using updated selectedFilters
+    const filtered = filterCarparks(nearbyCarparks, updatedFilters);
+    setNearbyCarparksFiltered(filtered);  // Update filtered carparks state
+    setNearbyCarparks(filtered);          // Optionally update the actual nearbyCarparks state as well
+
+    // Logging for debugging
+    console.log('Filtered Carparks:', filtered);
+}, [selectedRate, selectedDuration, selectedFeatures]);
+
   
-    // Apply the filter to the existing carpark data based on the updated selectedFilters
-    setNearbyCarparksFiltered(filterCarparks(nearbyCarparks, selectedFilters));
-  
-    // Store the filtered carparks in the state
-    setNearbyCarparks(nearbyCarparksFiltered);
-    
-    console.log('Filtered Carparks:', nearbyCarparksFiltered);  // Log the filtered result
-    console.log('Filtered Carparks:', selectedFeatures);
-    setSelectedFilters(initialSelectedFilters);
-  }, [selectedRate, selectedDuration, selectedFeatures]);
   
   
   
