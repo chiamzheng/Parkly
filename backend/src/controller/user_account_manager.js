@@ -191,12 +191,12 @@ async function change_password( user_email, new_password) {
     
     // password is strong
     // update password on the database
-    await UserAccountWrite.write_password(user_email, new_password);
-    console.log(`Password successfully changed to ${new_password}`)
+    const encrypted_password = await bcrypt.hash(new_password, 10);
+    await UserAccountWrite.write_password(user_email, encrypted_password);
+    console.log(`Password successfully changed to ${encrypted_password}`)
     return 1;
 
 }
-
 
 /**
  * Updates the bookmark list for a user by either adding or removing a carpark ID.
