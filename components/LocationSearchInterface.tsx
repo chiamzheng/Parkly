@@ -141,7 +141,11 @@ const LocationSearchInterface = ({ email, style, onClickBookmark, username, setD
     setStartPoint(null);
   }, [])
 
-
+  const navigateSettings = () => {
+    navigation.navigate('SettingsUI/settingspage', {
+      email,
+    });
+  }
 
 
   const onOpenSuggestionsList = useCallback(isOpened => {}, [])
@@ -157,7 +161,7 @@ const LocationSearchInterface = ({ email, style, onClickBookmark, username, setD
         <TouchableOpacity onPress={toggleBookmarks} style={styles.iconButton}>
           <Icon name="bookmark-outline" size={24} style={styles.icon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("SettingsUI/settingspage")} style={styles.iconButton}>
+        <TouchableOpacity onPress={navigateSettings} style={styles.iconButton}>
           <Icon name="settings-outline" size={24} style={styles.icon} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('WelcomeUI/welcomepage')} style={styles.iconButton}>

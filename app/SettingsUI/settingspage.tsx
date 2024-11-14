@@ -10,8 +10,11 @@ import {
 } from 'react-native';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemedView } from '@/components/ThemedView';
+import { useNavigation } from '@react-navigation/native';
 
-export default function Settings({ navigation }: { navigation: any }) {
+export default function Settings({route}) {
+  const navigation = useNavigation();
+  const { email } = route.params || { email: "Guest@gmail.com" };
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.background}>
@@ -26,13 +29,9 @@ export default function Settings({ navigation }: { navigation: any }) {
         <ThemedView style={styles.settingsContainer}>
           <Pressable
             style={styles.button}
-            onPress={() => navigation.navigate('SettingsUI/change_username')}
-          >
-            <Text style={styles.buttonText}>Change Username</Text>
-          </Pressable>
-          <Pressable
-            style={styles.button}
-            onPress={() => navigation.navigate('SettingsUI/change_password')}
+            onPress={() => navigation.navigate('SettingsUI/change_password',{
+              email,
+            })}
           >
             <Text style={styles.buttonText}>Change Password</Text>
           </Pressable>
@@ -44,7 +43,9 @@ export default function Settings({ navigation }: { navigation: any }) {
           </Pressable>
         </ThemedView>
         <View style={styles.returnButtonContainer}>
-          <Pressable onPress={() => navigation.navigate('HomepageUI/homepage')}>
+          <Pressable onPress={() => navigation.navigate("HomepageUI/homepage", {
+              email: email,
+            })}>
             <Image
               source={require('../../assets/images/return.png')}
               style={styles.returnButton}

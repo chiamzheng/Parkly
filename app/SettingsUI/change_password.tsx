@@ -10,22 +10,16 @@ import {
   Image,
 } from 'react-native';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
-import { ThemedView } from '@/components/ThemedView';
+import Constants from 'expo-constants';
+const URL = Constants.expoConfig?.extra?.SERVER_IP;
+import axios from "axios";
+import { useNavigation } from '@react-navigation/native';
 
-export default function ChangePassword({ navigation }: { navigation: any }) {
+export default function ChangePassword({route}) {
+  const navigation = useNavigation();
+  const { email } = route.params || { email: "Guest@gmail.com" };
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
-  const handleConfirm = () => {
-    if (newPassword !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
-      return;
-    }
-    // Here you would typically handle the password change logic
-    Alert.alert('Password changed', 'Your password has been updated');
-    // After changing the password, navigate back or to homepage
-    navigation.navigate('HomepageUI/homepage');
-  };
 
   return (
     <SafeAreaProvider>
@@ -58,7 +52,7 @@ export default function ChangePassword({ navigation }: { navigation: any }) {
         </View>
 
         <View style={styles.buttonContainer}>
-        <Pressable onPress={() => navigation.navigate('SettingsUI/settingspage')}>
+        <Pressable onPress={() => navigation.navigate('SettingsUI/settingspage', {email:email})}>
             <Image
               source={require('../../assets/images/return.png')}
               style={styles.returnButton}
@@ -66,8 +60,26 @@ export default function ChangePassword({ navigation }: { navigation: any }) {
           </Pressable>
           <Pressable
             style={styles.button}
-            onPress={handleConfirm}
-          >
+            onPress={async() => {if (newPassword !== confirmPassword) {
+              Alert.alert('Error', 'Passwords do not match');
+              return;
+            }
+            axios
+              .get(
+                `${URL}/api/user_account/change_password/${email}/${newPassword}`
+              )
+              .then((response) => {
+              })
+              .catch((error) => {
+                console.error("Error fetching data:", error);
+              });
+                
+            // After changing the password, navigate back or to homepage
+            navigation.navigate("HomepageUI/homepage", {
+                      email: email,
+                    });
+                  }
+            }>
             <Text style={styles.confirmButton}>Confirm</Text>
           </Pressable>
         </View>

@@ -163,20 +163,22 @@ async function change_password( user_email, new_password) {
 
     // if password is same as before
 
-    const password_match = await password_matches(user_email, new_password);
+    // const password_match = await password_matches(user_email, new_password);
 
-    if (password_match) {
-        console.log("This password is same as your previous password!")
-        return -1;
-    }
+    // if (password_match) {
+    //     console.log("This password is same as your previous password!")
+    //     return -1;
+    // }
 
     // password is not the same as before 
     // if password is too weak
-    const strong_password = strong_password(input_password);
-    if (!strong_password) {
-        console.log("Password too weak.");
-        return 0;
-    }
+    // const strong_password = strong_password(input_password);
+    // if (!strong_password) {
+    //     console.log("Password too weak.");
+    //     return 0;
+    // }
+    
+    //DELETE THE ABOVE BECAUSE IT GIVES INITIALIZATION ERROR
 
     // ask for current password before approving? (in a different file so that other UIs can reuse)
     
