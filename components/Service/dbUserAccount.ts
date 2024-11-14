@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Constants from 'expo-constants';
 const URL = Constants.expoConfig?.extra?.SERVER_IP;
-const BASE_URL = `${URL}/api/user_account` //use this if you are NOT using emulator
+const BASE_URL = `${URL}/api/user_account`
 
 // Returns -1 if the email already exists, 0 if the password is too weak, 1 if registration is successful.
 export async function register(email: string, password: string): Promise<any> {

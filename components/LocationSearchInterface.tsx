@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { View, TextInput, TouchableOpacity, Text, Modal, StyleSheet,FlatList,ActivityIndicator } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, Modal, StyleSheet,FlatList,ActivityIndicator, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { BookmarkList } from './Bookmark';
 import LocationScreen from './Geolocation';
@@ -86,7 +86,8 @@ const LocationSearchInterface = ({ email, style, onClickBookmark, username, setD
         identify?setLoading1(false):setLoading(false);
       return suggestions
     } catch (error) {
-      console.error('Error fetching data:', error);
+      Alert.alert('No matching locations found');
+      //console.error('Error fetching data:', error);
       identify?setLoading1(false):setLoading(false);
     }
   };
