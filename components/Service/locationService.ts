@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 const URL = Constants.expoConfig?.extra?.SERVER_IP;
 const BASE_URL = `${URL}/api/external` 
-
+//const BASE_URL= 'http://10.91.105.139:8083/api/external';
 interface Coordinate {
     latitude: number;
     longitude: number;
@@ -32,7 +32,7 @@ export async function getLocationSuggestions(searchQuery: string): Promise<any> 
         console.log('Location Suggestions:', data);
         return data;
     } catch (error) {
-        console.error('Error fetching location suggestions:', error);
+        //console.error('Error fetching location suggestions:', error);
     }
 }
 
@@ -61,7 +61,7 @@ export async function getRouteDetails(start: Coordinate, end: Coordinate): Promi
         console.log('Route Details:', data);
         return data;
     } catch (error) {
-        console.error('Error fetching route details:', error);
+       // console.error('Error fetching route details:', error);
     }
 }
 
@@ -91,6 +91,6 @@ export async function getRoutePolyline(start: Coordinate, end: Coordinate): Prom
         console.log('Route Polyline:', data);
         return data;
     } catch (error) {
-        console.error('Error fetching route polyline:', error);
+        //console.error('Error fetching route polyline:', error);
     }
 }

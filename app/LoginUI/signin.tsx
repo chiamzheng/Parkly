@@ -19,7 +19,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Constants from 'expo-constants';
 const URL = Constants.expoConfig?.extra?.SERVER_IP;
-
+//const URL = 10.91.105.139:8083;
 export default function Signin({ navigation }: { navigation: any }) {
   const [email, onChangeEmail] = useState("");
   const [password, onChangePass] = useState("");
@@ -71,7 +71,7 @@ export default function Signin({ navigation }: { navigation: any }) {
           }
         })
         .catch((error) => {
-          console.error("Error fetching data:", error);
+          //console.error("Error fetching data:", error);
         });
     }
   };

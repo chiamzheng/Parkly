@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 const URL = Constants.expoConfig?.extra?.SERVER_IP;
 const BASE_URL = `${URL}/api/carpark`
-
+//const BASE_URL= 'http://10.91.105.139:8083/api/carpark';
 interface Coordinate {
     latitude: number;
     longitude: number;
@@ -18,6 +18,6 @@ export async function getNearbyCarparks(destination: Coordinate, radius: number)
         console.log('Nearby Carparks:', data);
         return data;
     } catch (error) {
-        console.error('Error fetching Nearby Carparks:', error);
+       // console.error('Error fetching Nearby Carparks:', error);
     }
 }
