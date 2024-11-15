@@ -3,7 +3,7 @@ const UserAccountWrite = require("../repository/database_access/write database/u
 const UserAccountRead = require("../repository/database_access/read database/user_account_read");
 const { sendVerificationEmail } = require('../../src/controller/email_service.js');
 const { password_matches, email_exists, strong_password, email_verified } = require("./user_account_manager_tools");
-const URL = "http://192.168.0.218"
+const URL = "http://192.168.0.8"
 /**
  * Registers a new user by adding an account to the database if the email is not already taken and the password is strong.
  * 
@@ -17,7 +17,7 @@ const URL = "http://192.168.0.218"
 
 async function register ( input_email, input_password ) {
     console.log("Verification function called.");
-    const URL = "http://localhost:8083" // Change to your own URL, or just open email on the computer haha
+    const URL = "http://192.168.0.8:8083" // Change to your own URL, or just open email on the computer haha
     var verificationLink = `${URL}/api/user_account/verify/${input_email}` 
     try {
         await sendVerificationEmail(input_email, verificationLink);
@@ -44,11 +44,6 @@ async function register ( input_email, input_password ) {
     // password is strong enough
 
     const hashed_password = await bcrypt.hash(input_password, 10) // 10 represents salt round i.e. how many times the password is hashed repeatedly
-    
-    // Account verification
-    verificationLink = `${URL}/verify?email=${input_email}`;
-    sendVerificationEmail(input_email, verificationLink);
-    console.log("Sent verification email.");
 
     // writing to the database
     await UserAccountWrite.add_user_account(input_email, hashed_password);
