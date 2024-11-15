@@ -53,14 +53,15 @@ const FloatingActionButton = ({ isExpanded, index, imgsrc,setModalVisible,modalV
     return (
       <Animated.View style={[animatedStyles, styles.fabButton]}>
         <Pressable onPress={() => setModalVisible(!modalVisible)}>
-            <Image source={imgsrc} />
+            <Image source={imgsrc} style={styles.iconStyle}/>
         </Pressable>
       </Animated.View>
     );
 };
   
-export default function FAB({returnRadius,returnDuration,returnRate,returnFeature}) {
+export default function FAB({returnRadius,returnDuration,returnRate,returnFeature,returnReset}) {
   const [radius, setRadius] = React.useState(1000);
+  const [reset, setReset] = React.useState(false);
   const [time, setTime] = React.useState(new Date());
   const [time1, setTime1] = React.useState(new Date());
   const [timeVis, setTimeVis] = React.useState(false); 
@@ -94,7 +95,7 @@ export default function FAB({returnRadius,returnDuration,returnRate,returnFeatur
   const applyDuration=() => {
     setDurationVisible(!durationVisible);
     returnDuration([time,time1]);
-    returnRate(dollar+(0.1*cent));
+    returnRate(dollar+(0.1*0.1*cent));
   };
   const applyFeature=() => {
     setFeatureVisible(!featureVisible);
@@ -104,14 +105,19 @@ export default function FAB({returnRadius,returnDuration,returnRate,returnFeatur
     setRadiusVisible(!radiusVisible);
     returnRadius(radius);
   };
+  const applyReset=() => {
+    setResetVisible(!resetVisible);
+    returnReset(true);
+  };
   const isExpanded = useSharedValue(false); // State to track if FAB is expanded
   const containerHeight = useSharedValue(60); // Initial height of the FAB container
   const [durationVisible, setDurationVisible] = React.useState(false);
   const [featureVisible, setFeatureVisible] = React.useState(false);
   const [radiusVisible, setRadiusVisible] = React.useState(false);
+  const [resetVisible, setResetVisible] = React.useState(false);
   const handlePress = () => {
     isExpanded.value = !isExpanded.value; // Toggle the expanded state
-    containerHeight.value = isExpanded.value ? 60 :245; // Update the height based on expanded state
+    containerHeight.value = isExpanded.value ? 60 :300; // Update the height based on expanded state
   };
 
   const animatedContainerStyle = useAnimatedStyle(() => {
@@ -159,9 +165,9 @@ export default function FAB({returnRadius,returnDuration,returnRate,returnFeatur
                               <Text>{time1.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</Text>
                             </Pressable>
                         </View>
-                        <Text style={styles.text}>Set Max Average Rate:</Text>
-                        <View style={styles.row}>
-                          <Text style={styles.text}>$ </Text>
+                        <Text style={styles.text}>Set Max Total Cost:</Text>
+                        <View style={styles.row2}>
+                          <Text style={styles.textdollar}>$ </Text>
                           <View style={styles.scrollpicker}>
                             <ScrollPicker
                                   dataSource={[0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
@@ -199,7 +205,7 @@ export default function FAB({returnRadius,returnDuration,returnRate,returnFeatur
                                   highlightBorderWidth={0}
                               />
                           </View>
-                          <Text style={styles.text}>/hour</Text>
+                          {/*<Text style={styles.text}>/hour</Text>*/}
                         </View>
                         <Pressable style={styles.applybutton} onPress={applyDuration}>
                           <Text style={styles.apply}>Apply</Text>
@@ -270,6 +276,29 @@ export default function FAB({returnRadius,returnDuration,returnRate,returnFeatur
                 </View>
             </View> 
           </Modal>
+          <Modal
+          animationType="slide"
+          transparent={true}
+          visible={resetVisible}
+          onRequestClose={() => {
+            setRadiusVisible(!resetVisible);
+          }}>
+            <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                    <View style={styles.toprow}>
+                        <Text style={styles.text}>Reset Filters:</Text>
+                        <Pressable
+                            onPress={() => setResetVisible(!resetVisible)}>
+                            <Image source={exitIcon} style={styles.exit}/>
+                        </Pressable>
+                    </View>
+                    
+                    <Pressable style={styles.applybutton} onPress={applyReset}>
+                      <Text style={styles.apply}>Apply</Text>
+                    </Pressable>
+                </View>
+            </View> 
+          </Modal>
       <Animated.View style={[styles.FABContainer, animatedContainerStyle]}>
         <Pressable onPress={handlePress} style={[styles.shadow, styles.mainFAB]}>
           <Image source={require('../assets/images/Sliders.png')} />
@@ -295,6 +324,13 @@ export default function FAB({returnRadius,returnDuration,returnRate,returnFeatur
           imgsrc={require('../assets/images/Target.png')}
           setModalVisible={setRadiusVisible}
           modalVisible={radiusVisible}
+        />
+        <FloatingActionButton
+          isExpanded={isExpanded}
+          index={4}
+          imgsrc={require('../assets/images/reset.png')}
+          setModalVisible={setResetVisible}
+          modalVisible={resetVisible}
         />
       </Animated.View>
       </View>
@@ -411,6 +447,13 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         alignItems:"center",
       },
+      row2:{
+        flexDirection:"row",
+        alignItems:"center",
+        justifyContent:'center',
+        alignContent:"center",
+        marginRight:20,
+      },
       text:{
         fontWeight:'500',
         fontSize:16,
@@ -460,8 +503,8 @@ const styles = StyleSheet.create({
         marginLeft: 8,
       },
       iconStyle: {
-        width: 20,
-        height: 20,
+        width: 40,
+        height: 40,
       },
       scrollpicker:{
         width:40,
@@ -469,6 +512,7 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         borderColor:"black",
         borderWidth:3,
+        
       },
       textdot:{
         fontWeight:'700',
@@ -477,6 +521,13 @@ const styles = StyleSheet.create({
         alignSelf:"flex-start",
         paddingLeft:5,
         paddingRight:5,
+      },
+      textdollar:{
+        fontWeight:'500',
+        fontSize:16,
+        marginVertical:10,
+        alignSelf:"flex-start",
+        //paddingLeft:20,
       },
   });
   

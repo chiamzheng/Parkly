@@ -1,3 +1,4 @@
+const bcrypt = require("bcryptjs");
 const UserAccountRead = require("../repository/database_access/read database/user_account_read");
 const { passwordStrength } = require("check-password-strength"); // https://www.npmjs.com/package/check-password-strength 
 const { find_document } = require("../repository/database_access/read database/user_account_read");
@@ -18,9 +19,12 @@ async function password_matches(email, password) {
 
     // read user password in database
     const user_password = await UserAccountRead.read_password(email);
+    
+    // returns a Boolean
+    const passwords_match = await bcrypt.compare(password, user_password);
 
     // passwords match
-    if (user_password == password) {
+    if (passwords_match) {
         return 1;
     }
 

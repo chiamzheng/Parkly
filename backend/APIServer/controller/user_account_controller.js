@@ -36,11 +36,13 @@ const change_email_api = async (req, res) => {
 
 const change_password_api = async (req, res) => {
     try{
+        console.log("change_password_api called"); // Log statement added
         const user_email = req.params.user_email;
         const new_password = req.params.new_password;
         await change_password(user_email, new_password);
         res.status(200).json(`Password successfully changed to ${new_password}!`);
     } catch (error) {
+        console.error("Error in change_password_api:", error); // Detailed error logging
         res.status(500).json({message: error.message});
     }
 }
