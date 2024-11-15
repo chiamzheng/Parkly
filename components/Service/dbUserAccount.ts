@@ -2,7 +2,7 @@ import axios from 'axios';
 import Constants from 'expo-constants';
 const URL = Constants.expoConfig?.extra?.SERVER_IP;
 const BASE_URL = `${URL}/api/user_account`
-
+//const BASE_URL= 'http://10.91.105.139:8083/api/user_account';
 // Returns -1 if the email already exists, 0 if the password is too weak, 1 if registration is successful.
 export async function register(email: string, password: string): Promise<any> {
     try {
@@ -15,7 +15,7 @@ export async function register(email: string, password: string): Promise<any> {
         console.log('Value:', data);
         return data;
     } catch (error) {
-        console.error('Error registering:', error);
+        //console.error('Error registering:', error);
     }
 }
 
@@ -29,7 +29,7 @@ export const fetchBookmark = async (email) => {
         const bookmarks = await axios.get(`${URL}/api/user_account/fetch_bookmark/${email}`)
         return bookmarks.data;
     } catch (error) {
-        console.error('Error fetching carpark bookmarks', error);
+        //console.error('Error fetching carpark bookmarks', error);
         throw error;
     }
 }

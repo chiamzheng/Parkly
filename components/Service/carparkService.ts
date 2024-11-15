@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 const URL = Constants.expoConfig?.extra?.SERVER_IP;
 const BASE_URL = `${URL}/api/external`
-
+//const BASE_URL= 'http://10.91.105.139:8083/api/external';
 /**
  * Fetches the available parking lots for a specific carpark from backend localserver.
  * 
@@ -53,7 +53,7 @@ export async function getCarparkCapacity(carparkId: string): Promise<any> {
         console.log('Carpark Capacity:', data);
         return data;
     } catch (error) {
-        console.error('Error fetching carpark capacity:', error);
+        //console.error('Error fetching carpark capacity:', error);
         return null;
     }
 }

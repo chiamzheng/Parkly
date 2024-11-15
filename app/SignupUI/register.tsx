@@ -36,8 +36,8 @@ export default function Register({ navigation }) {
   const [validPassword, setValidPassword] = React.useState(true);
   const [validcfm, setValidcfm] = React.useState(true);
   const [registered, setRegistered] = React.useState(1);
-
   const URL = Constants.expoConfig?.extra?.SERVER_IP;
+  //const URL = 'http://10.91.105.139:8083';
   
 
   // const [registerValue, setRegisterValue] = React.useState(null);
@@ -186,7 +186,7 @@ export default function Register({ navigation }) {
                     }
                   })
                   .catch((error) => {
-                    console.error("Error fetching data:", error);
+                    //console.error("Error fetching data:", error);
                   });
               }
             }}

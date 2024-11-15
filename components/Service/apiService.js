@@ -3,7 +3,7 @@ import computeLatLon from '../../scripts/computeLatLon';
 import axios from 'axios';
 
 const URL = Constants.expoConfig?.extra?.SERVER_IP;
-
+//const URL = 'http://10.91.105.139:8083';
 export const addReview = async (carparkID, email, review) => {
     const publish = await axios.get(`${URL}/api/carpark/add_review/${carparkID}/${email}/${review}`);
     console.log(`Review successfully added to database: ${carparkID}, ${email}, ${review}`);
@@ -14,8 +14,8 @@ export const fetchReviews = async (carparkID) => {
         const reviews = await axios.get(`${URL}/api/carpark/fetch_reviews/${carparkID}`)
         return reviews.data;
     } catch (error) {
-        console.error('Error fetching carpark reviews', error);
-        throw error;
+        //console.error('Error fetching carpark reviews', error);
+        //throw error;
     }
 }  
 
@@ -24,8 +24,8 @@ export const fetchCarparkAddress = async (carparkID) => {
         const response = await axios.get(`${URL}/api/carpark/fetch_address/${carparkID}`);
         return response.data;
     } catch (error) {
-        console.error('Error fetching carpark address:', error);
-        throw error;
+        //console.error('Error fetching carpark address:', error);
+        //throw error;
     }
 };
 
@@ -35,8 +35,8 @@ export const fetchRate = async (carparkID) => {
         const response = await axios.get(`${URL}/api/carpark/fetch_carpark_rates/${carparkID}`);
         return response.data;
     } catch (error) {
-        console.error('Error fetching carpark rates:', error);
-        throw error;
+        //console.error('Error fetching carpark rates:', error);
+        //throw error;
     }
 };
 
@@ -49,8 +49,8 @@ export const fetchLocation = async (carparkID) => {
 
         return { latitude: lat, longitude: lon };
     } catch (error) {
-        console.error('Error fetching carpark location:', error);
-        throw error;
+        //console.error('Error fetching carpark location:', error);
+        //throw error;
     }
 };
 
@@ -74,8 +74,8 @@ export const fetchCarparkFeatures = async (carparkID) => {
             carpark_free: response7.data
           };
     } catch (error) {
-        console.error('Error fetching carpark data', error);
-        throw error;
+        //console.error('Error fetching carpark data', error);
+        //throw error;
     }
 };
 
@@ -85,8 +85,8 @@ export const fetchNearbyCarparks = async (destination, radius) => {
         //console.log('Nearby Carparks:', response.data);
         return response.data;
     } catch (error) {
-        console.error('Error fetching nearby carparks:', error);
-        throw error;
+        //console.error('Error fetching nearby carparks:', error);
+        //throw error;
     }
 }; //should give array of nearby carparkIDs and ONLY the id, no coordinates
 
@@ -96,7 +96,7 @@ export const fetchAvailableLots = async (carparkID) => {
         return response.data;
     } catch (error) {
         //console.error('Error fetching carpark lots:', error);
-        throw error;
+        //throw error;
     }
 };
 
