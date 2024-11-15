@@ -17,7 +17,7 @@ const URL = "http://192.168.0.218"
 
 async function register ( input_email, input_password ) {
     console.log("Verification function called.");
-    const URL = "http://192.168.0.218:8083" // Change to your own URL, or just open email on the computer haha
+    const URL = "http://localhost:8083" // Change to your own URL, or just open email on the computer haha
     var verificationLink = `${URL}/api/user_account/verify/${input_email}` 
     try {
         await sendVerificationEmail(input_email, verificationLink);

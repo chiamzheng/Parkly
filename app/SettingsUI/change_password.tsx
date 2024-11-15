@@ -73,7 +73,9 @@ export default function ChangePassword({route}) {
               .catch((error) => {
                 console.error("Error fetching data:", error);
               });
-                
+               
+            Alert.alert('Password changed', 'Your password has been updated');
+            
             // After changing the password, navigate back or to homepage
             navigation.navigate("HomepageUI/homepage", {
                       email: email,

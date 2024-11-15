@@ -38,6 +38,7 @@ export default function Register({ navigation }) {
   const [registered, setRegistered] = React.useState(1);
 
   const URL = Constants.expoConfig?.extra?.SERVER_IP;
+  
 
   // const [registerValue, setRegisterValue] = React.useState(null);
 

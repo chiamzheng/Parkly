@@ -95,7 +95,7 @@ export const fetchAvailableLots = async (carparkID) => {
         const response = await axios.get(`${URL}/api/external/carpark/available-lot?carpark_id=${carparkID}`);
         return response.data;
     } catch (error) {
-        console.error('Error fetching carpark lots:', error);
+        //console.error('Error fetching carpark lots:', error);
         throw error;
     }
 };
