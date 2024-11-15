@@ -2,7 +2,7 @@ import LocationSearchInterface from '@/components/LocationSearchInterface';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Image } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import CarparkSummary from '../../components/carparkSummary';
 import FAB from '../../components/FAB';
 import carparkData from '../../CarparkInformation.json'; 
@@ -42,6 +42,7 @@ export default function Homepage({ route }) {
   const [zoomThreshold, setZoomThreshold] = useState(0.06);
   const [radius, setRadius] = useState(1000); // default 1km - tweak this for filter
   const [bookmarkUpdateAlert, setBookmarkUpdateAlert] = useState(false); // Observer Pattern !!
+  const mapRef = useRef<MapView|null>(null);
   const [selectedFeatures, setSelectedFeatures] = useState({
         carpark_type: false,
         carpark_system: false,
@@ -517,10 +518,13 @@ useEffect(() => {
         bookmarkUpdateAlert={bookmarkUpdateAlert}
         setBookmarkUpdateAlert={setBookmarkUpdateAlert}
         email={email}
+        mapRef = {mapRef}
+        handleMarkerPress={handleMarkerPress}
       />
 
       <MapView
         style={styles.map}
+        ref={mapRef}
         initialRegion={{
           latitude: 1.3521,
           longitude: 103.8198,

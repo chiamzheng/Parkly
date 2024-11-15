@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { updateBookmark, fetchBookmark } from './Service/dbUserAccount';
-import CarparkIcons from './carparkIcons';
+import carparkData from '../CarparkInformation.json'; 
+import computeLatLon from '@/scripts/computeLatLon';
+import MapView from 'react-native-maps';
 
 export const BookmarkList = ({
   onPress,
@@ -11,12 +13,44 @@ export const BookmarkList = ({
   bookmarkUpdateAlert,
   setBookmarkUpdateAlert,
   email,
+  mapRef,
+  handleMarkerPress,
 }) => {
   const [bookmarks, setBookmarks] = useState<string[]>([]);
 
+  const animateToCoordinate = (mapRef, coordinate: { latitude: number, longitude: number }) => {
+    if (mapRef.current && coordinate) {
+      console.log('Animating to coordinates:', coordinate);
+      mapRef.current.animateToRegion(
+        {
+          ...coordinate,
+          latitudeDelta: 0.01, // Adjust zoom level
+          longitudeDelta: 0.01,
+        },
+        1000 // Duration in milliseconds
+      );
+    } else {
+      console.log('No map ref or invalid coordinates');
+    }
+  };
+  
+
+  const getCarparkLocation = (chosenCarpark) => {
+    // Find the carpark in carparkData that matches the chosenCarpark car_park_no
+    const carpark = carparkData.find((data) => data.car_park_no === chosenCarpark);
+    
+    // If a match is found, return the latitude and longitude
+    if (carpark) {  
+      const { lat, lon } = computeLatLon(carpark.y_coord, carpark.x_coord);
+      return { latitude: lat, longitude: lon };
+    } else {
+      return null; // If no match is found, return null
+    }
+  };
+
   const fetchData = async () => {
     const data = await fetchBookmark(email);
-    setBookmarks(data || []);
+    setBookmarks(data||[]);
   };
 
   useEffect(() => {
@@ -30,9 +64,16 @@ export const BookmarkList = ({
     }
   }, [bookmarkUpdateAlert]); 
 
-  const handleMarkerPress = (markerCode) => {
-    onPressGo;
-    onClickBookmark(markerCode);
+  const handleMarkerPress2 = (carparkID) => {
+    onPress();
+    onClickBookmark(carparkID);
+    const carparkLocation = getCarparkLocation(carparkID);
+    if (carparkLocation) {
+      animateToCoordinate(mapRef, carparkLocation); // Focus map on chosen carpark
+    } else {
+      Alert.alert("Carpark Not Found", "Unable to locate the selected carpark.");
+    }
+    
   };
 
   const handleDelete = async (carparkID) => {
@@ -42,7 +83,7 @@ export const BookmarkList = ({
   };
 
   const renderItem = ({ item }: { item: string }) => (
-    <TouchableOpacity style={styles.bookmarkRow} onPress={() => handleMarkerPress(item)}>
+    <TouchableOpacity style={styles.bookmarkRow} onPress={() => {handleMarkerPress2(item); handleMarkerPress(item);}}>
       {/* Color marker */}
       <View style={styles.colorMarker} />
 
@@ -156,4 +197,3 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 });
-

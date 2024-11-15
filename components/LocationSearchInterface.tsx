@@ -9,7 +9,7 @@ import { Button, Dimensions, Platform } from 'react-native'
 import { AutocompleteDropdown, AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown'
 import * as Location from 'expo-location';
 
-const LocationSearchInterface = ({ email, style, onClickBookmark, username, setDestination, setStartPoint, onPressGo, bookmarkUpdateAlert, setBookmarkUpdateAlert }) => {
+const LocationSearchInterface = ({ handleMarkerPress, mapRef, email, style, onClickBookmark, username, setDestination, setStartPoint, onPressGo, bookmarkUpdateAlert, setBookmarkUpdateAlert }) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [loading1, setLoading1] = useState(false);
@@ -315,6 +315,8 @@ const LocationSearchInterface = ({ email, style, onClickBookmark, username, setD
               bookmarkUpdateAlert={bookmarkUpdateAlert}
               setBookmarkUpdateAlert={setBookmarkUpdateAlert}
               email={email}
+              mapRef={mapRef}
+              handleMarkerPress={handleMarkerPress}
             />
           </View>
         </View>

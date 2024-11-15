@@ -1,9 +1,9 @@
 const bcrypt = require("bcryptjs");
 const UserAccountWrite = require("../repository/database_access/write database/user_account_write");
 const UserAccountRead = require("../repository/database_access/read database/user_account_read");
-const { sendVerificationEmail } = require('../../src/controller/email_service.js');
+const { sendVerificationEmail, sendTemporaryPasswordEmail } = require('../../src/controller/email_service.js');
 const { password_matches, email_exists, strong_password, email_verified } = require("./user_account_manager_tools");
-const URL = "http://192.168.0.8"
+const URL = "http://localhost:8083"
 /**
  * Registers a new user by adding an account to the database if the email is not already taken and the password is strong.
  * 
@@ -17,7 +17,7 @@ const URL = "http://192.168.0.8"
 
 async function register ( input_email, input_password ) {
     console.log("Verification function called.");
-    const URL = "http://192.168.0.8:8083" // Change to your own URL, or just open email on the computer haha
+    const URL = "http://localhost:8083" // Change to your own URL, or just open email on the computer haha
     var verificationLink = `${URL}/api/user_account/verify/${input_email}` 
     try {
         await sendVerificationEmail(input_email, verificationLink);
@@ -77,7 +77,7 @@ async function login ( input_email, input_password ){
     const email_verified_value = await email_verified(input_email);
     if (email_verified_value == 0){
         console.log("Email not verified.");
-        return 0;
+        return -2;
     }
     // email exists
     // check if input password matches the password in database
@@ -190,7 +190,6 @@ async function change_password( user_email, new_password) {
     await UserAccountWrite.write_password(user_email, encrypted_password);
     console.log(`Password successfully changed to ${encrypted_password}`)
     return 1;
-
 }
 
 /**
@@ -235,4 +234,27 @@ async function verify_email(email){
     UserAccountWrite.verify_account(email);
 }
 
-module.exports = { register, login, fetch_bookmark, change_email, change_password, update_bookmark, verify_email};
+async function send_password_to_email(email) {
+    const generateRandomPassword = () => {
+        const length = 12;
+        const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#";
+        let password = "";
+        for (let i = 0, n = charset.length; i < length; ++i) {
+            password += charset.charAt(Math.floor(Math.random() * n));
+        }
+        return password;
+    };
+    const password = generateRandomPassword();
+    console.log(password);
+    try {
+        // const hashed_password = bcrypt.hash(password, 10);
+        await sendTemporaryPasswordEmail(email, password);
+        // update password on the database
+        await change_password(email, password);
+    } catch (error) {
+        console.error(`Error sending temporary password to ${email}:`, error);
+        throw new Error(`Failed to send temporary password to ${email}`);
+    }
+}
+
+module.exports = { register, login, fetch_bookmark, change_email, change_password, update_bookmark, verify_email, send_password_to_email};

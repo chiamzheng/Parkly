@@ -25,7 +25,6 @@ export default function Forgot({ navigation }) {
   const handlePasswordReset = async () => {
     if (validator.isEmail(email)) {
       setValidEmail(true);
-      
       try {
         await axios.get(`${URL}/api/user_account/send_password/${email}`);
         navigation.navigate('LoginUI/emailsent', { email: email });
