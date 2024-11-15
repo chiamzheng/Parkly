@@ -141,7 +141,7 @@ export default function Homepage({ route }) {
         console.log(routeData.data);
         console.log(routeData1.data);
         if (routeData&&routeData1) {
-          setRouteDetails(`Start to Carpark\nDuration: ${routeData.totalTime} secs\nDistance: ${routeData.totalDistance} m\nCarpark to Destination\nDuration: ${routeData1.totalTime} secs\nDistance: ${routeData1.totalDistance} m`);
+          setRouteDetails(`Start to Carpark\nDuration: ${routeData.totalTime} mins\nDistance: ${routeData.totalDistance} km\nCarpark to Destination\nDuration: ${routeData1.totalTime} mins\nDistance: ${routeData1.totalDistance} km`);
           
         }
         
@@ -159,7 +159,7 @@ export default function Homepage({ route }) {
         const routeData = await getRouteDetails(startpoint, destination);
         console.log(routeData.data);
         if (routeData) {
-          setRouteDetails(`Start to Destination\nDuration: ${routeData.totalTime} secs\nDistance: ${routeData.totalDistance} m`);
+          setRouteDetails(`Start to Destination\nDuration: ${routeData.totalTime} mins\nDistance: ${routeData.totalDistance} km`);
         }
         
         const coordinates = await getRoutePolyline(startpoint, destination);
@@ -175,7 +175,7 @@ export default function Homepage({ route }) {
         const routeData = await getRouteDetails(startpoint, carparkLocation);
         console.log(routeData.data);
         if (routeData) {
-          setRouteDetails(`Start to Carpark\nDuration: ${routeData.totalTime} secs\nDistance: ${routeData.totalDistance} m`);
+          setRouteDetails(`Start to Carpark\nDuration: ${routeData.totalTime} mins\nDistance: ${routeData.totalDistance} km`);
         }
         
         const coordinates = await getRoutePolyline(startpoint, carparkLocation);
