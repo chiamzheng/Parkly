@@ -18,6 +18,7 @@ We are group 70 from lab group SDAB, Nanyang Technological University, Singapore
 ## Table of Contents
 ### 1.0 Demo Video
 1.1 Youtube link to our [Demo Video](https://www.youtube.com/watch?v=GZ4Z2GCu7Ts) <br />
+
 1.2 [Presentation Slides](https://www.canva.com/design/DAGWXt_WhOw/ZkWJLQ50WYH5vN1SkcJwpA/edit?)
 
 ### 2.0 Software Requirements Specification
@@ -77,7 +78,9 @@ You have successfully runned our backend!
 npm install
 ```
 
-9) To compile, run:
+9) Change SERVER_IP to your own IP and PORT in the root .env file
+
+10) To compile, run:
 
 ```bash
 npx expo start
