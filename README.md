@@ -21,7 +21,9 @@ We are group 70 from lab group SDAB, Nanyang Technological University, Singapore
 ### 2.0 Software Requirements Specification
 1.1 [SRS]
 ### 3.0 Suporting Documents
-2.1 Use Case Model
+[2.1 Use Case Model](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Use%20Case%20Model.docx.pdf)
+
+   [2.1.1 Use Case Diagram](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Use%20Case%20Diagram.jpg)
 
 [2.2 Class Diagram + Key boundary and Control classes](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Class%20Diagram%20%2B%20Key%20boundary%20and%20Control%20classes.jpg)
 
