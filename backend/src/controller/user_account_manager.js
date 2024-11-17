@@ -3,7 +3,7 @@ const UserAccountWrite = require("../repository/database_access/write database/u
 const UserAccountRead = require("../repository/database_access/read database/user_account_read");
 const { sendVerificationEmail, sendTemporaryPasswordEmail } = require('../../src/controller/email_service.js');
 const { password_matches, email_exists, strong_password, email_verified } = require("./user_account_manager_tools");
-const URL = "http://localhost:8083"
+//const URL = "http://localhost:8083"
 /**
  * Registers a new user by adding an account to the database if the email is not already taken and the password is strong.
  * 
@@ -17,7 +17,6 @@ const URL = "http://localhost:8083"
 
 async function register ( input_email, input_password ) {
     console.log("Verification function called.");
-    const URL = "http://localhost:8083" // Change to your own URL, or just open email on the computer haha
     var verificationLink = `${URL}/api/user_account/verify/${input_email}` 
     try {
         await sendVerificationEmail(input_email, verificationLink);
