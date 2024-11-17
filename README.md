@@ -19,21 +19,21 @@ We are group 70 from lab group SDAB, Nanyang Technological University, Singapore
 ### 1.0 Demo Video
 1.1 Youtube link to our [Demo Video](https://www.youtube.com/watch?v=GZ4Z2GCu7Ts) 
 ### 2.0 Software Requirements Specification
-1.1 [SRS]
+2.1 [SRS]
 ### 3.0 Suporting Documents
-[2.1 Use Case Model](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Use%20Case%20Model.docx.pdf)
+[3.1 Use Case Model](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Use%20Case%20Model.docx.pdf)
 
-   [2.1.1 Use Case Diagram](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Use%20Case%20Diagram.jpg)
+[3.1.1 Use Case Diagram](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Use%20Case%20Diagram.jpg)
 
-[2.2 Class Diagram + Key boundary and Control classes](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Class%20Diagram%20%2B%20Key%20boundary%20and%20Control%20classes.jpg)
+[3.2 Class Diagram + Key boundary and Control classes](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Class%20Diagram%20%2B%20Key%20boundary%20and%20Control%20classes.jpg)
 
-[2.3 Sequence Diagrams](https://github.com/softwarelab3/2006-SDAB-70/tree/main/lab5/Sequence%20Diagrams)
+[3.3 Sequence Diagrams](https://github.com/softwarelab3/2006-SDAB-70/tree/main/lab5/Sequence%20Diagrams)
 
-[2.4 Dialog Map](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Dialog%20Map.png)
+[3.4 Dialog Map](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Dialog%20Map.png)
 
-[2.5 System Architecture](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/System%20Architecture.png)
+[3.5 System Architecture](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/System%20Architecture.png)
 
-[2.6 UI MockUps](https://github.com/softwarelab3/2006-SDAB-70/tree/main/lab5/UI%20Mockups)
+[3.6 UI MockUps](https://github.com/softwarelab3/2006-SDAB-70/tree/main/lab5/UI%20Mockups)
 
 ## Setup Instructions using Visual Studio Code 
 ### Using Visual Studio Code
