@@ -65,7 +65,7 @@ npm install
 ```
 
    > npm install any other dependencies if required
-8) To run our backend, run 'node backend/APIServer/server.js'
+7) To run our backend, run 'node backend/APIServer/server.js'
 
 ```bash
 node backend/APIServer/server.js
@@ -82,7 +82,7 @@ You have successfully runned our backend!
 npm install
 ```
    
-11) To install frontend dependencies, run:
+9) To compile, run:
 
 ```bash
 npx expo start
