@@ -81,7 +81,7 @@ npm start
    
 You have successfully runned our frontend!
 
-Here on, you may use your mobile device to scan the QR code generated (Expo App) or you may use your favourite emulator. We have used Andriod Studios platoform for our emulator in the demo.
+Here on, you may use your mobile device to scan the QR code generated (Expo App) or you may use your favourite emulator. We have used Andriod Studios platform for our emulator in the demo.
 
 You have successfully loaded Parkly!
 
