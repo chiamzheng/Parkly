@@ -55,7 +55,7 @@ We are group 70 from lab group SDAB, Nanyang Technological University, Singapore
 Go to the 'Parkly' directory.
 
 ### Backend
-In .env, change SERVER_IP to the IP address and port of your device. 
+**Change Enviroment Variables:** In .env, change SERVER_IP to the IP address and port of your device. 
 
 5) In your terminal, type 'cd backend'
 6) To install dependencies, run:
