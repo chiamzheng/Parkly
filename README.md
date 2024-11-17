@@ -17,16 +17,16 @@ We are group 70 from lab group SDAB, Nanyang Technological University, Singapore
 
 ## Table of Contents
 ### 1.0 Demo Video
-1.1 Youtube link to our [Demo Video](https://www.youtube.com/watch?v=GZ4Z2GCu7Ts) <br />
-
-1.2 [Presentation Slides](https://www.canva.com/design/DAGWXt_WhOw/ZkWJLQ50WYH5vN1SkcJwpA/edit?)
-
+1.1 Youtube link to our [Demo Video](https://www.youtube.com/watch?v=GZ4Z2GCu7Ts) 
 ### 2.0 Software Requirements Specification
-2.1 [SRS]
+[2.1 Software Requirements Specification Document](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Software%20Requirements%20Specification.pdf)
+
+[2.1.1 Appendix A: Data Dictionary](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Data%20Dictionary.pdf)
+
 ### 3.0 Suporting Documents
 [3.1 Use Case Model](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Use%20Case%20Model.docx.pdf)
 
-[3.1.1 Use Case Diagram](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Use%20Case%20Diagram.jpg)
+   [3.1.1 Use Case Diagram](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Use%20Case%20Diagram.jpg)
 
 [3.2 Class Diagram + Key boundary and Control classes](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Class%20Diagram%20%2B%20Key%20boundary%20and%20Control%20classes.jpg)
 
@@ -37,6 +37,8 @@ We are group 70 from lab group SDAB, Nanyang Technological University, Singapore
 [3.5 System Architecture](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/System%20Architecture.png)
 
 [3.6 UI MockUps](https://github.com/softwarelab3/2006-SDAB-70/tree/main/lab5/UI%20Mockups)
+
+[3.7 Slide Deck](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Parkly%20Slide%20Deck.pdf)
 
 ## Setup Instructions using Visual Studio Code 
 ### Using Visual Studio Code
@@ -53,6 +55,8 @@ We are group 70 from lab group SDAB, Nanyang Technological University, Singapore
 Go to the 'Parkly' directory.
 
 ### Backend
+In .env, change SERVER_IP to the IP address of your device. 
+
 5) In your terminal, type 'cd backend'
 6) To install dependencies, run:
    
@@ -61,10 +65,10 @@ npm install
 ```
 
    > npm install any other dependencies if required
-7) To run our backend, run 'node APIServer/server.js'
+8) To run our backend, run 'node APIServer/server.js'
 
 ```bash
-node backend/APIServer/server.js
+node APIServer/server.js
 ```
    
    > note : API for routing requires OneMap token, which expires every 3 days
@@ -77,13 +81,11 @@ You have successfully runned our backend!
 ```bash
 npm install
 ```
-
-9) At the root directory, go to .env and change SERVER_IP to your own IP and PORT
-
-10) To compile, run:
+   
+11) To install frontend dependencies, run:
 
 ```bash
-npx expo start
+npm start
 ```
    
 You have successfully runned our frontend!
