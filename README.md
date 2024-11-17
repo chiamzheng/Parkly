@@ -65,10 +65,10 @@ npm install
 ```
 
    > npm install any other dependencies if required
-8) To run our backend, run 'node APIServer/server.js'
+8) To run our backend, run 'node backend/APIServer/server.js'
 
 ```bash
-node APIServer/server.js
+node backend/APIServer/server.js
 ```
    
    > note : API for routing requires OneMap token, which expires every 3 days
@@ -85,7 +85,7 @@ npm install
 11) To install frontend dependencies, run:
 
 ```bash
-npm start
+npx expo start
 ```
    
 You have successfully runned our frontend!
