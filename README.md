@@ -26,7 +26,7 @@ We are group 70 from lab group SDAB, Nanyang Technological University, Singapore
 ### 3.0 Suporting Documents
 [3.1 Use Case Model](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Use%20Case%20Model.docx.pdf)
 
-   [3.1.1 Use Case Diagram](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Use%20Case%20Diagram.jpg)
+[3.1.1 Use Case Diagram](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Use%20Case%20Diagram.jpg)
 
 [3.2 Class Diagram + Key boundary and Control classes](https://github.com/softwarelab3/2006-SDAB-70/blob/main/lab5/Class%20Diagram%20%2B%20Key%20boundary%20and%20Control%20classes.jpg)
 
@@ -55,7 +55,7 @@ We are group 70 from lab group SDAB, Nanyang Technological University, Singapore
 Go to the 'Parkly' directory.
 
 ### Backend
-In .env, change SERVER_IP to the IP address of your device. 
+In .env, change SERVER_IP to the IP address and port of your device. 
 
 5) In your terminal, type 'cd backend'
 6) To install dependencies, run:
