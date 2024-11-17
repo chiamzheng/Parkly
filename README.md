@@ -78,7 +78,7 @@ You have successfully runned our backend!
 npm install
 ```
 
-9) Change SERVER_IP to your own IP and PORT in the root .env file
+9) At the root directory, go to .env and change SERVER_IP to your own IP and PORT
 
 10) To compile, run:
 
